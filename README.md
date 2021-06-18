@@ -1,2 +1,2 @@
 # Muscle_Tendon_Passive_Parameter_Estimation
- 
+The common method to find the muscle parameter of the participant is scaling base on anthropometric data. In this process, the reference model is employed and scaled base on the length of participant segments. The reference-model is made of cadavers or MRI images of the other people and it’s not a propper representive of subject musculoskeletal parameters. In this project I'm trying to develope new method to estime the passive parmeters using optimazation algorithm.   
