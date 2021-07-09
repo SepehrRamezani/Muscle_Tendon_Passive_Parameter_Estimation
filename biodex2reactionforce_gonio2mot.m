@@ -61,7 +61,8 @@ Dataheadermotion=['time\tpelvis_tilt\tpelvis_tx\tpelvis_ty\thip_flexion_r\thip_a
 Dataheaderforce=['time\treaction_force_vx\treaction_force_vy\treaction_force_vz\treaction_force_px\treaction_force_py\treaction_force_pz\treaction_torque_x\treaction_torque_y\treaction_torque_z'];
 DataheaderEMG=['time\t'];
 %getting goniometer calibration coefficient
-[Ph,Pk,Pa]= GnCalib(Datafolder,psname,1);
+% [Ph,Pk,Pa]= GnCalib(Datafolder,psname,1);
+[P_torque,P_Position]= BiodexCalib(Datafolder,psname,1);
 for T1=1:length(Terials1)
     for T2=1:length(Terials2)
         EMGHDdata=[""];
@@ -93,12 +94,12 @@ for T1=1:length(Terials1)
 
         %% Save Motion
         delimiterIn='\t';
-        F_fnames=append(Subjectname,char(filename),'_Motion.mot');
+        F_fnames = append(Subjectname,char(filename),'_Motion.mot');
         Title='\nversion=1\nnRows=%d\nnColumns=%d\nInDegrees=no\nendheader\n';
-        MDatadata=[1,0,0.055,1.059,1,0,0,1,0,0].*ones(r,10);
+        MDatadata = [1,0,0.055,1.059,1,0,0,1,0,0].*ones(r,10);
         MDatadata(:,[1,5,8,10])=[Data(:,1),GonCalibratedH,GonCalibratedK,GonCalibratedA];
-        Titledata=[r,length(MDatadata(1,:))];
-%         makefile(Datafolder,F_fnames,Title,Titledata,Dataheadermotion,MDatadata,5,delimiterIn);
+        Titledata = [r,length(MDatadata(1,:))];
+%       makefile(Datafolder,F_fnames,Title,Titledata,Dataheadermotion,MDatadata,5,delimiterIn);
         
         %% Process Force
         %%% Caculating Torque from Arm

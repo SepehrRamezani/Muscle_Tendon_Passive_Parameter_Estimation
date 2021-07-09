@@ -1,7 +1,7 @@
 function [Ph,Pk,Pa]= GnCalib (dfolder,subjectname,plotflage)
 
 Fname =append(subjectname,"_GnCalib_");
-Names=["AnkleDors20","AnkleDors10","Ankle0","AnklePlant10","AnklePlant30","AnklePlant50"...
+Names=["AnkleDorsi15","AnkleDorsi10","Ankle0","AnklePlant10","AnklePlant30","AnklePlant50"...
     ,"Hip0","Hip30","Hip60","Hip90"...
     ,"Knee0","Knee30","Knee45","Knee60","Knee90"];
 AnkelGnCalibdata=[];
@@ -30,7 +30,7 @@ for i=1:length(Names)
     end
     
 end
-y=[20,10,0,-10,-30,-50];
+y=[15,10,0,-10,-30,-50];
 y=y./180*pi();
 x=AnkelGnCalibdata;
 Pa = polyfit(x(:,2)',y,1);
