@@ -76,8 +76,8 @@ DataheaderEMG=['time\t'];
 %getting goniometer calibration coefficient
 [P_Gonio_H,P_Gonio_K,P_Gonio_A]= GnCalib(Datafolder,psname,0);
 [Weight_Coefficient,P_Biodex_Torque,P_Biodex_Knee_Angle,P_Biodex_Ankle_Angle]= BiodexCalib(Datafolder,psname,Calibration_Limits,0);
-for Count=1:length(filename)
-    if Count~=22
+for Count=4:length(filename)
+    if contains(filename(Count),"Q") & Count~=22
         %         EMGHDdata=[""];
         Header=filename(Count);
         Data=FinalData.(Header).data;
@@ -133,6 +133,21 @@ for Count=1:length(filename)
         FDatadata=[Data(:,1),zeros(r,8),Mb];
         Titledata=[r,length(FDatadata(1,:))];
         % makefile(Datafolder,F_fnames,Title,Titledata,Dataheaderforce,FDatadata,5,delimiterIn);
+        
+         %% Finding events
+        Event=EventDetection(Header,FDatadata(:,1),FDatadata(:,10),ResultData.info.ForceRatio,BiodexAngle,[ResultData.info.M_ThresholdMin ResultData.info.M_ThresholdMax]);
+        Stime=Event(1);
+        Etime=Event(2);
+%         if length(Stime)~=3||length(Etime)~=3
+%             fprintf('\nERROR: %s Wrong trail ...\n\n', filename);
+%         end
+      
+        Expindx=find(Data(:,1)>=Stime&Data(:,1)<=Etime);
+        plot([BiodexAngle(Expindx)*180/pi(),Mb(Expindx)])
+        hold on
+        plot(BiodexAngle*180/pi())
+         hold off
+        figure
         %% Strat reading Simulation files
         ResultData.(Header).('ExpForce').('full')=[Data(:,1),Mb];
         ResultData.(Header).('Motion').('full')=[Data(:,1),GonCalibratedK];
