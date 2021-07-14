@@ -104,13 +104,14 @@ for Count=4:length(filename)
         GonCalibratedA = polyval(P_Gonio_A,GonA);
         
         %% Save Motion
+        Time=Data(:,1);
         delimiterIn='\t';
         F_fnames = append(psname,char(Header),'_Motion.mot');
         Title='\nversion=1\nnRows=%d\nnColumns=%d\nInDegrees=no\nendheader\n';
         MDatadata = [1,0,0.055,1.059,1,0,0,1,0,0].*ones(r,10);
-        MDatadata(:,[1,5,8,10])=[Data(:,1),GonCalibratedH,GonCalibratedK,GonCalibratedA];
+        MDatadata(:,[1,5,8,10])=[Time,GonCalibratedH,GonCalibratedK,GonCalibratedA];
         Titledata = [r,length(MDatadata(1,:))];
-        %         makefile(Datafolder,F_fnames,Title,Titledata,Dataheadermotion,MDatadata,5,delimiterIn);
+        makefile(Datafolder,F_fnames,Title,Titledata,Dataheadermotion,MDatadata,5,delimiterIn);
         %% Process Force
         %%% Caculating Torque from Arm
         RawAngle=Data(:,cb(2));
@@ -130,31 +131,28 @@ for Count=4:length(filename)
         Mb=TotalTorque-ArmTorque;
         %% Save Force
         F_fnames=append(psname,char(Header),'_Torque.mot');
-        FDatadata=[Data(:,1),zeros(r,8),Mb];
+        FDatadata=[Time,zeros(r,8),Mb];
         Titledata=[r,length(FDatadata(1,:))];
-        % makefile(Datafolder,F_fnames,Title,Titledata,Dataheaderforce,FDatadata,5,delimiterIn);
+        makefile(Datafolder,F_fnames,Title,Titledata,Dataheaderforce,FDatadata,5,delimiterIn);
         
-         %% Finding events
-        Event=EventDetection(Header,FDatadata(:,1),FDatadata(:,10),ResultData.info.ForceRatio,BiodexAngle,[ResultData.info.M_ThresholdMin ResultData.info.M_ThresholdMax]);
+        %% Finding events
+        Event=EventDetection(Header,Time,BiodexAngle);
         Stime=Event(1);
         Etime=Event(2);
-%         if length(Stime)~=3||length(Etime)~=3
-%             fprintf('\nERROR: %s Wrong trail ...\n\n', filename);
-%         end
-      
         Expindx=find(Data(:,1)>=Stime&Data(:,1)<=Etime);
         plot([BiodexAngle(Expindx)*180/pi(),Mb(Expindx)])
         hold on
         plot(BiodexAngle*180/pi())
-         hold off
+        hold off
         figure
         %% Strat reading Simulation files
-        ResultData.(Header).('ExpForce').('full')=[Data(:,1),Mb];
-        ResultData.(Header).('Motion').('full')=[Data(:,1),GonCalibratedK];
+        ResultData.(Header).('ExpTorque').('full')=[Time(Expindx),Mb(Expindx)];
+        ResultData.(Header).('Motion').('full')=[Time(Expindx),GonCalibratedK(Expindx)];
+        ResultData.(Header).Events=Expindx;
         
     end
     
 end
 
-save (append(results_folder,"\",psname,"_ResultData.mat"),'ResultData');
+save (append(results_folder,"\",psname,"ResultData.mat"),'ResultData');
 
