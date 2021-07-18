@@ -4,6 +4,7 @@ clc;
 % Some times there is no need to import raw data because all data will
 % save in FinalDatafor first time. readflage=1 means import files again.
 readflage= 0;
+filtflage=0;
 % folder=uigetdir(); % get Data directory
 SubjectNumber='T002';
 Project='P006';
@@ -26,7 +27,7 @@ SpeedType=["0","2","5","Q"];
 ArmWeight=2.72;
 ArmCOM=0.218;
 Fdata=[];
-counter=0
+counter=0;
 k=0;
 % DStime=0.0005192; % desired sampling time
 DStime=0.01;
@@ -102,14 +103,23 @@ for Count=4:length(filename)
         %Ankle calibration
         GonA=Data(:,ca(2));
         GonCalibratedA = polyval(P_Gonio_A,GonA);
-        
+        %% Filtering 
+        if filtflage 
+        samfreq=1/DStime;
+        hpvar=20; %Hz
+        bworder=5;
+        [bb,aa] = butter(bworder, hpvar/(samfreq/2),'low');
+        GonCalibratedH=filtfilt(bb,aa,GonCalibratedH);
+        GonCalibratedK=filter(bb,aa,GonCalibratedK);
+        GonCalibratedA=filter(bb,aa,GonCalibratedA);
+        end
         %% Save Motion
         Time=Data(:,1);
         delimiterIn='\t';
         F_fnames = append(psname,char(Header),'_Motion.mot');
         Title='\nversion=1\nnRows=%d\nnColumns=%d\nInDegrees=no\nendheader\n';
         MDatadata = [1,0,0.055,1.059,1,0,0,1,0,0].*ones(r,10);
-        MDatadata(:,[1,5,8,10])=[Time,GonCalibratedH,GonCalibratedK,GonCalibratedA];
+        MDatadata(:,[1,2,5,8,10])=[Time,pi()/2-GonCalibratedH,GonCalibratedH,GonCalibratedK,GonCalibratedA];
         Titledata = [r,length(MDatadata(1,:))];
         makefile(Datafolder,F_fnames,Title,Titledata,Dataheadermotion,MDatadata,5,delimiterIn);
         %% Process Force
@@ -129,6 +139,11 @@ for Count=4:length(filename)
         TotalTorque=polyval(P_Biodex_Torque,RawTorque);
         %%% Arm weight compensation
         Mb=TotalTorque-ArmTorque;
+        %% filtering force
+        if filtflage 
+        [bb,aa] = butter(bworder, hpvar/(samfreq/2),'low');
+        Mb=filter(bb,aa,Mb);
+        end
         %% Save Force
         F_fnames=append(psname,char(Header),'_Torque.mot');
         FDatadata=[Time,zeros(r,8),Mb];
@@ -140,15 +155,16 @@ for Count=4:length(filename)
         Stime=Event(1);
         Etime=Event(2);
         Expindx=find(Data(:,1)>=Stime&Data(:,1)<=Etime);
-        plot([BiodexAngle(Expindx)*180/pi(),Mb(Expindx)])
-        hold on
-        plot(BiodexAngle*180/pi())
-        hold off
-        figure
+%         plot([BiodexAngle(Expindx)*180/pi(),Mb(Expindx)])
+%         hold on
+%         plot(BiodexAngle*180/pi())
+%         hold off
+%         figure
         %% Strat reading Simulation files
-        ResultData.(Header).('ExpTorque').('full')=[Time(Expindx),Mb(Expindx)];
-        ResultData.(Header).('Motion').('full')=[Time(Expindx),GonCalibratedK(Expindx)];
-        ResultData.(Header).Events=Expindx;
+        ResultData.(Header).('ExpTorque')=[Time(Expindx),Mb(Expindx)];
+        ResultData.(Header).('Motion')=[Time(Expindx),GonCalibratedK(Expindx),GonCalibratedH(Expindx)];
+        ResultData.(Header).Events=[Stime Etime];
+        ResultData.info.trialsname=filename;
         
     end
     
