@@ -2,7 +2,7 @@ function makefile (folder,F_fnames,Title,Titledata,Dataheader,Datadata,Resulotio
 % Resulotion number of digit after zero
            fid=fopen(append(folder,'\',F_fnames), "w");
             if fid < 0
-                fprintf('\nERROR: %s could not be opened for writing...\n\n', fname);
+                fprintf('\nERROR: %s could not be opened for writing...\n\n', F_fnames);
             return
             end
             [r,c]=size(Datadata);

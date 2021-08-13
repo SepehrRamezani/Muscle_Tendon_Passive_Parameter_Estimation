@@ -96,7 +96,7 @@ for Count=4:length(filename)
         %knee calibration
         GonK=Data(:,ck(2));
         GonCalibratedK = polyval(P_Gonio_K,GonK);
-        %         GonCalibratedK(GonCalibratedK<0)=0;
+        GonCalibratedK(GonCalibratedK<0)=0;
         %Hip calibration
         GonH=Data(:,ch(2));
         GonCalibratedH = polyval(P_Gonio_H,GonH);
@@ -160,7 +160,7 @@ for Count=4:length(filename)
 %         plot(BiodexAngle*180/pi())
 %         hold off
 %         figure
-        %% Strat reading Simulation files
+        %% Preparing data for Simulation
         ResultData.(Header).('ExpTorque')=[Time(Expindx),Mb(Expindx)];
         ResultData.(Header).('Motion')=[Time(Expindx),GonCalibratedK(Expindx),GonCalibratedH(Expindx)];
         ResultData.(Header).Events=[Stime Etime];

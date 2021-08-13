@@ -1,5 +1,6 @@
 clear all
 import org.opensim.modeling.*
+Logger.addSink(JavaLogSink())
 path='C:\Program Files\OpenSim 4.1\Geometry';
 ModelVisualizer.addDirToGeometrySearchPaths(path);
 %% File address %%
@@ -42,11 +43,14 @@ for m=1:length(Modelname)
             modelCoordSet = osimModel.getCoordinateSet();
             currentcoord = modelCoordSet.get(0);
             currentcoord.setDefaultValue(pi/2-HipFl);
-%             currentcoord.setLocked(true);
-            osimModel.print(append(results_folder,Header,".osim"));
+            currentcoord1 = modelCoordSet.get(6);
+            currentcoord1.setDefaultValue(HipFl);
+%             currentcoord1.setLocked(true);
+%             osimModel.print(append(results_folder,Header,".osim"));
             %% ID %%%%
             idTool=	InverseDynamicsTool(append(results_folder,psname,"ID_Setup_ref.xml"));
             idTool.setModel(osimModel);
+            idTool.setModelFileName(append(results_folder,Header,".osim"))
             idTool.setStartTime(Stime);
             idTool.setEndTime(Etime);
             idTool.setCoordinatesFileName(IkFile);
@@ -62,28 +66,31 @@ for m=1:length(Modelname)
             %% SOP %%%%%
             analysis = AnalyzeTool(append(results_folder,psname,"SOP_Setup_ref.xml"));
             analysis.setModel(osimModel);
-%           analysis.getModel;
+            analysis.setModelFilename(append(results_folder,Header,".osim"))
             analysis.setName(append(Modelname(m),'_',Header))
             analysis.setInitialTime(Stime(1));
             analysis.setFinalTime(Etime(1));
-            %analysis.setLowpassCutoffFrequency(6);
+            analysis.setLowpassCutoffFrequency(6);
             analysis.setCoordinatesFileName(IkFile);
             analysis.setExternalLoadsFileName(NewExForcefile);
             analysis.setLoadModelAndInput(true);
             analysis.setResultsDir(append(results_folder2(1)));
             analysis.print(append(results_folder2(1),Header,"_",AnalyzeMethod(1),"_Setup.xml"))
+            Logger.addSink(JavaLogSink())
             analysis.run();
             %% CMC %%%%%
             cmc = CMCTool(append(results_folder,psname,"CMC_Setup_ref.xml"));
             cmc.setModel(osimModel);
+            cmc.setModelFilename(append(results_folder,Header,".osim"))
             cmc.setName(append(Modelname(m),'_',Header,'_CMC'))
             cmc.setDesiredKinematicsFileName(IkFile);
+            cmc.setLowpassCutoffFrequency(6);
             cmc.setExternalLoadsFileName(NewExForcefile);
             cmc.setStartTime(Stime(1));
             cmc.setFinalTime(Etime(1));
             cmc.setResultsDir(append(results_folder2(2)));
-            cmc.print(append(results_folder2(2),Header,"_",AnalyzeMethod(2),"_Setup.xml"));
-            cmc.run();
+%             cmc.print(append(results_folder2(2),Header,"_",AnalyzeMethod(2),"_Setup.xml"));
+%             cmc.run();
             clear cmc ExLoad idTool analysis
             %                 end
         end
