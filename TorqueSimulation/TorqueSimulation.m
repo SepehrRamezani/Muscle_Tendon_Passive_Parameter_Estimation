@@ -1,8 +1,8 @@
 clear all
 import org.opensim.modeling.*;
-% SimMusclename=["bflh_r","bfsh_r","gaslat_r","gasmed_r","recfem_r","sart_r","semimem_r","semiten_r","tfl_r","vasint_r","vaslat_r","vasmed_r"];
+SimMusclename=["bflh_r","bfsh_r","gaslat_r","gasmed_r","recfem_r","sart_r","semimem_r","semiten_r","tfl_r","vasint_r","vaslat_r","vasmed_r"];
 % SimMusclename=["knee_act","recfem_r","semimem_r"];
-SimMusclename=["knee_act"];
+% SimMusclename=["knee_act"];
 
 % muscleDrivenModel = getMuscleDrivenModel();
 % This initial block of code is identical to the code above.
@@ -47,60 +47,34 @@ if ~exist('subject_walk_armless_DeGroote.osim', 'file')
 else
     osismmodel = Model('subject_walk_armless_DeGroote.osim');
 end
-study = MocoStudy();
-problem = study.updProblem();
-problem.setModel(osismmodel);
-problem.setTimeBounds(0, .1);
-problem.setStateInfo('/jointset/walker_knee_r/knee_angle_r/value', ...
-    [0, 1.7], 0, 1.5);
 
-% problem.setStateInfoPattern('/jointset/.*/speed', [0 0], 0, 0);
-problem.setStateInfoPattern('/jointset/walker_knee_r/knee_angle_r/speed', [0.11 0.11], 0.11, 0.11);
-% problem.setStateInfoPattern('/jointset/patellofemoral_r/knee_angle_r_beta/speed', [0.11 0.11], 0.11, 0.11);
-problem.addGoal(MocoControlGoal('myeffort'));
-solver = study.initCasADiSolver();
-solver.set_num_mesh_intervals(25);
-solver.set_optim_convergence_tolerance(1e-4);
-solver.set_optim_constraint_tolerance(1e-4);
-predictSolution = study.solve();
-predictSolution.write('predictSolution.sto');
+track = MocoTrack();
+track.setName('kneeTracking');
+stateTrackingWeight = 1;
+tableProcessor = TableProcessor('referenceCoordinates.sto');
+tableProcessor.append(TabOpLowPassFilter(6));
+modelProcessor = ModelProcessor("subject_walk_armless_DeGroote.osim");
+track.setModel(modelProcessor);
+track.setStatesReference(tableProcessor);
+track.set_states_global_tracking_weight(stateTrackingWeight);
+track.set_allow_unused_references(true);
+track.set_track_reference_position_derivatives(true);
+track.set_apply_tracked_states_to_guess(true);
+track.set_initial_time(0.0);
+track.set_final_time(6);
+track.set_mesh_interval(0.05);
+study = track.initialize();
+problem = study.updProblem();
+model = modelProcessor.process();
+model.initSystem();
+effort = MocoControlGoal.safeDownCast(problem.updGoal('control_effort'));
+controlEffortWeight=10;
+effort.setWeight(controlEffortWeight);
+problem.setStateInfo('/jointset/walker_knee_r/knee_angle_r/value', ...
+    [0, 1.6]);
+kneeTrackingSolution = study.solve();
+kneeTrackingSolution.write('Kneeflexion_solution.sto');
+% study.visualize(kneeTrackingSolution   );
+
 %%
-% inverse = MocoInverse();
-% 
-% % osismmodel = Model('subject_walk_armless.osim');
-% modelProcessor = ModelProcessor(osismmodel);
-% 
-% % modelProcessor.append(ModOpAddExternalLoads('grf_walk.xml'));
-% modelProcessor.append(ModOpIgnoreTendonCompliance());
-% % modelProcessor.append(ModOpReplaceMusclesWithDeGrooteFregly2016());
-% modelProcessor.append(ModOpIgnorePassiveFiberForcesDGF());
-% % modelProcessor.append(ModOpScaleActiveFiberForceCurveWidthDGF(1));
-% % modelProcessor.append(ModOpAddReserves(100.0));
-% inverse.setModel(modelProcessor);
-% tableProcessor = TableProcessor('coordinates.sto');
-% 
-% 
-% inverse.setKinematics(tableProcessor);
-% inverse.set_initial_time(0.5);
-% inverse.set_final_time(.7);
-% inverse.set_mesh_interval(0.02);
-% inverse.set_kinematics_allow_extra_columns(true);
-% inverse.set_minimize_sum_squared_activations(true);
-% 
-% % study = inverse.initialize();
-% % problem = study.updProblem();
-% %
-% % problem.addGoal
-% % solution = study.solve();
-% 
-% solution = inverse.solve();
-% ww=solution.unseal();
-% solution.getMocoSolution().write('inverseSolution.sto');
-% 
-% % Generate a report with plots for the solution trajectory.
-% model = modelProcessor.process();
-% report = osimMocoTrajectoryReport(model, ...
-%     'inverseSolution.sto', 'bilateral', true);
-% % The report is saved to the working directory.
-% reportFilepath = report.generate();
-% open(reportFilepath);
+
