@@ -64,6 +64,7 @@ track.set_initial_time(0.0);
 track.set_final_time(6);
 stateWeights = MocoWeightSet();
 stateWeights.cloneAndAppend(MocoWeight('/jointset/walker_knee_r/knee_angle_r/value',pq));
+
 track.set_states_weight_set(stateWeights);
 % track.set_mesh_interval(0.01);
 study = track.initialize();
@@ -76,6 +77,8 @@ effort.setExponent(2);
 effort.setDivideByDisplacement(false);
 
 problem.setStateInfo('/jointset/walker_knee_r/knee_angle_r/value',[0, 1.6]);
+problem.addParameter(MocoParameter('PenAngle', 'body', 'mass', MocoBounds(0, 10)));
+
 
 solver = study.initCasADiSolver();
 
@@ -83,7 +86,7 @@ solver.set_num_mesh_intervals(50);
 solver.set_verbosity(2);
 solver.set_optim_solver('ipopt');
 solver.set_optim_convergence_tolerance(1e-3);
-solver.set_optim_constraint_tolerance(1e1);
+solver.set_optim_constraint_tolerance(1e-1);
 solver.set_optim_max_iterations(3000);
 solver.set_implicit_auxiliary_derivatives_weight(0.00001)
 solver.resetProblem(problem);
