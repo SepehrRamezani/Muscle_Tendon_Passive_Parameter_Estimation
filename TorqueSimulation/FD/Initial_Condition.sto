@@ -1,0 +1,8 @@
+subject_scale_walk_states								
+version=1								
+nRows=566								
+nColumns=9								
+inDegrees=no								
+endheader								
+time	/jointset/hip_r/hip_flexion_r/value	/jointset/hip_r/hip_flexion_r/speed	/jointset/walker_knee_r/knee_angle_r/value	/jointset/walker_knee_r/knee_angle_r/speed	/jointset/patellofemoral_r/knee_angle_r_beta/value	/jointset/patellofemoral_r/knee_angle_r_beta/speed	/jointset/ankle_r/ankle_angle_r/value	/jointset/ankle_r/ankle_angle_r/speed
+0	1.570796327	0.00572525	0.00572525	-2.34E-27	-1.36E-27	0.262827864	0.262827864	2.87E-28
