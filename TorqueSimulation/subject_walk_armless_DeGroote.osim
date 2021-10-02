@@ -2843,7 +2843,7 @@
 					<!--Name of the generalized coordinate to which the actuator applies.-->
 					<coordinate>knee_angle_r</coordinate>
 					<!--The maximum generalized force produced by this actuator.-->
-					<optimal_force>30000</optimal_force>
+					<optimal_force>3000</optimal_force>
 				</CoordinateActuator>
 			</objects>
 			<groups />
