@@ -77,7 +77,6 @@ effort.setExponent(2);
 effort.setDivideByDisplacement(false);
 
 problem.setStateInfo('/jointset/walker_knee_r/knee_angle_r/value',[0, 1.6]);
-problem.addParameter(MocoParameter('PenAngle', 'body', 'mass', MocoBounds(0, 10)));
 
 
 solver = study.initCasADiSolver();
