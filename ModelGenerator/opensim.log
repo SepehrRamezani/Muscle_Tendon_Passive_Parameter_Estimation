@@ -1,0 +1,33 @@
+[2021-10-12 14:10:33.845] [info] Loaded model subject_scale_walk from file subject_walk_armless_RLeg_justknee.osim
+[2021-10-12 14:10:33.848] [warning] Couldn't find file 'r_pelvis.vtp'.
+[2021-10-12 14:10:33.848] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-10-12 14:10:33.849] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-10-12 14:10:33.849] [warning] Couldn't find file 'r_femur.vtp'.
+[2021-10-12 14:10:33.849] [warning] Couldn't find file 'r_tibia.vtp'.
+[2021-10-12 14:10:33.850] [warning] Couldn't find file 'r_fibula.vtp'.
+[2021-10-12 14:10:33.850] [warning] Couldn't find file 'r_patella.vtp'.
+[2021-10-12 14:10:33.850] [warning] Couldn't find file 'r_talus.vtp'.
+[2021-10-12 14:10:33.850] [warning] Couldn't find file 'r_foot.vtp'.
+[2021-10-12 14:10:33.851] [warning] Couldn't find file 'r_bofoot.vtp'.
+[2021-10-12 14:13:45.829] [info] Loaded model subject_scale_walk from file subject_walk_armless_RLeg_justknee.osim
+[2021-10-12 14:13:45.831] [warning] Couldn't find file 'r_pelvis.vtp'.
+[2021-10-12 14:13:45.832] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-10-12 14:13:45.832] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-10-12 14:13:45.832] [warning] Couldn't find file 'r_femur.vtp'.
+[2021-10-12 14:13:45.833] [warning] Couldn't find file 'r_tibia.vtp'.
+[2021-10-12 14:13:45.833] [warning] Couldn't find file 'r_fibula.vtp'.
+[2021-10-12 14:13:45.833] [warning] Couldn't find file 'r_patella.vtp'.
+[2021-10-12 14:13:45.833] [warning] Couldn't find file 'r_talus.vtp'.
+[2021-10-12 14:13:45.834] [warning] Couldn't find file 'r_foot.vtp'.
+[2021-10-12 14:13:45.834] [warning] Couldn't find file 'r_bofoot.vtp'.
+[2021-10-12 16:01:40.150] [info] Loaded model subject_scale_walk from file subject_walk_armless_RLeg_justknee.osim
+[2021-10-12 16:01:40.152] [warning] Couldn't find file 'r_pelvis.vtp'.
+[2021-10-12 16:01:40.152] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-10-12 16:01:40.153] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-10-12 16:01:40.153] [warning] Couldn't find file 'r_femur.vtp'.
+[2021-10-12 16:01:40.153] [warning] Couldn't find file 'r_tibia.vtp'.
+[2021-10-12 16:01:40.153] [warning] Couldn't find file 'r_fibula.vtp'.
+[2021-10-12 16:01:40.154] [warning] Couldn't find file 'r_patella.vtp'.
+[2021-10-12 16:01:40.154] [warning] Couldn't find file 'r_talus.vtp'.
+[2021-10-12 16:01:40.154] [warning] Couldn't find file 'r_foot.vtp'.
+[2021-10-12 16:01:40.154] [warning] Couldn't find file 'r_bofoot.vtp'.
