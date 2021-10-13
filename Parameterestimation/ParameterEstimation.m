@@ -58,6 +58,7 @@ model.initSystem();
 %% define parameter 
 problem.setStateInfo('/jointset/walker_knee_r/knee_angle_r/value',[0, 1.6]);
 %% optimal_fiber_length
+% param = MocoParameter('Test', '/forceset/bflh_r/geometrypath/bflh_r-P1/','location', MocoBounds(0,1),1);
 param = MocoParameter('max_isometric_force_bflh', '/forceset/bflh_r','max_isometric_force', MocoBounds(1000,7000));
 param2 = MocoParameter('max_isometric_force_vaslat', '/forceset/vaslat_r', 'max_isometric_force', MocoBounds(1000,7000));
 param3 = MocoParameter('max_isometric_force_Semimem', '/forceset/semimem_r', 'max_isometric_force', MocoBounds(1000,7000));
