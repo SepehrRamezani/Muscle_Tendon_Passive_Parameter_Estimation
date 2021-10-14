@@ -53,3 +53,14 @@
 [2021-10-13 12:51:42.595] [warning] Couldn't find file 'r_talus.vtp'.
 [2021-10-13 12:51:42.595] [warning] Couldn't find file 'r_foot.vtp'.
 [2021-10-13 12:51:42.595] [warning] Couldn't find file 'r_bofoot.vtp'.
+[2021-10-14 16:37:37.708] [info] Loaded model OneDof_KneeFl from file subject_walk_armless_RLeg_justknee.osim
+[2021-10-14 16:37:37.711] [warning] Couldn't find file 'r_pelvis.vtp'.
+[2021-10-14 16:37:37.711] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-10-14 16:37:37.712] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-10-14 16:37:37.712] [warning] Couldn't find file 'r_femur.vtp'.
+[2021-10-14 16:37:37.712] [warning] Couldn't find file 'r_tibia.vtp'.
+[2021-10-14 16:37:37.712] [warning] Couldn't find file 'r_fibula.vtp'.
+[2021-10-14 16:37:37.712] [warning] Couldn't find file 'r_patella.vtp'.
+[2021-10-14 16:37:37.713] [warning] Couldn't find file 'r_talus.vtp'.
+[2021-10-14 16:37:37.713] [warning] Couldn't find file 'r_foot.vtp'.
+[2021-10-14 16:37:37.713] [warning] Couldn't find file 'r_bofoot.vtp'.
