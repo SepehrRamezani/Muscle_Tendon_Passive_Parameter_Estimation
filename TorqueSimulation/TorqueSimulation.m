@@ -1,19 +1,13 @@
 clear all
 import org.opensim.modeling.*;
 ModelPath=[cd '\..\ModelGenerator\subject_walk_armless_DeGroote.osim'];
-%% Which muscles we want to keep (need an actuator to estimate external torque)
-% SimMusclename=["knee_act","bflh_r","bfsh_r","gaslat_r","gasmed_r","recfem_r","sart_r","semimem_r","semiten_r","tfl_r","vasint_r","vaslat_r","vasmed_r"];
-SimMusclename=["knee_act","bflh_r","bfsh_r","gaslat_r","gasmed_r","recfem_r","semimem_r","semiten_r","vasint_r","vaslat_r","vasmed_r"];
-% SimMusclename=["knee_act"];
-Logger.addSink(JavaLogSink());
-%% initialze parameters
-Logger.addSink(JavaLogSink());
+%% Initialze parameters
 osimmodel = Model(ModelPath);
 ControlWight=1.0/osimmodel.getForceSet().getSize();
-StateWeight = 1.0/osimmodel.getNumCoordinates();
+StateWeight = 10.0/osimmodel.getNumCoordinates();
 GlobalstateTrackingWeight = 1;
 Stime=0;
-Etime=6;
+Etime=10;
 Solverinterval=20;
 %% Import reference state
 tableProcessor = TableProcessor('referenceCoordinates.sto');
@@ -50,15 +44,15 @@ solver = study.initCasADiSolver();
 solver.set_num_mesh_intervals(Solverinterval);
 solver.set_verbosity(2);
 solver.set_optim_solver('ipopt');
-solver.set_optim_convergence_tolerance(1e-3);
+solver.set_optim_convergence_tolerance(1e-4);
 solver.set_optim_constraint_tolerance(1e-1);
 solver.set_optim_max_iterations(3000);
 solver.set_implicit_auxiliary_derivatives_weight(0.00001)
 solver.resetProblem(problem);
-solver.setGuessFile('soln_track_N50_w50.sto');
-solver.setGuess(gaitTrackingSolution);
+% solver.setGuessFile('Kneeflexion_solution_Degroot.sto');
 kneeTrackingSolution = study.solve();
-kneeTrackingSolution.write('Kneeflexion_solution.sto');
+Logger.addSink(JavaLogSink());
+kneeTrackingSolution.write('Kneeflexion_solution_Degroot.sto');
 % study.visualize(kneeTrackingSolution   );
 %%
 
