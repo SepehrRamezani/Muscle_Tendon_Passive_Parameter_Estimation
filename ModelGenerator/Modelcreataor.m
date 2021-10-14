@@ -21,15 +21,25 @@ for m = 0:osismmodel.getForceSet().getSize()-1
         if ~strcmp(char(frcset.getName()), 'knee_act')
             
             musc=Muscle.safeDownCast(frcset);
-            musc.set_min_control(0.01);
-            musc.set_max_control(0.01);
-            musc.set_ignore_activation_dynamics(true);
+            
+            
             if DeGrooteflage
-                musc.set_ignore_tendon_compliance(true);
+                %                  musc.set_ignore_tendon_compliance(true);
                 dgf = DeGrooteFregly2016Muscle.safeDownCast(musc);
+%                 dgf.set_default_activation(0);
+                dgf.set_min_control(0.0);
+                dgf.set_max_control(0.0);
                 dgf.set_active_force_width_scale(1);
+%                 dgf.setExcitation(0.0)
                 dgf.set_tendon_compliance_dynamics_mode('implicit');
+                %                  dgf.set_ignore_passive_fiber_force(true);
+            else
+                musc.set_min_control(0.0);
+                musc.set_max_control(0.0);
+                musc.set_ignore_activation_dynamics(true);
+                
             end
+            
             
             % if strcmp(char(musc.getName()), 'soleus_r')
             %   dgf.set_active_force_width_scale(10);
