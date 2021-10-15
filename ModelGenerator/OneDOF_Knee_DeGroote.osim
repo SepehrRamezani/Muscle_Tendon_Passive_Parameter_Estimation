@@ -1103,7 +1103,7 @@
 					<coordinates>
 						<Coordinate name="hip_flexion_r">
 							<!--The value of this coordinate before any value has been set. Rotational coordinate value is in radians and Translational in meters.-->
-							<default_value>1.5707963266646681</default_value>
+							<default_value>1.5707963267948966</default_value>
 							<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 							<default_speed_value>0</default_speed_value>
 							<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
@@ -1756,7 +1756,7 @@
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
 					<ignore_tendon_compliance>false</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-					<ignore_activation_dynamics>false</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--Smaller value means activation can increase more rapidly. Default: 0.015 seconds.-->
 					<activation_time_constant>0.01</activation_time_constant>
 					<!--Smaller value means activation can decrease more rapidly. Default: 0.060 seconds.-->
@@ -1834,7 +1834,7 @@
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
 					<ignore_tendon_compliance>true</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-					<ignore_activation_dynamics>false</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--Smaller value means activation can increase more rapidly. Default: 0.015 seconds.-->
 					<activation_time_constant>0.01</activation_time_constant>
 					<!--Smaller value means activation can decrease more rapidly. Default: 0.060 seconds.-->
@@ -1920,7 +1920,7 @@
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
 					<ignore_tendon_compliance>false</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-					<ignore_activation_dynamics>false</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--Smaller value means activation can increase more rapidly. Default: 0.015 seconds.-->
 					<activation_time_constant>0.01</activation_time_constant>
 					<!--Smaller value means activation can decrease more rapidly. Default: 0.060 seconds.-->
@@ -2006,7 +2006,89 @@
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
 					<ignore_tendon_compliance>false</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-					<ignore_activation_dynamics>false</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
+					<!--Smaller value means activation can increase more rapidly. Default: 0.015 seconds.-->
+					<activation_time_constant>0.01</activation_time_constant>
+					<!--Smaller value means activation can decrease more rapidly. Default: 0.060 seconds.-->
+					<deactivation_time_constant>0.040000000000000001</deactivation_time_constant>
+					<!--Value of activation in the default state returned by initSystem(). Default: 0.5.-->
+					<default_activation>0.01</default_activation>
+					<!--Scale factor for the width of the active force-length curve. Larger values make the curve wider. Default: 1.0.-->
+					<active_force_width_scale>1</active_force_width_scale>
+					<!--Use this property to define the linear damping force that is added to the total muscle fiber force. It is computed by multiplying this damping parameter by the normalized fiber velocity and the max isometric force. Default: 0.-->
+					<fiber_damping>0.01</fiber_damping>
+					<!--Fiber strain when the passive fiber force is 1 normalized force. Default: 0.6.-->
+					<passive_fiber_strain_at_one_norm_force>0.69999999999999996</passive_fiber_strain_at_one_norm_force>
+					<!--Tendon strain at a tension of 1 normalized force. Default: 0.049.-->
+					<tendon_strain_at_one_norm_force>0.049000000000000002</tendon_strain_at_one_norm_force>
+					<!--The dynamics method used to enforce tendon compliance dynamics. Options: 'explicit' or 'implicit'. Default: 'explicit'. -->
+					<tendon_compliance_dynamics_mode>implicit</tendon_compliance_dynamics_mode>
+				</DeGrooteFregly2016Muscle>
+				<DeGrooteFregly2016Muscle name="sart_r">
+					<!--Flag indicating whether the force is applied or not. If true the forceis applied to the MultibodySystem otherwise the force is not applied.NOTE: Prior to OpenSim 4.0, this behavior was controlled by the 'isDisabled' property, where 'true' meant that force was not being applied. Thus, if 'isDisabled' is true, then 'appliesForce` is false.-->
+					<appliesForce>true</appliesForce>
+					<!--Minimum allowed value for control signal. Used primarily when solving for control values.-->
+					<min_control>0</min_control>
+					<!--Maximum allowed value for control signal. Used primarily when solving for control values.-->
+					<max_control>0</max_control>
+					<!--The set of points defining the path of the actuator.-->
+					<GeometryPath name="geometrypath">
+						<!--The set of points defining the path-->
+						<PathPointSet>
+							<objects>
+								<PathPoint name="sart_r-P1">
+									<!--Path to a Component that satisfies the Socket 'parent_frame' of type PhysicalFrame (description: The frame in which this path point is defined.).-->
+									<socket_parent_frame>/bodyset/pelvis</socket_parent_frame>
+									<!--The fixed location of the path point expressed in its parent frame.-->
+									<location>-0.024270300000000002 -0.015626000000000001 0.126441</location>
+								</PathPoint>
+								<PathPoint name="sart_r-P2">
+									<!--Path to a Component that satisfies the Socket 'parent_frame' of type PhysicalFrame (description: The frame in which this path point is defined.).-->
+									<socket_parent_frame>/bodyset/femur_r</socket_parent_frame>
+									<!--The fixed location of the path point expressed in its parent frame.-->
+									<location>-0.0028739999999999998 -0.34181400000000001 -0.040331800000000001</location>
+								</PathPoint>
+								<PathPoint name="sart_r-P3">
+									<!--Path to a Component that satisfies the Socket 'parent_frame' of type PhysicalFrame (description: The frame in which this path point is defined.).-->
+									<socket_parent_frame>/bodyset/tibia_r</socket_parent_frame>
+									<!--The fixed location of the path point expressed in its parent frame.-->
+									<location>-0.028839900000000002 -0.046074900000000002 -0.041938499999999997</location>
+								</PathPoint>
+								<PathPoint name="sart_r-P4">
+									<!--Path to a Component that satisfies the Socket 'parent_frame' of type PhysicalFrame (description: The frame in which this path point is defined.).-->
+									<socket_parent_frame>/bodyset/tibia_r</socket_parent_frame>
+									<!--The fixed location of the path point expressed in its parent frame.-->
+									<location>-0.0182691 -0.0688251 -0.030333599999999999</location>
+								</PathPoint>
+								<PathPoint name="sart_r-P5">
+									<!--Path to a Component that satisfies the Socket 'parent_frame' of type PhysicalFrame (description: The frame in which this path point is defined.).-->
+									<socket_parent_frame>/bodyset/tibia_r</socket_parent_frame>
+									<!--The fixed location of the path point expressed in its parent frame.-->
+									<location>0.015626399999999999 -0.093068999999999999 -0.0029873999999999999</location>
+								</PathPoint>
+							</objects>
+							<groups />
+						</PathPointSet>
+						<!--Default appearance attributes for this GeometryPath-->
+						<Appearance>
+							<!--The color, (red, green, blue), [0, 1], used to display the geometry. -->
+							<color>0.80000000000000004 0.10000000000000001 0.10000000000000001</color>
+						</Appearance>
+					</GeometryPath>
+					<!--Maximum isometric force that the fibers can generate-->
+					<max_isometric_force>265.44644107773399</max_isometric_force>
+					<!--Optimal length of the muscle fibers-->
+					<optimal_fiber_length>0.40353075175004199</optimal_fiber_length>
+					<!--Resting length of the tendon-->
+					<tendon_slack_length>0.12416313820155001</tendon_slack_length>
+					<!--Angle between tendon and fibers at optimal fiber length expressed in radians-->
+					<pennation_angle_at_optimal>0.026135419999999999</pennation_angle_at_optimal>
+					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
+					<max_contraction_velocity>15</max_contraction_velocity>
+					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
+					<ignore_tendon_compliance>true</ignore_tendon_compliance>
+					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--Smaller value means activation can increase more rapidly. Default: 0.015 seconds.-->
 					<activation_time_constant>0.01</activation_time_constant>
 					<!--Smaller value means activation can decrease more rapidly. Default: 0.060 seconds.-->
@@ -2084,7 +2166,7 @@
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
 					<ignore_tendon_compliance>false</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-					<ignore_activation_dynamics>false</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--Smaller value means activation can increase more rapidly. Default: 0.015 seconds.-->
 					<activation_time_constant>0.01</activation_time_constant>
 					<!--Smaller value means activation can decrease more rapidly. Default: 0.060 seconds.-->
@@ -2168,7 +2250,7 @@
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
 					<ignore_tendon_compliance>false</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-					<ignore_activation_dynamics>false</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--Smaller value means activation can increase more rapidly. Default: 0.015 seconds.-->
 					<activation_time_constant>0.01</activation_time_constant>
 					<!--Smaller value means activation can decrease more rapidly. Default: 0.060 seconds.-->
@@ -2264,7 +2346,7 @@
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
 					<ignore_tendon_compliance>false</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-					<ignore_activation_dynamics>false</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--Smaller value means activation can increase more rapidly. Default: 0.015 seconds.-->
 					<activation_time_constant>0.01</activation_time_constant>
 					<!--Smaller value means activation can decrease more rapidly. Default: 0.060 seconds.-->
@@ -2360,7 +2442,7 @@
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
 					<ignore_tendon_compliance>false</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-					<ignore_activation_dynamics>false</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--Smaller value means activation can increase more rapidly. Default: 0.015 seconds.-->
 					<activation_time_constant>0.01</activation_time_constant>
 					<!--Smaller value means activation can decrease more rapidly. Default: 0.060 seconds.-->
@@ -2456,7 +2538,7 @@
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
 					<ignore_tendon_compliance>false</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
-					<ignore_activation_dynamics>false</ignore_activation_dynamics>
+					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--Smaller value means activation can increase more rapidly. Default: 0.015 seconds.-->
 					<activation_time_constant>0.01</activation_time_constant>
 					<!--Smaller value means activation can decrease more rapidly. Default: 0.060 seconds.-->

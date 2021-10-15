@@ -1,11 +1,16 @@
 clear all
 import org.opensim.modeling.*;
 % SimMusclename=["knee_act","bflh_r","bfsh_r","gaslat_r","gasmed_r","recfem_r","sart_r","semimem_r","semiten_r","tfl_r","vasint_r","vaslat_r","vasmed_r"];
-SimMusclename=["knee_act","bflh_r","bfsh_r","gaslat_r","gasmed_r","recfem_r","semimem_r","semiten_r","vasint_r","vaslat_r","vasmed_r"];
+SimMusclename=["knee_act","bflh_r","bfsh_r","gaslat_r","gasmed_r","sart_r","semimem_r","semiten_r","vasint_r","vaslat_r","vasmed_r"];
 % SimMusclename=["knee_act"];
 Logger.addSink(JavaLogSink());
 osismmodel = Model('subject_walk_armless_RLeg_justknee.osim');
 osismmodel.finalizeConnections();
+%% setup hip_felexion angle
+modelCoordSet = osismmodel.getCoordinateSet();
+currentcoord = modelCoordSet.get(0);
+currentcoord.setDefaultValue(90/180*pi());
+%% setup muscle properties
 DeGrooteflage=1;
 if DeGrooteflage
     DeGrooteFregly2016Muscle().replaceMuscles(osismmodel);
@@ -20,24 +25,20 @@ for m = 0:osismmodel.getForceSet().getSize()-1
         c=c+1;
         if ~strcmp(char(frcset.getName()), 'knee_act')
             
-            musc=Muscle.safeDownCast(frcset);
-            
+            musc=Muscle.safeDownCast(frcset);   
+            musc.set_ignore_activation_dynamics(true);
             
             if DeGrooteflage
-                %                  musc.set_ignore_tendon_compliance(true);
+%                  musc.set_ignore_tendon_compliance(true);
                 dgf = DeGrooteFregly2016Muscle.safeDownCast(musc);
-%                 dgf.set_default_activation(0);
                 dgf.set_min_control(0.0);
                 dgf.set_max_control(0.0);
                 dgf.set_active_force_width_scale(1);
-%                 dgf.setExcitation(0.0)
                 dgf.set_tendon_compliance_dynamics_mode('implicit');
-                %                  dgf.set_ignore_passive_fiber_force(true);
+                %  dgf.set_ignore_passive_fiber_force(true);
             else
                 musc.set_min_control(0.0);
                 musc.set_max_control(0.0);
-                musc.set_ignore_activation_dynamics(true);
-                
             end
             
             

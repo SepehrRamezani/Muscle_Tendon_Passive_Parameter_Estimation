@@ -1,6 +1,7 @@
 clear all
 import org.opensim.modeling.*;
-ModelPath=[cd '\..\ModelGenerator\subject_walk_armless_DeGroote.osim'];
+ModelPath=[cd '\..\ModelGenerator\OneDOF_Knee_DeGroote.osim'];
+Logger.addSink(JavaLogSink());
 %% Initialze parameters
 osimmodel = Model(ModelPath);
 ControlWight=1.0/osimmodel.getForceSet().getSize();
@@ -44,7 +45,7 @@ solver = study.initCasADiSolver();
 solver.set_num_mesh_intervals(Solverinterval);
 solver.set_verbosity(2);
 solver.set_optim_solver('ipopt');
-solver.set_optim_convergence_tolerance(1e-4);
+solver.set_optim_convergence_tolerance(1e-3);
 solver.set_optim_constraint_tolerance(1e-1);
 solver.set_optim_max_iterations(3000);
 solver.set_implicit_auxiliary_derivatives_weight(0.00001)
