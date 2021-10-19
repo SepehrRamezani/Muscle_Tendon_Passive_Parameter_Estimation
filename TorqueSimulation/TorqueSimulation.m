@@ -1,4 +1,5 @@
 clear all
+pause(30)
 import org.opensim.modeling.*;
 ModelPath=[cd '\..\ModelGenerator\OneDOF_Knee_DeGroote.osim'];
 Logger.addSink(JavaLogSink());

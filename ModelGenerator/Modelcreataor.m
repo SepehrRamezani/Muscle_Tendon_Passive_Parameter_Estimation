@@ -7,9 +7,14 @@ Logger.addSink(JavaLogSink());
 osismmodel = Model('subject_walk_armless_RLeg_justknee.osim');
 osismmodel.finalizeConnections();
 %% setup hip_felexion angle
+modeljointSet=osismmodel.getJointSet();
+Hipjoint=modeljointSet.get(0);
+Hipweldjoint=WeldJoint.safeDownCast(Hipjoint);
+hipfram=Hipweldjoint.get_frames (0);
+hipfram.set_orientation(Vec3(0,0,90/180*pi()));
 modelCoordSet = osismmodel.getCoordinateSet();
 currentcoord = modelCoordSet.get(0);
-currentcoord.setDefaultValue(90/180*pi());
+currentcoord.setDefaultValue(0/180*pi());
 %% setup muscle properties
 DeGrooteflage=1;
 if DeGrooteflage
