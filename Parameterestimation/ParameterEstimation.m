@@ -2,17 +2,20 @@ clear all
 % pause(30)
 import org.opensim.modeling.*;
 Logger.addSink(JavaLogSink());
-osismmodel = Model('subject_walk_armless_Thelen.osim');
+ModelPath=[cd '\..\ModelGenerator\OneDOF_Knee_DeGroote.osim'];
+SimulPath=[cd '\..\TorqueSimulation\Kneeflexion_solution_Degroot_Hip90.sto'];
+osismmodel = Model(ModelPath);
 w=1/osismmodel.getForceSet().getSize();
+
+osismmodel.getMuscles().getName;
 % pq = 1.0/osismmodel.getNumCoordinates();
 pq = 1.0;
-%% define problem
+%% Define tracking problem
 track = MocoTrack();
 track.setName('kneestateTracking');
 stateTrackingWeight = 0.25;
-
-tableProcessor = TableProcessor('Kneeflexion_solution.sto');
-tableProcessor.append(TabOpLowPassFilter(6));
+tableProcessor = TableProcessor(SimulPath);
+tableProcessor.append(TabOpLowPassFilter(2));
 modelProcessor = ModelProcessor(osismmodel);
 track.setModel(modelProcessor);
 track.setStatesReference(tableProcessor);
@@ -29,22 +32,17 @@ stateWeights.cloneAndAppend(MocoWeight('/jointset/walker_knee_r/knee_angle_r/spe
 track.set_states_weight_set(stateWeights);
 study = track.initialize();
 problem = study.updProblem();
-
 ContTracking = MocoControlTrackingGoal('kneeControlTracking');
 ContTracking.setWeight(w);
-controlsRef = TableProcessor('Kneeflexion_solution.sto');
-ContTracking.setReference(controlsRef);
-
-ContTracking.setReferenceLabel('/forceset/bflh_r','/forceset/bflh_r');
-ContTracking.setReferenceLabel('/forceset/bfsh_r','/forceset/bfsh_r');
-ContTracking.setReferenceLabel('/forceset/gaslat_r','/forceset/gaslat_r');
-ContTracking.setReferenceLabel('/forceset/gasmed_r','/forceset/gasmed_r');
-ContTracking.setReferenceLabel('/forceset/recfem_r','/forceset/recfem_r');
-ContTracking.setReferenceLabel('/forceset/semimem_r','/forceset/semimem_r');
-ContTracking.setReferenceLabel('/forceset/semiten_r','/forceset/semiten_r');
-ContTracking.setReferenceLabel('/forceset/vasint_r','/forceset/vasint_r');
-ContTracking.setReferenceLabel('/forceset/vaslat_r','/forceset/vaslat_r');
-ContTracking.setReferenceLabel('/forceset/vasmed_r','/forceset/vasmed_r');
+% controlsRef = TableProcessor('Kneeflexion_solution.sto');
+ContTracking.setReference(tableProcessor);
+for i=0:1:osismmodel.getMuscles().getSize()-1
+    Musname = osismmodel.updMuscles().get(i).getName();
+    MusPath=append('/forceset/',char(Musname));
+    ContTracking.setReferenceLabel(MusPath,MusPath);
+    param = MocoParameter(append('max_isometric_force_',char(Musname)),MusPath,'passive_fiber_strain_at_one_norm_force', MocoBounds(0.2,0.8));
+    problem.addParameter(param);
+end
 ContTracking.setReferenceLabel('/forceset/knee_act','/forceset/knee_act');
 ContTracking.setWeightForControl('/forceset/knee_act',10);
 problem.addGoal(ContTracking)
@@ -58,15 +56,6 @@ model.initSystem();
 %% define parameter 
 problem.setStateInfo('/jointset/walker_knee_r/knee_angle_r/value',[0, 1.6]);
 %% optimal_fiber_length
-% param = MocoParameter('Test', '/forceset/bflh_r/geometrypath/bflh_r-P1/','location', MocoBounds(0,1),1);
-param = MocoParameter('max_isometric_force_bflh', '/forceset/bflh_r','max_isometric_force', MocoBounds(1000,7000));
-param2 = MocoParameter('max_isometric_force_vaslat', '/forceset/vaslat_r', 'max_isometric_force', MocoBounds(1000,7000));
-param3 = MocoParameter('max_isometric_force_Semimem', '/forceset/semimem_r', 'max_isometric_force', MocoBounds(1000,7000));
-param4 = MocoParameter('max_isometric_force_vasmed', '/forceset/vasmed_r', 'max_isometric_force', MocoBounds(1000,7000));
-problem.addParameter(param);
-problem.addParameter(param2);
-problem.addParameter(param3);
-problem.addParameter(param4);
 solver = study.initCasADiSolver();
 %% define solver
 solver.set_num_mesh_intervals(20);
