@@ -6,8 +6,9 @@ ModelPath=[cd '\..\ModelGenerator\OneDOF_Knee_DeGroote.osim'];
 SimulPath=[cd '\..\TorqueSimulation\Kneeflexion_solution_Degroot_Hip90.sto'];
 osismmodel = Model(ModelPath);
 w=1/osismmodel.getForceSet().getSize();
+%% find the bondray for tendon slack lenght
 
-osismmodel.getMuscles().getName;
+
 % pq = 1.0/osismmodel.getNumCoordinates();
 pq = 1.0;
 %% Define tracking problem
@@ -15,7 +16,7 @@ track = MocoTrack();
 track.setName('kneestateTracking');
 stateTrackingWeight = 0.25;
 tableProcessor = TableProcessor(SimulPath);
-tableProcessor.append(TabOpLowPassFilter(2));
+% tableProcessor.append(TabOpLowPassFilter(2));
 modelProcessor = ModelProcessor(osismmodel);
 track.setModel(modelProcessor);
 track.setStatesReference(tableProcessor);
@@ -24,7 +25,7 @@ track.set_allow_unused_references(true);
 track.set_track_reference_position_derivatives(true);
 track.set_apply_tracked_states_to_guess(true);
 track.set_initial_time(0);
-track.set_final_time(6);
+track.set_final_time(20);
 track.set_minimize_control_effort(false);
 stateWeights = MocoWeightSet();
 stateWeights.cloneAndAppend(MocoWeight('/jointset/walker_knee_r/knee_angle_r/value',pq));
@@ -40,9 +41,10 @@ for i=0:1:osismmodel.getMuscles().getSize()-1
     Musname = osismmodel.updMuscles().get(i).getName();
     MusPath=append('/forceset/',char(Musname));
     ContTracking.setReferenceLabel(MusPath,MusPath);
-    param = MocoParameter(append('max_isometric_force_',char(Musname)),MusPath,'passive_fiber_strain_at_one_norm_force', MocoBounds(0.2,0.8));
+    param = MocoParameter(append('passive_fiber_strain_at_one_norm_force',char(Musname)),MusPath,'passive_fiber_strain_at_one_norm_force', MocoBounds(0.2,0.8));
     problem.addParameter(param);
 end
+
 ContTracking.setReferenceLabel('/forceset/knee_act','/forceset/knee_act');
 ContTracking.setWeightForControl('/forceset/knee_act',10);
 problem.addGoal(ContTracking)
@@ -61,7 +63,7 @@ solver = study.initCasADiSolver();
 solver.set_num_mesh_intervals(20);
 solver.set_verbosity(2);
 solver.set_optim_solver('ipopt');
-solver.set_optim_convergence_tolerance(1e-5);
+solver.set_optim_convergence_tolerance(1e-4);
 solver.set_optim_constraint_tolerance(1e-1);
 solver.set_optim_max_iterations(3000);
 solver.set_implicit_auxiliary_derivatives_weight(0.00001)
