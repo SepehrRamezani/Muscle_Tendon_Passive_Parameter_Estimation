@@ -360,3 +360,112 @@
 [2021-10-19 18:32:31.232] [warning] MocoCasADiSolver did NOT succeed:
 [2021-10-19 18:32:31.233] [warning]   Maximum_Iterations_Exceeded
 [2021-10-19 18:32:31.233] [info] ========================================================================
+[2021-10-20 10:59:18.722] [info] Loaded model OneDof_KneeFl from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\Parameterestimation\..\ModelGenerator\OneDOF_Knee_DeGroote.osim
+[2021-10-20 10:59:18.724] [warning] Couldn't find file 'r_pelvis.vtp'.
+[2021-10-20 10:59:18.724] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-10-20 10:59:18.724] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-10-20 10:59:18.725] [warning] Couldn't find file 'r_femur.vtp'.
+[2021-10-20 10:59:18.725] [warning] Couldn't find file 'r_tibia.vtp'.
+[2021-10-20 10:59:18.726] [warning] Couldn't find file 'r_fibula.vtp'.
+[2021-10-20 10:59:18.727] [warning] Couldn't find file 'r_patella.vtp'.
+[2021-10-20 10:59:18.727] [warning] Couldn't find file 'r_talus.vtp'.
+[2021-10-20 10:59:18.727] [warning] Couldn't find file 'r_foot.vtp'.
+[2021-10-20 10:59:18.727] [warning] Couldn't find file 'r_bofoot.vtp'.
+[2021-10-20 10:59:20.861] [info] ========================================================================
+[2021-10-20 10:59:20.861] [info] MocoCasADiSolver starting.
+[2021-10-20 10:59:20.861] [info] 10/20/2021 10:59:20 AM
+[2021-10-20 10:59:20.861] [info] ------------------------------------------------------------------------
+[2021-10-20 10:59:20.862] [cout] [info] Costs: (total: 2)
+[2021-10-20 10:59:20.862] [cout] [info]   state_tracking. MocoStateTrackingGoal, enabled: true, mode: cost, weight: 0.25
+[2021-10-20 10:59:20.862] [cout] [info]         state: /jointset/hip_r/hip_flexion_r/value, weight: 0.0
+[2021-10-20 10:59:20.862] [cout] [info]         state: /jointset/walker_knee_r/knee_angle_r/value, weight: 1.0
+[2021-10-20 10:59:20.862] [cout] [info]         state: /jointset/patellofemoral_r/knee_angle_r_beta/value, weight: 0.0
+[2021-10-20 10:59:20.862] [cout] [info]         state: /jointset/ankle_r/ankle_angle_r/value, weight: 0.0
+[2021-10-20 10:59:20.862] [cout] [info]         state: /jointset/hip_r/hip_flexion_r/speed, weight: 0.0
+[2021-10-20 10:59:20.862] [cout] [info]         state: /jointset/walker_knee_r/knee_angle_r/speed, weight: 0.000100000
+[2021-10-20 10:59:20.862] [cout] [info]         state: /jointset/patellofemoral_r/knee_angle_r_beta/speed, weight: 0.0
+[2021-10-20 10:59:20.862] [cout] [info]         state: /jointset/ankle_r/ankle_angle_r/speed, weight: 0.0
+[2021-10-20 10:59:20.862] [cout] [info]         state: /forceset/bflh_r/normalized_tendon_force, weight: 1.0
+[2021-10-20 10:59:20.862] [cout] [info]         state: /forceset/gaslat_r/normalized_tendon_force, weight: 1.0
+[2021-10-20 10:59:20.862] [cout] [info]         state: /forceset/gasmed_r/normalized_tendon_force, weight: 1.0
+[2021-10-20 10:59:20.862] [cout] [info]         state: /forceset/semimem_r/normalized_tendon_force, weight: 1.0
+[2021-10-20 10:59:20.862] [cout] [info]         state: /forceset/semiten_r/normalized_tendon_force, weight: 1.0
+[2021-10-20 10:59:20.862] [cout] [info]         state: /forceset/vasint_r/normalized_tendon_force, weight: 1.0
+[2021-10-20 10:59:20.862] [cout] [info]         state: /forceset/vaslat_r/normalized_tendon_force, weight: 1.0
+[2021-10-20 10:59:20.862] [cout] [info]         state: /forceset/vasmed_r/normalized_tendon_force, weight: 1.0
+[2021-10-20 10:59:20.863] [cout] [info]   kneeControlTracking. MocoControlTrackingGoal, enabled: true, mode: cost, weight: 0.0909091
+[2021-10-20 10:59:20.863] [cout] [info]         control: /forceset/bflh_r, reference label: /forceset/bflh_r, weight: 1.0
+[2021-10-20 10:59:20.863] [cout] [info]         control: /forceset/bfsh_r, reference label: /forceset/bfsh_r, weight: 1.0
+[2021-10-20 10:59:20.863] [cout] [info]         control: /forceset/gaslat_r, reference label: /forceset/gaslat_r, weight: 1.0
+[2021-10-20 10:59:20.863] [cout] [info]         control: /forceset/gasmed_r, reference label: /forceset/gasmed_r, weight: 1.0
+[2021-10-20 10:59:20.863] [cout] [info]         control: /forceset/knee_act, reference label: /forceset/knee_act, weight: 10.0
+[2021-10-20 10:59:20.863] [cout] [info]         control: /forceset/sart_r, reference label: /forceset/sart_r, weight: 1.0
+[2021-10-20 10:59:20.863] [cout] [info]         control: /forceset/semimem_r, reference label: /forceset/semimem_r, weight: 1.0
+[2021-10-20 10:59:20.863] [cout] [info]         control: /forceset/semiten_r, reference label: /forceset/semiten_r, weight: 1.0
+[2021-10-20 10:59:20.863] [cout] [info]         control: /forceset/vasint_r, reference label: /forceset/vasint_r, weight: 1.0
+[2021-10-20 10:59:20.863] [cout] [info]         control: /forceset/vaslat_r, reference label: /forceset/vaslat_r, weight: 1.0
+[2021-10-20 10:59:20.863] [cout] [info]         control: /forceset/vasmed_r, reference label: /forceset/vasmed_r, weight: 1.0
+[2021-10-20 10:59:20.863] [cout] [info] Endpoint constraints: none
+[2021-10-20 10:59:20.863] [cout] [info] Kinematic constraints: (total: 3)
+[2021-10-20 10:59:20.863] [cout] [info]   kinematic_constraint_cid0. MocoConstraintInfo. number of scalar equations: 3. bounds: 0, 0, 0
+[2021-10-20 10:59:20.864] [cout] [info]   kinematic_constraint_cid3. MocoConstraintInfo. number of scalar equations: 3. bounds: 0, 0, 0
+[2021-10-20 10:59:20.864] [cout] [info]   kinematic_constraint_cid4. MocoConstraintInfo. number of scalar equations: 3. bounds: 0, 0, 0
+[2021-10-20 10:59:20.864] [cout] [info] Path constraints: none
+[2021-10-20 10:59:20.864] [cout] [info] States: (total: 16)
+[2021-10-20 10:59:20.864] [cout] [info]   /jointset/walker_knee_r/knee_angle_r/value. bounds: [0, 1.6]
+[2021-10-20 10:59:20.864] [cout] [info]   /forceset/bflh_r/normalized_tendon_force. bounds: [0, 5]
+[2021-10-20 10:59:20.864] [cout] [info]   /forceset/gaslat_r/normalized_tendon_force. bounds: [0, 5]
+[2021-10-20 10:59:20.864] [cout] [info]   /forceset/gasmed_r/normalized_tendon_force. bounds: [0, 5]
+[2021-10-20 10:59:20.864] [cout] [info]   /forceset/semimem_r/normalized_tendon_force. bounds: [0, 5]
+[2021-10-20 10:59:20.864] [cout] [info]   /forceset/semiten_r/normalized_tendon_force. bounds: [0, 5]
+[2021-10-20 10:59:20.864] [cout] [info]   /forceset/vasint_r/normalized_tendon_force. bounds: [0, 5]
+[2021-10-20 10:59:20.864] [cout] [info]   /forceset/vaslat_r/normalized_tendon_force. bounds: [0, 5]
+[2021-10-20 10:59:20.864] [cout] [info]   /forceset/vasmed_r/normalized_tendon_force. bounds: [0, 5]
+[2021-10-20 10:59:20.864] [cout] [info]   /jointset/ankle_r/ankle_angle_r/value. bounds: [-0.4, 0.4]
+[2021-10-20 10:59:20.864] [cout] [info]   /jointset/hip_r/hip_flexion_r/value. bounds: [-0.523599, 2.0944]
+[2021-10-20 10:59:20.864] [cout] [info]   /jointset/ankle_r/ankle_angle_r/speed. bounds: [-50, 50]
+[2021-10-20 10:59:20.865] [cout] [info]   /jointset/hip_r/hip_flexion_r/speed. bounds: [-50, 50]
+[2021-10-20 10:59:20.865] [cout] [info]   /jointset/walker_knee_r/knee_angle_r/speed. bounds: [-50, 50]
+[2021-10-20 10:59:20.865] [cout] [info]   /jointset/patellofemoral_r/knee_angle_r_beta/value. bounds: [-99999.9, 99999.9]
+[2021-10-20 10:59:20.865] [cout] [info]   /jointset/patellofemoral_r/knee_angle_r_beta/speed. bounds: [-50, 50]
+[2021-10-20 10:59:20.865] [cout] [info] Controls: (total: 11)
+[2021-10-20 10:59:20.865] [cout] [info]   /forceset/semiten_r. bounds: 0
+[2021-10-20 10:59:20.865] [cout] [info]   /forceset/knee_act. bounds: [-1, 1]
+[2021-10-20 10:59:20.865] [cout] [info]   /forceset/bflh_r. bounds: 0
+[2021-10-20 10:59:20.865] [cout] [info]   /forceset/vaslat_r. bounds: 0
+[2021-10-20 10:59:20.865] [cout] [info]   /forceset/bfsh_r. bounds: 0
+[2021-10-20 10:59:20.865] [cout] [info]   /forceset/gaslat_r. bounds: 0
+[2021-10-20 10:59:20.865] [cout] [info]   /forceset/gasmed_r. bounds: 0
+[2021-10-20 10:59:20.866] [cout] [info]   /forceset/sart_r. bounds: 0
+[2021-10-20 10:59:20.866] [cout] [info]   /forceset/semimem_r. bounds: 0
+[2021-10-20 10:59:20.866] [cout] [info]   /forceset/vasint_r. bounds: 0
+[2021-10-20 10:59:20.866] [cout] [info]   /forceset/vasmed_r. bounds: 0
+[2021-10-20 10:59:20.866] [cout] [info] Parameters: (total: 10)
+[2021-10-20 10:59:20.866] [cout] [info]   max_isometric_force_bflh_r. model property name: passive_fiber_strain_at_one_norm_force. component paths: /forceset/bflh_r. property element: n/a. bounds: [0.2, 0.8]
+[2021-10-20 10:59:20.866] [cout] [info]   max_isometric_force_bfsh_r. model property name: passive_fiber_strain_at_one_norm_force. component paths: /forceset/bfsh_r. property element: n/a. bounds: [0.2, 0.8]
+[2021-10-20 10:59:20.867] [cout] [info]   max_isometric_force_gaslat_r. model property name: passive_fiber_strain_at_one_norm_force. component paths: /forceset/gaslat_r. property element: n/a. bounds: [0.2, 0.8]
+[2021-10-20 10:59:20.867] [cout] [info]   max_isometric_force_gasmed_r. model property name: passive_fiber_strain_at_one_norm_force. component paths: /forceset/gasmed_r. property element: n/a. bounds: [0.2, 0.8]
+[2021-10-20 10:59:20.867] [cout] [info]   max_isometric_force_sart_r. model property name: passive_fiber_strain_at_one_norm_force. component paths: /forceset/sart_r. property element: n/a. bounds: [0.2, 0.8]
+[2021-10-20 10:59:20.867] [cout] [info]   max_isometric_force_semimem_r. model property name: passive_fiber_strain_at_one_norm_force. component paths: /forceset/semimem_r. property element: n/a. bounds: [0.2, 0.8]
+[2021-10-20 10:59:20.867] [cout] [info]   max_isometric_force_semiten_r. model property name: passive_fiber_strain_at_one_norm_force. component paths: /forceset/semiten_r. property element: n/a. bounds: [0.2, 0.8]
+[2021-10-20 10:59:20.867] [cout] [info]   max_isometric_force_vasint_r. model property name: passive_fiber_strain_at_one_norm_force. component paths: /forceset/vasint_r. property element: n/a. bounds: [0.2, 0.8]
+[2021-10-20 10:59:20.867] [cout] [info]   max_isometric_force_vaslat_r. model property name: passive_fiber_strain_at_one_norm_force. component paths: /forceset/vaslat_r. property element: n/a. bounds: [0.2, 0.8]
+[2021-10-20 10:59:20.867] [cout] [info]   max_isometric_force_vasmed_r. model property name: passive_fiber_strain_at_one_norm_force. component paths: /forceset/vasmed_r. property element: n/a. bounds: [0.2, 0.8]
+[2021-10-20 10:59:21.509] [info] Number of threads: 16
+[2021-10-20 12:18:08.825] [info] Set log level to Info.
+[2021-10-20 12:18:08.830] [info] ------------------------------------------------------------------------
+[2021-10-20 12:18:08.830] [info] Elapsed real time: 4728 second(s) (1 hour(s), 18 minute(s), 48 second(s)).
+[2021-10-20 12:18:08.830] [info] 10/20/2021 12:18:08 PM
+[2021-10-20 12:18:08.830] [info] MocoCasADiSolver succeeded!
+[2021-10-20 12:18:08.830] [info] ========================================================================
+[2021-10-21 11:38:55.573] [info] Loaded model OneDof_KneeFl from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\Parameterestimation\..\ModelGenerator\OneDOF_Knee_DeGroote.osim
+[2021-10-21 11:38:55.575] [warning] Couldn't find file 'r_pelvis.vtp'.
+[2021-10-21 11:38:55.576] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-10-21 11:38:55.576] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-10-21 11:38:55.576] [warning] Couldn't find file 'r_femur.vtp'.
+[2021-10-21 11:38:55.577] [warning] Couldn't find file 'r_tibia.vtp'.
+[2021-10-21 11:38:55.577] [warning] Couldn't find file 'r_fibula.vtp'.
+[2021-10-21 11:38:55.577] [warning] Couldn't find file 'r_patella.vtp'.
+[2021-10-21 11:38:55.578] [warning] Couldn't find file 'r_talus.vtp'.
+[2021-10-21 11:38:55.578] [warning] Couldn't find file 'r_foot.vtp'.
+[2021-10-21 11:38:55.578] [warning] Couldn't find file 'r_bofoot.vtp'.
