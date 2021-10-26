@@ -8,6 +8,9 @@ osismmodel = Model(ModelPath);
 state = osismmodel.initSystem();
 w=1/osismmodel.getForceSet().getSize();
 Qrange=pi()/2;
+Stime=0;
+Etime=5;
+Solverinterval=20;
 %% find the bondray for tendon slack lenght
 % [Musclename,maxlentgh]=FindmaxMTL(osismmodel,1.57)
 % pq = 1.0/osismmodel.getNumCoordinates();
@@ -25,12 +28,12 @@ track.set_states_global_tracking_weight(stateTrackingWeight);
 track.set_allow_unused_references(true);
 track.set_track_reference_position_derivatives(true);
 track.set_apply_tracked_states_to_guess(true);
-track.set_initial_time(0);
-track.set_final_time(20);
+track.set_initial_time(Stime);
+track.set_final_time(Etime);
 track.set_minimize_control_effort(false);
 stateWeights = MocoWeightSet();
 stateWeights.cloneAndAppend(MocoWeight('/jointset/walker_knee_r/knee_angle_r/value',pq));
-stateWeights.cloneAndAppend(MocoWeight('/jointset/walker_knee_r/knee_angle_r/speed',pq.*0.0001));
+stateWeights.cloneAndAppend(MocoWeight('/jointset/walker_knee_r/knee_angle_r/speed',pq.*0.001));
 track.set_states_weight_set(stateWeights);
 study = track.initialize();
 problem = study.updProblem();
@@ -52,7 +55,7 @@ for i=0:1:osismmodel.getMuscles().getSize()-1
     end
     maxlentgh=max(musclelength);
     %param = MocoParameter(append('passive_fiber_strain_at_one_norm_force',char(Musname)),MusPath,'passive_fiber_strain_at_one_norm_force', MocoBounds(0.2,0.8));
-    param = MocoParameter(append('tendon_slack_',char(Musname)),MusPath,'tendon_slack_length', MocoBounds(0.2*maxlentgh,maxlentgh));
+    param = MocoParameter(append('tendon_slack_',char(Musname)),MusPath,'tendon_slack_length', MocoBounds(0.2*maxlentgh,0.95*maxlentgh));
     problem.addParameter(param);
 end
 
@@ -71,7 +74,7 @@ problem.setStateInfo('/jointset/walker_knee_r/knee_angle_r/value',[0, 1.6]);
 %% optimal_fiber_length
 solver = study.initCasADiSolver();
 %% define solver
-solver.set_num_mesh_intervals(20);
+solver.set_num_mesh_intervals(Solverinterval);
 solver.set_verbosity(2);
 solver.set_optim_solver('ipopt');
 solver.set_optim_convergence_tolerance(1e-4);
