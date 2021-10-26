@@ -5,10 +5,11 @@ Logger.addSink(JavaLogSink());
 ModelPath=[cd '\..\ModelGenerator\OneDOF_Knee_DeGroote.osim'];
 SimulPath=[cd '\..\TorqueSimulation\Kneeflexion_solution_Degroot_Hip90.sto'];
 osismmodel = Model(ModelPath);
+state = osismmodel.initSystem();
 w=1/osismmodel.getForceSet().getSize();
+Qrange=pi()/2;
 %% find the bondray for tendon slack lenght
-
-
+% [Musclename,maxlentgh]=FindmaxMTL(osismmodel,1.57)
 % pq = 1.0/osismmodel.getNumCoordinates();
 pq = 1.0;
 %% Define tracking problem
@@ -41,7 +42,17 @@ for i=0:1:osismmodel.getMuscles().getSize()-1
     Musname = osismmodel.updMuscles().get(i).getName();
     MusPath=append('/forceset/',char(Musname));
     ContTracking.setReferenceLabel(MusPath,MusPath);
-    param = MocoParameter(append('passive_fiber_strain_at_one_norm_force',char(Musname)),MusPath,'passive_fiber_strain_at_one_norm_force', MocoBounds(0.2,0.8));
+    c=0;
+    % finding maximum bound of tendon slack length
+    for q=0:0.1:Qrange
+        c=c+1;
+        osismmodel.updCoordinateSet().get(1).setValue(state, q);
+        osismmodel.realizePosition(state);
+        musclelength(c)=osismmodel.getMuscles().get(i).getLength(state);
+    end
+    maxlentgh=max(musclelength);
+    %param = MocoParameter(append('passive_fiber_strain_at_one_norm_force',char(Musname)),MusPath,'passive_fiber_strain_at_one_norm_force', MocoBounds(0.2,0.8));
+    param = MocoParameter(append('tendon_slack_',char(Musname)),MusPath,'tendon_slack_length', MocoBounds(0.2*maxlentgh,maxlentgh));
     problem.addParameter(param);
 end
 
