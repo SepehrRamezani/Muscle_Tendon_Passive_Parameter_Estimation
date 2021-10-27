@@ -1,7 +1,9 @@
 clear all
 % pause(30)
 import org.opensim.modeling.*;
-Logger.addSink(JavaLogSink());
+myLog = JavaLogSink();
+Logger.addSink(myLog)
+% Logger.addSink(JavaLogSink());
 ModelPath=[cd '\..\ModelGenerator\OneDOF_Knee_DeGroote.osim'];
 SimulPath=[cd '\..\TorqueSimulation\Kneeflexion_solution_Degroot_Hip90.sto'];
 osismmodel = Model(ModelPath);
@@ -53,9 +55,9 @@ for i=0:1:osismmodel.getMuscles().getSize()-1
         osismmodel.realizePosition(state);
         musclelength(c)=osismmodel.getMuscles().get(i).getLength(state);
     end
-    maxlentgh=max(musclelength);
+    MaxTendonSlack=min(musclelength);
     %param = MocoParameter(append('passive_fiber_strain_at_one_norm_force',char(Musname)),MusPath,'passive_fiber_strain_at_one_norm_force', MocoBounds(0.2,0.8));
-    param = MocoParameter(append('tendon_slack_',char(Musname)),MusPath,'tendon_slack_length', MocoBounds(0.2*maxlentgh,0.95*maxlentgh));
+    param = MocoParameter(append('tendon_slack_',char(Musname)),MusPath,'tendon_slack_length', MocoBounds(0.2*MaxTendonSlack,MaxTendonSlack));
     problem.addParameter(param);
 end
 
@@ -77,13 +79,13 @@ solver = study.initCasADiSolver();
 solver.set_num_mesh_intervals(Solverinterval);
 solver.set_verbosity(2);
 solver.set_optim_solver('ipopt');
-solver.set_optim_convergence_tolerance(1e-4);
+solver.set_optim_convergence_tolerance(1e-3);
 solver.set_optim_constraint_tolerance(1e-1);
-solver.set_optim_max_iterations(3000);
+solver.set_optim_max_iterations(4000);
 solver.set_implicit_auxiliary_derivatives_weight(0.00001)
 solver.set_parameters_require_initsystem(false);
 solver.resetProblem(problem);
-% solver.setGuessFile('soln_track_N50_w50.sto');
+% solver.setGuessFile('Parameter_Opt_passive_fiber.sto');
 % solver.setGuess(gaitTrackingSolution);
 % problem.setControlInfo('/forceset/actuator',[0.01, 0.01]);
 kneeTrackingSolution = study.solve();
