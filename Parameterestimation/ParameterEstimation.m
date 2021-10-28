@@ -11,7 +11,7 @@ state = osismmodel.initSystem();
 w=1/osismmodel.getForceSet().getSize();
 Qrange=pi()/2;
 Stime=0;
-Etime=5;
+Etime=20;
 Solverinterval=20;
 %% find the bondray for tendon slack lenght
 % [Musclename,maxlentgh]=FindmaxMTL(osismmodel,1.57)
@@ -85,7 +85,7 @@ solver.set_optim_max_iterations(4000);
 solver.set_implicit_auxiliary_derivatives_weight(0.00001)
 solver.set_parameters_require_initsystem(false);
 solver.resetProblem(problem);
-% solver.setGuessFile('Parameter_Opt_passive_fiber.sto');
+solver.setGuessFile('Parameter_Opt.sto');
 % solver.setGuess(gaitTrackingSolution);
 % problem.setControlInfo('/forceset/actuator',[0.01, 0.01]);
 kneeTrackingSolution = study.solve();
