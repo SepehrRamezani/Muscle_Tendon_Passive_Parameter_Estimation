@@ -12,7 +12,7 @@ w=1/osismmodel.getForceSet().getSize();
 Qrange=pi()/2;
 Stime=0;
 Etime=5;
-Solverinterval=30;
+Solverinterval=20;
 %% find the bondray for tendon slack lenght
 % [Musclename,maxlentgh]=FindmaxMTL(osismmodel,1.57)
 % pq = 1.0/osismmodel.getNumCoordinates();
@@ -40,13 +40,13 @@ track.set_states_weight_set(stateWeights);
 study = track.initialize();
 problem = study.updProblem();
 ContTracking = MocoControlTrackingGoal('kneeControlTracking');
-ContTracking.setWeight(w);
+% ContTracking.setWeight(w);
 % controlsRef = TableProcessor('Kneeflexion_solution.sto');
 ContTracking.setReference(tableProcessor);
 for i=0:1:osismmodel.getMuscles().getSize()-1
     Musname = osismmodel.updMuscles().get(i).getName();
     MusPath=append('/forceset/',char(Musname));
-    ContTracking.setReferenceLabel(MusPath,MusPath);
+%     ContTracking.setReferenceLabel(MusPath,MusPath);
     c=0;
     % finding maximum bound of tendon slack length
     for q=0:0.1:Qrange
