@@ -1,8 +1,9 @@
 clear all
-pause(30)
+% pause(30)
 import org.opensim.modeling.*;
 ModelPath=[cd '\..\ModelGenerator\OneDOF_Knee_DeGroote.osim'];
-Logger.addSink(JavaLogSink());
+myLog = JavaLogSink();
+Logger.addSink(myLog)
 %% Initialze parameters
 osimmodel = Model(ModelPath);
 ControlWight=1.0/osimmodel.getForceSet().getSize();
@@ -10,10 +11,10 @@ StateWeight = 10.0/osimmodel.getNumCoordinates();
 GlobalstateTrackingWeight = 1;
 Stime=0;
 Etime=20;
-Solverinterval=50;
+Solverinterval=40;
 %% Import reference state
 tableProcessor = TableProcessor('referenceCoordinates.sto');
-tableProcessor.append(TabOpLowPassFilter(6));
+% tableProcessor.append(TabOpLowPassFilter(6));
 %% make a tracking problem 
 track = MocoTrack();
 track.setName('kneeTracking');
@@ -37,6 +38,7 @@ model.initSystem();
 %% add control costfunction
 effort = MocoControlGoal.safeDownCast(problem.updGoal('control_effort'));
 effort.setWeight(ControlWight);
+effort.setWeightForControl('/forceset/knee_act',10);
 effort.setExponent(2);
 effort.setDivideByDisplacement(false);
 %% Bounderies
@@ -53,8 +55,7 @@ solver.set_implicit_auxiliary_derivatives_weight(0.00001)
 solver.resetProblem(problem);
 solver.setGuessFile('Kneeflexion_solution_Degroot.sto');
 kneeTrackingSolution = study.solve();
-Logger.addSink(JavaLogSink());
 kneeTrackingSolution.write('Kneeflexion_solution_Degroot.sto');
-% study.visualize(kneeTrackingSolution   );
+% study.visualize(kneeTrackingSolution);
 %%
 

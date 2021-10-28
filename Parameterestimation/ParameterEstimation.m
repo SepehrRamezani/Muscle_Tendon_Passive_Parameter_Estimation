@@ -12,7 +12,7 @@ w=1/osismmodel.getForceSet().getSize();
 Qrange=pi()/2;
 Stime=0;
 Etime=5;
-Solverinterval=20;
+Solverinterval=30;
 %% find the bondray for tendon slack lenght
 % [Musclename,maxlentgh]=FindmaxMTL(osismmodel,1.57)
 % pq = 1.0/osismmodel.getNumCoordinates();
