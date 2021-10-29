@@ -56,7 +56,7 @@ for i=0:1:osismmodel.getMuscles().getSize()-1
         musclelength(c)=osismmodel.getMuscles().get(i).getLength(state);
     end
     MaxTendonSlack=min(musclelength);
-    param1= MocoParameter(append('passive_fiber_strain_at_one_norm_force',char(Musname)),MusPath,'passive_fiber_strain_at_one_norm_force', MocoBounds(0.2,0.8));
+    param1 = MocoParameter(append('passive_fiber_strain_at_one_norm_force',char(Musname)),MusPath,'passive_fiber_strain_at_one_norm_force', MocoBounds(0.2,0.8));
     param = MocoParameter(append('tendon_slack_',char(Musname)),MusPath,'tendon_slack_length', MocoBounds(0.2*MaxTendonSlack,MaxTendonSlack));
     problem.addParameter(param);
     problem.addParameter(param1);
@@ -86,7 +86,7 @@ solver.set_optim_max_iterations(4000);
 solver.set_implicit_auxiliary_derivatives_weight(0.00001)
 solver.set_parameters_require_initsystem(false);
 solver.resetProblem(problem);
-% solver.setGuessFile('Parameter_Opt.sto');
+solver.setGuessFile('Parameter_Opt.sto');
 % solver.setGuess(gaitTrackingSolution);
 % problem.setControlInfo('/forceset/actuator',[0.01, 0.01]);
 kneeTrackingSolution = study.solve();
