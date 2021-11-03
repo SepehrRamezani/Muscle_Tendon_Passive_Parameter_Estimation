@@ -3,24 +3,21 @@ clear all
 import org.opensim.modeling.*;
 myLog = JavaLogSink();
 Logger.addSink(myLog)
-% Logger.addSink(JavaLogSink());
 ModelPath=[cd '\..\ModelGenerator\OneDOF_Knee_DeGroote.osim'];
-SimulPath=[cd '\..\TorqueSimulation\Kneeflexion_solution_Degroot_Hip90.sto'];
+SimulPath=[cd '\..\TorqueSimulation\Kneeflexion_solution_Degroot.sto'];
 osimmodel = Model(ModelPath);
 state = osimmodel.initSystem();
+ControlWight=1;
 w=1/osimmodel.getForceSet().getSize();
+StateWeight = 10.0/osimmodel.getNumCoordinates();
 Qrange=pi()/2;
 Stime=0;
 Etime=20;
 Solverinterval=20;
-%% find the bondray for tendon slack lenght
-% [Musclename,maxlentgh]=FindmaxMTL(osismmodel,1.57)
-% pq = 1.0/osismmodel.getNumCoordinates();
-pq = 1.0;
 %% Define tracking problem
 track = MocoTrack();
 track.setName('kneestateTracking');
-stateTrackingWeight = 0.25;
+stateTrackingWeight = 1;
 tableProcessor = TableProcessor(SimulPath);
 % tableProcessor.append(TabOpLowPassFilter(2));
 modelProcessor = ModelProcessor(osimmodel);
@@ -34,8 +31,8 @@ track.set_initial_time(Stime);
 track.set_final_time(Etime);
 track.set_minimize_control_effort(false);
 stateWeights = MocoWeightSet();
-stateWeights.cloneAndAppend(MocoWeight('/jointset/walker_knee_r/knee_angle_r/value',pq));
-stateWeights.cloneAndAppend(MocoWeight('/jointset/walker_knee_r/knee_angle_r/speed',pq.*0.001));
+stateWeights.cloneAndAppend(MocoWeight('/jointset/walker_knee_r/knee_angle_r/value',StateWeight));
+% stateWeights.cloneAndAppend(MocoWeight('/jointset/walker_knee_r/knee_angle_r/speed',pq.*0.001));
 track.set_states_weight_set(stateWeights);
 study = track.initialize();
 problem = study.updProblem();
@@ -63,7 +60,7 @@ for i=0:1:osimmodel.getMuscles().getSize()-1
 end
 
 ContTracking.setReferenceLabel('/forceset/knee_act','/forceset/knee_act');
-ContTracking.setWeightForControl('/forceset/knee_act',10);
+ContTracking.setWeightForControl('/forceset/knee_act',ControlWight);
 problem.addGoal(ContTracking)
 model = modelProcessor.process();
 model.initSystem();
@@ -86,7 +83,7 @@ solver.set_optim_max_iterations(4000);
 solver.set_implicit_auxiliary_derivatives_weight(0.00001)
 solver.set_parameters_require_initsystem(false);
 solver.resetProblem(problem);
-% solver.setGuessFile('Parameter_Opt.sto');
+solver.setGuessFile('Parameter_Opt.sto');
 % solver.setGuess(gaitTrackingSolution);
 % problem.setControlInfo('/forceset/actuator',[0.01, 0.01]);
 kneeTrackingSolution = study.solve();

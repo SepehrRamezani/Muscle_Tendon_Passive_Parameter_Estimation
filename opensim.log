@@ -1,0 +1,44 @@
+[2021-11-03 15:05:05.884] [info] Loaded model OneDof_KneeFl from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\ModelGenerator\subject_walk_armless_RLeg_justknee.osim
+[2021-11-03 15:05:05.885] [warning] Couldn't find file 'r_pelvis.vtp'.
+[2021-11-03 15:05:05.885] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-03 15:05:05.886] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-03 15:05:05.886] [warning] Couldn't find file 'r_femur.vtp'.
+[2021-11-03 15:05:05.886] [warning] Couldn't find file 'r_tibia.vtp'.
+[2021-11-03 15:05:05.887] [warning] Couldn't find file 'r_fibula.vtp'.
+[2021-11-03 15:05:05.887] [warning] Couldn't find file 'r_patella.vtp'.
+[2021-11-03 15:05:05.887] [warning] Couldn't find file 'r_talus.vtp'.
+[2021-11-03 15:05:05.890] [warning] Couldn't find file 'r_foot.vtp'.
+[2021-11-03 15:05:05.890] [warning] Couldn't find file 'r_bofoot.vtp'.
+[2021-11-03 15:12:18.510] [info] Loaded model OneDof_KneeFl from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\ModelGenerator\subject_walk_armless_RLeg_justknee.osim
+[2021-11-03 15:12:18.511] [warning] Couldn't find file 'r_pelvis.vtp'.
+[2021-11-03 15:12:18.511] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-03 15:12:18.512] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-03 15:12:18.512] [warning] Couldn't find file 'r_femur.vtp'.
+[2021-11-03 15:12:18.512] [warning] Couldn't find file 'r_tibia.vtp'.
+[2021-11-03 15:12:18.513] [warning] Couldn't find file 'r_fibula.vtp'.
+[2021-11-03 15:12:18.513] [warning] Couldn't find file 'r_patella.vtp'.
+[2021-11-03 15:12:18.513] [warning] Couldn't find file 'r_talus.vtp'.
+[2021-11-03 15:12:18.514] [warning] Couldn't find file 'r_foot.vtp'.
+[2021-11-03 15:12:18.514] [warning] Couldn't find file 'r_bofoot.vtp'.
+[2021-11-03 15:12:47.011] [info] Loaded model OneDof_KneeFl from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\ModelGenerator\subject_walk_armless_RLeg_justknee.osim
+[2021-11-03 15:12:47.012] [warning] Couldn't find file 'r_pelvis.vtp'.
+[2021-11-03 15:12:47.013] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-03 15:12:47.013] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-03 15:12:47.013] [warning] Couldn't find file 'r_femur.vtp'.
+[2021-11-03 15:12:47.014] [warning] Couldn't find file 'r_tibia.vtp'.
+[2021-11-03 15:12:47.014] [warning] Couldn't find file 'r_fibula.vtp'.
+[2021-11-03 15:12:47.015] [warning] Couldn't find file 'r_patella.vtp'.
+[2021-11-03 15:12:47.015] [warning] Couldn't find file 'r_talus.vtp'.
+[2021-11-03 15:12:47.015] [warning] Couldn't find file 'r_foot.vtp'.
+[2021-11-03 15:12:47.016] [warning] Couldn't find file 'r_bofoot.vtp'.
+[2021-11-03 15:13:55.383] [info] Loaded model OneDof_KneeFl from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\ModelGenerator\subject_walk_armless_RLeg_justknee.osim
+[2021-11-03 15:13:55.385] [warning] Couldn't find file 'r_pelvis.vtp'.
+[2021-11-03 15:13:55.385] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-03 15:13:55.386] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-03 15:13:55.386] [warning] Couldn't find file 'r_femur.vtp'.
+[2021-11-03 15:13:55.387] [warning] Couldn't find file 'r_tibia.vtp'.
+[2021-11-03 15:13:55.387] [warning] Couldn't find file 'r_fibula.vtp'.
+[2021-11-03 15:13:55.388] [warning] Couldn't find file 'r_patella.vtp'.
+[2021-11-03 15:13:55.388] [warning] Couldn't find file 'r_talus.vtp'.
+[2021-11-03 15:13:55.389] [warning] Couldn't find file 'r_foot.vtp'.
+[2021-11-03 15:13:55.389] [warning] Couldn't find file 'r_bofoot.vtp'.
