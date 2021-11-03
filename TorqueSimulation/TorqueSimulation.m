@@ -3,10 +3,10 @@ clear all
 import org.opensim.modeling.*;
 ModelPath=[cd '\..\ModelGenerator\OneDOF_Knee_DeGroote.osim'];
 myLog = JavaLogSink();
-Logger.addSink(myLog)
+Logger.addSink(myLog);
 %% Initialze parameters
 osimmodel = Model(ModelPath);
-ControlWight=1.0/osimmodel.getForceSet().getSize();
+ControlWight=1;
 StateWeight = 10.0/osimmodel.getNumCoordinates();
 GlobalstateTrackingWeight = 1;
 Stime=0;
@@ -37,8 +37,14 @@ model = modelProcessor.process();
 model.initSystem();
 %% add control costfunction
 effort = MocoControlGoal.safeDownCast(problem.updGoal('control_effort'));
-effort.setWeight(ControlWight);
-effort.setWeightForControl('/forceset/knee_act',10);
+% effort.setWeight(1);
+effort.setWeightForControl('/forceset/knee_act',ControlWight);
+%%% disable muscles
+for i=0:1:osimmodel.getMuscles().getSize()-1
+    Musname = osimmodel.updMuscles().get(i).getName();
+    MusPath=append('/forceset/',char(Musname));
+    effort.setWeightForControl(MusPath,0);
+end
 effort.setExponent(2);
 effort.setDivideByDisplacement(false);
 %% Bounderies
