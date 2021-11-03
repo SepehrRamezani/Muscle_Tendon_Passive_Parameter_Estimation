@@ -1,7 +1,7 @@
 clear all
 import org.opensim.modeling.*;
 % SimMusclename=["knee_act","bflh_r","bfsh_r","gaslat_r","gasmed_r","recfem_r","sart_r","semimem_r","semiten_r","tfl_r","vasint_r","vaslat_r","vasmed_r"];
-SimMusclename=["knee_act","bflh_r","bfsh_r","gaslat_r","gasmed_r","recfem_r","semimem_r","semiten_r","tfl_r","vasint_r","vaslat_r","vasmed_r"];
+SimMusclename=["knee_act","bflh_r","bfsh_r","gaslat_r","gasmed_r","recfem_r","semimem_r","semiten_r","vasint_r","vaslat_r","vasmed_r"];
 % SimMusclename=["knee_act"];
 myLog = JavaLogSink();
 Logger.addSink(myLog)
@@ -10,7 +10,7 @@ osismmodel = Model('subject_walk_armless_RLeg_justknee.osim');
 % osismmodel.finalizeConnections();
 
 Qrange=90*pi()/180;
-Hipangle=90;%deg
+Hipangle=45;%deg
 %% Setup angles
 %%% Pelvis
 modeljointSet=osismmodel.getJointSet();
