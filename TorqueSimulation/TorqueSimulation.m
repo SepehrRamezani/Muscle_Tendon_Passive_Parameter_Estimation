@@ -1,19 +1,18 @@
-clear all
-% pause(30)
+function [kneeTrackingSolution]=TorqueSimulation(tableProcessor,osimmodel,Hipangle,Solverinterval,Etime)
+% ModelPath=[cd '\..\ModelGenerator\OneDOF_Knee_DeGroote.osim'];
 import org.opensim.modeling.*;
-ModelPath=[cd '\..\ModelGenerator\OneDOF_Knee_DeGroote.osim'];
-myLog = JavaLogSink();
-Logger.addSink(myLog);
+% myLog = JavaLogSink();
+% Logger.addSink(myLog);
 %% Initialze parameters
-osimmodel = Model(ModelPath);
+% osimmodel = Model(ModelPath);
 ControlWight=1;
 StateWeight = 10.0/osimmodel.getNumCoordinates();
 GlobalstateTrackingWeight = 1;
 Stime=0;
-Etime=20;
-Solverinterval=40;
+% Etime=20;
+% Solverinterval=10;
 %% Import reference state
-tableProcessor = TableProcessor('referenceCoordinates.sto');
+% tableProcessor = TableProcessor('referenceCoordinates.sto');
 % tableProcessor.append(TabOpLowPassFilter(6));
 %% make a tracking problem 
 track = MocoTrack();
@@ -59,9 +58,9 @@ solver.set_optim_constraint_tolerance(1e-1);
 solver.set_optim_max_iterations(3000);
 solver.set_implicit_auxiliary_derivatives_weight(0.00001)
 solver.resetProblem(problem);
-solver.setGuessFile('Kneeflexion_solution_Degroot.sto');
+solver.setGuessFile([cd '\TorqueSimulation\Tracking_Initial_Guess.sto']);
 kneeTrackingSolution = study.solve();
-kneeTrackingSolution.write('Kneeflexion_solution_Degroot.sto');
+kneeTrackingSolution.write([cd '\TorqueSimulation\Kneeflexion_solution_Degroot_Hip' num2str(Hipangle) '.sto']);
 % study.visualize(kneeTrackingSolution);
-%%
+end
 
