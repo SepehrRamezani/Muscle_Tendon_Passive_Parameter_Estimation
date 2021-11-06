@@ -1075,7 +1075,7 @@
 							<!--Translational offset (in meters) of this frame's origin from the parent frame's origin, expressed in the parent frame.-->
 							<translation>0 0.90000000000000002 0</translation>
 							<!--Orientation offset (in radians) of this frame in its parent frame, expressed as a frame-fixed x-y-z rotation sequence.-->
-							<orientation>0 0 1.5707963267948966</orientation>
+							<orientation>0 0 0.78539816339744828</orientation>
 						</PhysicalOffsetFrame>
 						<PhysicalOffsetFrame name="pelvis_offset">
 							<!--The geometry used to display the axes of this Frame.-->
@@ -1103,7 +1103,7 @@
 					<coordinates>
 						<Coordinate name="hip_flexion_r">
 							<!--The value of this coordinate before any value has been set. Rotational coordinate value is in radians and Translational in meters.-->
-							<default_value>0</default_value>
+							<default_value>0.78539816339744828</default_value>
 							<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 							<default_speed_value>0</default_speed_value>
 							<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
@@ -1771,6 +1771,8 @@
 					<passive_fiber_strain_at_one_norm_force>0.69999999999999996</passive_fiber_strain_at_one_norm_force>
 					<!--Tendon strain at a tension of 1 normalized force. Default: 0.049.-->
 					<tendon_strain_at_one_norm_force>0.049000000000000002</tendon_strain_at_one_norm_force>
+					<!--Make the passive fiber force 0. Default: false.-->
+					<ignore_passive_fiber_force>false</ignore_passive_fiber_force>
 					<!--The dynamics method used to enforce tendon compliance dynamics. Options: 'explicit' or 'implicit'. Default: 'explicit'. -->
 					<tendon_compliance_dynamics_mode>implicit</tendon_compliance_dynamics_mode>
 				</DeGrooteFregly2016Muscle>
@@ -1832,7 +1834,7 @@
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
 					<max_contraction_velocity>15</max_contraction_velocity>
 					<!--Compute muscle dynamics ignoring tendon compliance. Tendon is assumed to be rigid.-->
-					<ignore_tendon_compliance>true</ignore_tendon_compliance>
+					<ignore_tendon_compliance>false</ignore_tendon_compliance>
 					<!--Compute muscle dynamics ignoring activation dynamics. Activation is equivalent to excitation.-->
 					<ignore_activation_dynamics>true</ignore_activation_dynamics>
 					<!--Smaller value means activation can increase more rapidly. Default: 0.015 seconds.-->
@@ -1849,6 +1851,8 @@
 					<passive_fiber_strain_at_one_norm_force>0.69999999999999996</passive_fiber_strain_at_one_norm_force>
 					<!--Tendon strain at a tension of 1 normalized force. Default: 0.049.-->
 					<tendon_strain_at_one_norm_force>0.049000000000000002</tendon_strain_at_one_norm_force>
+					<!--Make the passive fiber force 0. Default: false.-->
+					<ignore_passive_fiber_force>false</ignore_passive_fiber_force>
 					<!--The dynamics method used to enforce tendon compliance dynamics. Options: 'explicit' or 'implicit'. Default: 'explicit'. -->
 					<tendon_compliance_dynamics_mode>implicit</tendon_compliance_dynamics_mode>
 				</DeGrooteFregly2016Muscle>
@@ -1935,6 +1939,8 @@
 					<passive_fiber_strain_at_one_norm_force>0.69999999999999996</passive_fiber_strain_at_one_norm_force>
 					<!--Tendon strain at a tension of 1 normalized force. Default: 0.049.-->
 					<tendon_strain_at_one_norm_force>0.049000000000000002</tendon_strain_at_one_norm_force>
+					<!--Make the passive fiber force 0. Default: false.-->
+					<ignore_passive_fiber_force>false</ignore_passive_fiber_force>
 					<!--The dynamics method used to enforce tendon compliance dynamics. Options: 'explicit' or 'implicit'. Default: 'explicit'. -->
 					<tendon_compliance_dynamics_mode>implicit</tendon_compliance_dynamics_mode>
 				</DeGrooteFregly2016Muscle>
@@ -2021,6 +2027,8 @@
 					<passive_fiber_strain_at_one_norm_force>0.69999999999999996</passive_fiber_strain_at_one_norm_force>
 					<!--Tendon strain at a tension of 1 normalized force. Default: 0.049.-->
 					<tendon_strain_at_one_norm_force>0.049000000000000002</tendon_strain_at_one_norm_force>
+					<!--Make the passive fiber force 0. Default: false.-->
+					<ignore_passive_fiber_force>false</ignore_passive_fiber_force>
 					<!--The dynamics method used to enforce tendon compliance dynamics. Options: 'explicit' or 'implicit'. Default: 'explicit'. -->
 					<tendon_compliance_dynamics_mode>implicit</tendon_compliance_dynamics_mode>
 				</DeGrooteFregly2016Muscle>
@@ -2117,6 +2125,8 @@
 					<passive_fiber_strain_at_one_norm_force>0.69999999999999996</passive_fiber_strain_at_one_norm_force>
 					<!--Tendon strain at a tension of 1 normalized force. Default: 0.049.-->
 					<tendon_strain_at_one_norm_force>0.049000000000000002</tendon_strain_at_one_norm_force>
+					<!--Make the passive fiber force 0. Default: false.-->
+					<ignore_passive_fiber_force>false</ignore_passive_fiber_force>
 					<!--The dynamics method used to enforce tendon compliance dynamics. Options: 'explicit' or 'implicit'. Default: 'explicit'. -->
 					<tendon_compliance_dynamics_mode>implicit</tendon_compliance_dynamics_mode>
 				</DeGrooteFregly2016Muscle>
@@ -2172,7 +2182,7 @@
 					<!--Optimal length of the muscle fibers-->
 					<optimal_fiber_length>0.067124637797777997</optimal_fiber_length>
 					<!--Resting length of the tendon-->
-					<tendon_slack_length>0.32187501872910307</tendon_slack_length>
+					<tendon_slack_length>0.33813888376453399</tendon_slack_length>
 					<!--Angle between tendon and fibers at optimal fiber length expressed in radians-->
 					<pennation_angle_at_optimal>0.25456146000000002</pennation_angle_at_optimal>
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
@@ -2195,6 +2205,8 @@
 					<passive_fiber_strain_at_one_norm_force>0.69999999999999996</passive_fiber_strain_at_one_norm_force>
 					<!--Tendon strain at a tension of 1 normalized force. Default: 0.049.-->
 					<tendon_strain_at_one_norm_force>0.049000000000000002</tendon_strain_at_one_norm_force>
+					<!--Make the passive fiber force 0. Default: false.-->
+					<ignore_passive_fiber_force>false</ignore_passive_fiber_force>
 					<!--The dynamics method used to enforce tendon compliance dynamics. Options: 'explicit' or 'implicit'. Default: 'explicit'. -->
 					<tendon_compliance_dynamics_mode>implicit</tendon_compliance_dynamics_mode>
 				</DeGrooteFregly2016Muscle>
@@ -2279,6 +2291,8 @@
 					<passive_fiber_strain_at_one_norm_force>0.69999999999999996</passive_fiber_strain_at_one_norm_force>
 					<!--Tendon strain at a tension of 1 normalized force. Default: 0.049.-->
 					<tendon_strain_at_one_norm_force>0.049000000000000002</tendon_strain_at_one_norm_force>
+					<!--Make the passive fiber force 0. Default: false.-->
+					<ignore_passive_fiber_force>false</ignore_passive_fiber_force>
 					<!--The dynamics method used to enforce tendon compliance dynamics. Options: 'explicit' or 'implicit'. Default: 'explicit'. -->
 					<tendon_compliance_dynamics_mode>implicit</tendon_compliance_dynamics_mode>
 				</DeGrooteFregly2016Muscle>
@@ -2375,6 +2389,8 @@
 					<passive_fiber_strain_at_one_norm_force>0.69999999999999996</passive_fiber_strain_at_one_norm_force>
 					<!--Tendon strain at a tension of 1 normalized force. Default: 0.049.-->
 					<tendon_strain_at_one_norm_force>0.049000000000000002</tendon_strain_at_one_norm_force>
+					<!--Make the passive fiber force 0. Default: false.-->
+					<ignore_passive_fiber_force>false</ignore_passive_fiber_force>
 					<!--The dynamics method used to enforce tendon compliance dynamics. Options: 'explicit' or 'implicit'. Default: 'explicit'. -->
 					<tendon_compliance_dynamics_mode>implicit</tendon_compliance_dynamics_mode>
 				</DeGrooteFregly2016Muscle>
@@ -2471,6 +2487,8 @@
 					<passive_fiber_strain_at_one_norm_force>0.69999999999999996</passive_fiber_strain_at_one_norm_force>
 					<!--Tendon strain at a tension of 1 normalized force. Default: 0.049.-->
 					<tendon_strain_at_one_norm_force>0.049000000000000002</tendon_strain_at_one_norm_force>
+					<!--Make the passive fiber force 0. Default: false.-->
+					<ignore_passive_fiber_force>false</ignore_passive_fiber_force>
 					<!--The dynamics method used to enforce tendon compliance dynamics. Options: 'explicit' or 'implicit'. Default: 'explicit'. -->
 					<tendon_compliance_dynamics_mode>implicit</tendon_compliance_dynamics_mode>
 				</DeGrooteFregly2016Muscle>
@@ -2567,6 +2585,8 @@
 					<passive_fiber_strain_at_one_norm_force>0.69999999999999996</passive_fiber_strain_at_one_norm_force>
 					<!--Tendon strain at a tension of 1 normalized force. Default: 0.049.-->
 					<tendon_strain_at_one_norm_force>0.049000000000000002</tendon_strain_at_one_norm_force>
+					<!--Make the passive fiber force 0. Default: false.-->
+					<ignore_passive_fiber_force>false</ignore_passive_fiber_force>
 					<!--The dynamics method used to enforce tendon compliance dynamics. Options: 'explicit' or 'implicit'. Default: 'explicit'. -->
 					<tendon_compliance_dynamics_mode>implicit</tendon_compliance_dynamics_mode>
 				</DeGrooteFregly2016Muscle>
