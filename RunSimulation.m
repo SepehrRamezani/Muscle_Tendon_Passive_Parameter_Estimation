@@ -15,18 +15,26 @@ TorqueSolverinterval=20;
 ParamSolverinterval=40;
 Etime=20;
 ce=0;
-% SimulPath=[cd '\..\TorqueSimulation\Kneeflexion_solution_Degroot.sto'];
-for Hipangle=90:45:90
+for Hipangle=0:45:90
+% Hipangle=90-Hipangle;
+SimulPath=[cd '\TorqueSimulation\Kneeflexion_solution_Degroot_Hip' num2str(Hipangle) '.sto'];
+DataTable=TableProcessor(SimulPath);
+kneeTrackingSolutionTable=DataTable.process;
 Refmmodel = Model(RefModelpath);
 ce=ce+1;
-[osimmodel,TSlack(ce,:),MinMTCLength(ce,:)]=Modelcreator(Hipangle,SimMusclename,DeGrooteflage,Refmmodel);
-[kneeTrackingSolution]=TorqueSimulation(tableProcessor,osimmodel,Hipangle,TorqueSolverinterval,Etime);
-[kneeTrackingParamSolution]=ParameterEstimation(kneeTrackingSolution.exportToStatesTable(),kneeTrackingSolution.exportToControlsTable(),osimmodel,Hipangle,MinMTCLength,ParamSolverinterval,Etime);
+[osimmodel,TSlack(ce,:),Passive,MinMTCLength(ce,:)]=Modelcreator(Hipangle,SimMusclename,DeGrooteflage,Refmmodel);
+% [kneeTrackingSolution]=TorqueSimulation(tableProcessor,osimmodel,Hipangle,TorqueSolverinterval,Etime);
+% [kneeTrackingParamSolution]=ParameterEstimation(kneeTrackingSolution.exportToStatesTable(),kneeTrackingSolution.exportToControlsTable(),osimmodel,Hipangle,MinMTCLength,ParamSolverinterval,Etime);
+[kneeTrackingParamSolution]=ParameterEstimation(kneeTrackingSolutionTable,kneeTrackingSolutionTable,osimmodel,Hipangle,MinMTCLength,ParamSolverinterval,Etime);
+
 for t=1:kneeTrackingParamSolution.getNumParameters()
-    OptimziedPar(ce,t)=kneeTrackingParamSolution.getParameters().get(t-1);  
+    OptimziedPar=kneeTrackingParamSolution.getParameters().get(t-1);  
+    OptParam1(ce,t)=OptimziedPar(1);
+    OptParam2(ce,t)=OptimziedPar(2);
 end
-Error(ce,:)=(OptimziedPar(ce,:)-TSlack(ce,:))./TSlack(ce,:).*100;
+Error1(ce,:)=(OptParam1(ce,:)-TSlack(ce,:))./TSlack(ce,:).*100;
+Error2(ce,:)=(OptParam2(ce,:)-TSlack(ce,:))./TSlack(ce,:).*100;
 ParName=kneeTrackingParamSolution.getParameterNames();
-% clear osimmodel kneeTrackingSolution kneeTrackingParamSolution
+clear osimmodel kneeTrackingSolution kneeTrackingParamSolution
 end
-bar(Error)
+% bar(Error)

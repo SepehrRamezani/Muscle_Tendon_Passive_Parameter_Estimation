@@ -1,4 +1,4 @@
-function [osimmodel,TSlack,MinMTCLength]=Modelcreator(Hipangle,SimMusclename,DeGrooteflage,osimmodel)
+function [osimmodel,TSlack,Passive,MinMTCLength]=Modelcreator(Hipangle,SimMusclename,DeGrooteflage,osimmodel)
 import org.opensim.modeling.*;
 % osimmodel = Model('subject_walk_armless_RLeg_justknee.osim');
 Qrange=90*pi()/180;
@@ -76,8 +76,11 @@ for i=0:1:osimmodel.getMuscles().getSize()-1
         TSlack(i+1)=0.98*MinMTCLength(i+1);
         CurrentMuscle.set_tendon_slack_length(TSlack(i+1));
     else
+        
         TSlack(i+1)=CurrentMuscle.get_tendon_slack_length();
     end
+%     dgf = DeGrooteFregly2016Muscle.safeDownCast(CurrentMuscle);
+        Passive(i+1)=DeGrooteFregly2016Muscle.safeDownCast(CurrentMuscle).get_passive_fiber_strain_at_one_norm_force();
 end
 osimmodel.initSystem();
 if DeGrooteflage

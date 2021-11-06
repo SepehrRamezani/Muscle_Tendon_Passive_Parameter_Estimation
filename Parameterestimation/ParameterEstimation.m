@@ -54,10 +54,10 @@ for i=0:1:osimmodel.getMuscles().getSize()-1
 %         musclelength(c)=osimmodel.getMuscles().get(i).getLength(state);
 %     end
     MaxTendonSlack=MinMTCLength(i+1);
-%     param1= MocoParameter(append('passive_fiber_strain_at_one_norm_force',char(Musname)),MusPath,'passive_fiber_strain_at_one_norm_force', MocoBounds(0.2,0.8));
+    param1= MocoParameter(append('passive_fiber_',char(Musname)),MusPath,'passive_fiber_strain_at_one_norm_force', MocoBounds(0.2,0.8));
     param = MocoParameter(append('tendon_slack_',char(Musname)),MusPath,'tendon_slack_length', MocoBounds(0.2*MaxTendonSlack,MaxTendonSlack));
     problem.addParameter(param);
-%     problem.addParameter(param1);
+    problem.addParameter(param1);
 end
 
 ContTracking.setReferenceLabel('/forceset/knee_act','/forceset/knee_act');
@@ -70,7 +70,7 @@ model.initSystem();
 % effort.setWeight(0.001);
 % effort.setExponent(2);
 % effort.setDivideByDisplacement(false);
-%% define parameter 
+%% define parameter
 problem.setStateInfo('/jointset/walker_knee_r/knee_angle_r/value',[0, 1.6]);
 %% optimal_fiber_length
 solver = study.initCasADiSolver();
@@ -85,9 +85,6 @@ solver.set_implicit_auxiliary_derivatives_weight(0.00001)
 solver.set_parameters_require_initsystem(false);
 solver.resetProblem(problem);
 % solver.setGuessFile([cd '\Parameterestimation\Parameter_Initial_Guess.sto']);
-% solver.setGuess(gaitTrackingSolution);
-% problem.setControlInfo('/forceset/actuator',[0.01, 0.01]);
 kneeTrackingParamSolution = study.solve();
 kneeTrackingParamSolution.write([cd '\Parameterestimation\Parameter_Opt_Hip' num2str(Hipangle) '.sto']);
-% study.visualize(kneeTrackingSolution   );
 end
