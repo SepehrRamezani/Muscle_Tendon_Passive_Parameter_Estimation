@@ -1,0 +1,884 @@
+[2021-11-11 15:22:50.838] [info] Loaded model subject01 from file gait2392_simbody_scaled.osim
+[2021-11-11 15:22:50.838] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-11 15:22:50.839] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-11 15:22:50.839] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-11 15:22:50.839] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-11 15:22:50.839] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-11 15:22:50.839] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-11 15:22:50.839] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-11 15:22:50.840] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-11 15:22:50.840] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-11 15:22:50.840] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-11 15:22:50.840] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-11 15:22:50.840] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-11 15:22:50.841] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-11 15:22:50.841] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-11 15:22:50.841] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-11 15:22:50.841] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-11 15:22:50.841] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-11 15:22:50.841] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-11 15:22:50.842] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-11 15:22:50.842] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-11 15:22:50.884] [info] AbstractTool IK loading model gait2392_simbody_scaled.osim
+[2021-11-11 15:25:04.837] [info] Loaded model subject01 from file gait2392_simbody_scaled.osim
+[2021-11-11 15:25:04.838] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-11 15:25:04.838] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-11 15:25:04.838] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-11 15:25:04.838] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-11 15:25:04.839] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-11 15:25:04.839] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-11 15:25:04.839] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-11 15:25:04.839] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-11 15:25:04.839] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-11 15:25:04.839] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-11 15:25:04.839] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-11 15:25:04.840] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-11 15:25:04.840] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-11 15:25:04.840] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-11 15:25:04.840] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-11 15:25:04.840] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-11 15:25:04.840] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-11 15:25:04.841] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-11 15:25:04.841] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-11 15:25:04.841] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-11 15:25:04.850] [info] AbstractTool IK loading model gait2392_simbody_scaled.osim
+[2021-11-11 15:27:56.734] [info] Loaded model subject01 from file gait2392_simbody_scaled.osim
+[2021-11-11 15:27:56.735] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-11 15:27:56.735] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-11 15:27:56.735] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-11 15:27:56.735] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-11 15:27:56.735] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-11 15:27:56.736] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-11 15:27:56.736] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-11 15:27:56.736] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-11 15:27:56.736] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-11 15:27:56.736] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-11 15:27:56.736] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-11 15:27:56.736] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-11 15:27:56.737] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-11 15:27:56.737] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-11 15:27:56.737] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-11 15:27:56.737] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-11 15:27:56.737] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-11 15:27:56.737] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-11 15:27:56.738] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-11 15:27:56.738] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-11 15:29:52.049] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-11 15:29:52.050] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-11 15:29:52.050] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-11 15:29:52.051] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-11 15:29:52.051] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-11 15:29:52.051] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-11 15:29:52.051] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-11 15:29:52.051] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-11 15:29:52.051] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-11 15:29:52.051] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-11 15:29:52.052] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-11 15:29:52.052] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-11 15:29:52.052] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-11 15:29:52.052] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-11 15:29:52.052] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-11 15:29:52.052] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-11 15:29:52.053] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-11 15:29:52.053] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-11 15:29:52.053] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-11 15:29:52.053] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-11 15:29:52.053] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-11 15:29:55.954] [info] AbstractTool IK loading model C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-11 15:29:56.031] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-11 15:29:56.032] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-11 15:29:56.032] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-11 15:29:56.032] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-11 15:29:56.033] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-11 15:29:56.033] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-11 15:29:56.033] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-11 15:29:56.033] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-11 15:29:56.033] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-11 15:29:56.033] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-11 15:29:56.034] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-11 15:29:56.034] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-11 15:29:56.034] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-11 15:29:56.034] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-11 15:29:56.034] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-11 15:29:56.034] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-11 15:29:56.034] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-11 15:29:56.035] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-11 15:29:56.035] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-11 15:29:56.035] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-11 15:29:56.035] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-11 15:29:56.049] [info] No external loads will be applied (external loads file not specified).
+[2021-11-11 15:29:56.071] [info] Loading coordinates from file 'IK.mot'.
+[2021-11-11 15:29:56.072] [info] Storage: read data file = IK.mot (nr=121 nc=24)
+[2021-11-11 15:29:56.119] [info] Found 121 state vectors with time stamps ranging from 0.5 to 2.5.
+[2021-11-11 15:29:56.119] [info] Executing the analyses from 0.517 to 1.95...
+[2021-11-11 15:29:57.158] [info] Printing results of investigation IK to C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\MuscleAnalysis
+[2021-11-11 15:29:58.396] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-11 15:29:58.397] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-11 15:29:58.397] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-11 15:29:58.397] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-11 15:29:58.397] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-11 15:29:58.397] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-11 15:29:58.398] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-11 15:29:58.398] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-11 15:29:58.398] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-11 15:29:58.398] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-11 15:29:58.398] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-11 15:29:58.398] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-11 15:29:58.399] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-11 15:29:58.399] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-11 15:29:58.399] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-11 15:29:58.399] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-11 15:29:58.399] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-11 15:29:58.399] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-11 15:29:58.400] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-11 15:29:58.400] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-11 15:29:58.400] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-11 15:34:08.723] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-11 15:34:08.724] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-11 15:34:08.724] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-11 15:34:08.724] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-11 15:34:08.724] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-11 15:34:08.725] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-11 15:34:08.725] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-11 15:34:08.725] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-11 15:34:08.725] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-11 15:34:08.725] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-11 15:34:08.725] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-11 15:34:08.725] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-11 15:34:08.726] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-11 15:34:08.726] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-11 15:34:08.726] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-11 15:34:08.726] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-11 15:34:08.726] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-11 15:34:08.726] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-11 15:34:08.727] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-11 15:34:08.727] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-11 15:34:08.727] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-11 15:34:08.740] [info] AbstractTool IK loading model C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-11 15:34:08.791] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-11 15:34:08.792] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-11 15:34:08.792] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-11 15:34:08.792] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-11 15:34:08.793] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-11 15:34:08.793] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-11 15:34:08.793] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-11 15:34:08.793] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-11 15:34:08.793] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-11 15:34:08.793] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-11 15:34:08.793] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-11 15:34:08.794] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-11 15:34:08.794] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-11 15:34:08.794] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-11 15:34:08.794] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-11 15:34:08.794] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-11 15:34:08.794] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-11 15:34:08.795] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-11 15:34:08.795] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-11 15:34:08.795] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-11 15:34:08.795] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-11 15:34:08.807] [info] No external loads will be applied (external loads file not specified).
+[2021-11-11 15:34:08.826] [info] Loading coordinates from file 'IK.mot'.
+[2021-11-11 15:34:08.827] [info] Storage: read data file = IK.mot (nr=121 nc=24)
+[2021-11-11 15:34:08.873] [info] Found 121 state vectors with time stamps ranging from 0.5 to 2.5.
+[2021-11-11 15:34:08.873] [info] Executing the analyses from 0.517 to 1.95...
+[2021-11-11 15:34:09.859] [info] Printing results of investigation IK to C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\MuscleAnalysis
+[2021-11-11 15:34:10.160] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-11 15:34:10.161] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-11 15:34:10.161] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-11 15:34:10.161] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-11 15:34:10.161] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-11 15:34:10.162] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-11 15:34:10.162] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-11 15:34:10.162] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-11 15:34:10.162] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-11 15:34:10.162] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-11 15:34:10.162] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-11 15:34:10.163] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-11 15:34:10.163] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-11 15:34:10.163] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-11 15:34:10.163] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-11 15:34:10.163] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-11 15:34:10.163] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-11 15:34:10.163] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-11 15:34:10.164] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-11 15:34:10.164] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-11 15:34:10.164] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-11 15:34:45.065] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-11 15:34:45.066] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-11 15:34:45.066] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-11 15:34:45.067] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-11 15:34:45.067] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-11 15:34:45.067] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-11 15:34:45.067] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-11 15:34:45.067] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-11 15:34:45.067] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-11 15:34:45.068] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-11 15:34:45.068] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-11 15:34:45.068] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-11 15:34:45.068] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-11 15:34:45.068] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-11 15:34:45.068] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-11 15:34:45.068] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-11 15:34:45.069] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-11 15:34:45.069] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-11 15:34:45.069] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-11 15:34:45.069] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-11 15:34:45.069] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-12 10:27:54.438] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-12 10:27:54.439] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-12 10:27:54.440] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-12 10:27:54.440] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-12 10:27:54.440] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-12 10:27:54.440] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-12 10:27:54.440] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-12 10:27:54.440] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-12 10:27:54.441] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-12 10:27:54.441] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-12 10:27:54.441] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-12 10:27:54.441] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-12 10:27:54.441] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-12 10:27:54.441] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-12 10:27:54.442] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-12 10:27:54.442] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-12 10:27:54.442] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-12 10:27:54.442] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-12 10:27:54.442] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-12 10:27:54.442] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-12 10:27:54.443] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-12 10:27:54.458] [info] AbstractTool IK loading model C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-12 10:27:54.511] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-12 10:27:54.512] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-12 10:27:54.512] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-12 10:27:54.513] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-12 10:27:54.513] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-12 10:27:54.513] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-12 10:27:54.513] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-12 10:27:54.513] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-12 10:27:54.513] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-12 10:27:54.513] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-12 10:27:54.514] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-12 10:27:54.514] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-12 10:27:54.514] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-12 10:27:54.514] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-12 10:27:54.514] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-12 10:27:54.514] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-12 10:27:54.515] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-12 10:27:54.515] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-12 10:27:54.515] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-12 10:27:54.515] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-12 10:27:54.515] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-12 10:27:54.527] [info] No external loads will be applied (external loads file not specified).
+[2021-11-12 10:27:54.549] [info] Loading coordinates from file 'IK.mot'.
+[2021-11-12 10:27:54.550] [info] Storage: read data file = IK.mot (nr=121 nc=24)
+[2021-11-12 10:27:54.597] [info] Found 121 state vectors with time stamps ranging from 0.5 to 2.5.
+[2021-11-12 10:27:54.597] [info] Executing the analyses from 0.517 to 1.95...
+[2021-11-12 10:27:55.635] [info] Printing results of investigation IK to C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\MuscleAnalysis
+[2021-11-12 10:27:55.965] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-12 10:27:55.966] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-12 10:27:55.966] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-12 10:27:55.966] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-12 10:27:55.966] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-12 10:27:55.966] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-12 10:27:55.967] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-12 10:27:55.967] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-12 10:27:55.967] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-12 10:27:55.967] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-12 10:27:55.967] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-12 10:27:55.967] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-12 10:27:55.968] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-12 10:27:55.968] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-12 10:27:55.968] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-12 10:27:55.968] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-12 10:27:55.968] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-12 10:27:55.968] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-12 10:27:55.968] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-12 10:27:55.969] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-12 10:27:55.969] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-12 10:28:25.403] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-12 10:28:25.404] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-12 10:28:25.404] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-12 10:28:25.404] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-12 10:28:25.404] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-12 10:28:25.404] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-12 10:28:25.404] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-12 10:28:25.405] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-12 10:28:25.405] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-12 10:28:25.405] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-12 10:28:25.405] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-12 10:28:25.405] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-12 10:28:25.405] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-12 10:28:25.406] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-12 10:28:25.406] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-12 10:28:25.406] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-12 10:28:25.406] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-12 10:28:25.406] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-12 10:28:25.406] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-12 10:28:25.406] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-12 10:28:25.407] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-12 10:30:25.089] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-12 10:30:25.090] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-12 10:30:25.090] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-12 10:30:25.090] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-12 10:30:25.091] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-12 10:30:25.091] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-12 10:30:25.091] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-12 10:30:25.091] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-12 10:30:25.091] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-12 10:30:25.091] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-12 10:30:25.091] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-12 10:30:25.092] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-12 10:30:25.092] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-12 10:30:25.092] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-12 10:30:25.092] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-12 10:30:25.092] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-12 10:30:25.092] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-12 10:30:25.093] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-12 10:30:25.093] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-12 10:30:25.093] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-12 10:30:25.093] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-12 10:30:25.113] [info] AbstractTool IK loading model C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-12 10:30:25.164] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-12 10:30:25.165] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-12 10:30:25.165] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-12 10:30:25.165] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-12 10:30:25.166] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-12 10:30:25.166] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-12 10:30:25.166] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-12 10:30:25.166] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-12 10:30:25.166] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-12 10:30:25.166] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-12 10:30:25.166] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-12 10:30:25.167] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-12 10:30:25.167] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-12 10:30:25.167] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-12 10:30:25.167] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-12 10:30:25.167] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-12 10:30:25.167] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-12 10:30:25.168] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-12 10:30:25.168] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-12 10:30:25.168] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-12 10:30:25.168] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-12 10:30:25.180] [info] No external loads will be applied (external loads file not specified).
+[2021-11-12 10:30:25.201] [info] Loading coordinates from file 'IK.mot'.
+[2021-11-12 10:30:25.201] [info] Storage: read data file = IK.mot (nr=121 nc=24)
+[2021-11-12 10:30:25.248] [info] Found 121 state vectors with time stamps ranging from 0.5 to 2.5.
+[2021-11-12 10:30:25.248] [info] Executing the analyses from 0.517 to 1.95...
+[2021-11-12 10:30:33.265] [info] Printing results of investigation IK to C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\MuscleAnalysis
+[2021-11-12 10:30:34.212] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-12 10:30:34.213] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-12 10:30:34.213] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-12 10:30:34.213] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-12 10:30:34.213] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-12 10:30:34.214] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-12 10:30:34.214] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-12 10:30:34.214] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-12 10:30:34.214] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-12 10:30:34.214] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-12 10:30:34.214] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-12 10:30:34.215] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-12 10:30:34.215] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-12 10:30:34.215] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-12 10:30:34.215] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-12 10:30:34.215] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-12 10:30:34.215] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-12 10:30:34.215] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-12 10:30:34.216] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-12 10:30:34.216] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-12 10:30:34.216] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-12 10:33:48.976] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-12 10:33:48.977] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-12 10:33:48.977] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-12 10:33:48.977] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-12 10:33:48.977] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-12 10:33:48.978] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-12 10:33:48.978] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-12 10:33:48.978] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-12 10:33:48.978] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-12 10:33:48.978] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-12 10:33:48.978] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-12 10:33:48.979] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-12 10:33:48.979] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-12 10:33:48.979] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-12 10:33:48.979] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-12 10:33:48.979] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-12 10:33:48.979] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-12 10:33:48.980] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-12 10:33:48.980] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-12 10:33:48.980] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-12 10:33:48.980] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-12 14:11:23.439] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-12 14:11:23.440] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-12 14:11:23.440] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-12 14:11:23.441] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-12 14:11:23.441] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-12 14:11:23.441] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-12 14:11:23.441] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-12 14:11:23.441] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-12 14:11:23.441] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-12 14:11:23.441] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-12 14:11:23.442] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-12 14:11:23.442] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-12 14:11:23.442] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-12 14:11:23.442] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-12 14:11:23.442] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-12 14:11:23.442] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-12 14:11:23.443] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-12 14:11:23.443] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-12 14:11:23.443] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-12 14:11:23.443] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-12 14:11:23.443] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-12 14:11:23.463] [info] AbstractTool IK loading model C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-12 14:11:23.517] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-12 14:11:23.518] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-12 14:11:23.518] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-12 14:11:23.518] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-12 14:11:23.518] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-12 14:11:23.518] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-12 14:11:23.518] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-12 14:11:23.519] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-12 14:11:23.519] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-12 14:11:23.519] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-12 14:11:23.519] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-12 14:11:23.519] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-12 14:11:23.519] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-12 14:11:23.519] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-12 14:11:23.520] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-12 14:11:23.520] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-12 14:11:23.520] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-12 14:11:23.520] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-12 14:11:23.520] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-12 14:11:23.520] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-12 14:11:23.521] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-12 14:11:23.532] [info] No external loads will be applied (external loads file not specified).
+[2021-11-12 14:11:23.553] [info] Loading coordinates from file 'IK.mot'.
+[2021-11-12 14:11:23.554] [info] Storage: read data file = IK.mot (nr=121 nc=24)
+[2021-11-12 14:11:23.600] [info] Found 121 state vectors with time stamps ranging from 0.5 to 2.5.
+[2021-11-12 14:11:23.600] [info] Executing the analyses from 0.517 to 1.95...
+[2021-11-12 14:11:31.577] [info] Printing results of investigation IK to C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\MuscleAnalysis
+[2021-11-12 14:11:32.542] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-12 14:11:32.543] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-12 14:11:32.543] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-12 14:11:32.544] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-12 14:11:32.544] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-12 14:11:32.544] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-12 14:11:32.544] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-12 14:11:32.544] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-12 14:11:32.544] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-12 14:11:32.544] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-12 14:11:32.545] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-12 14:11:32.545] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-12 14:11:32.545] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-12 14:11:32.545] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-12 14:11:32.545] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-12 14:11:32.545] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-12 14:11:32.546] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-12 14:11:32.546] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-12 14:11:32.546] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-12 14:11:32.546] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-12 14:11:32.546] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-12 14:14:50.377] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-12 14:14:50.378] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-12 14:14:50.378] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-12 14:14:50.378] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-12 14:14:50.379] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-12 14:14:50.379] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-12 14:14:50.379] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-12 14:14:50.379] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-12 14:14:50.379] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-12 14:14:50.379] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-12 14:14:50.379] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-12 14:14:50.380] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-12 14:14:50.380] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-12 14:14:50.380] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-12 14:14:50.380] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-12 14:14:50.380] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-12 14:14:50.380] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-12 14:14:50.381] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-12 14:14:50.381] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-12 14:14:50.381] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-12 14:14:50.381] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-12 14:23:50.980] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-12 14:23:50.981] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-12 14:23:50.982] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-12 14:23:50.982] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-12 14:23:50.982] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-12 14:23:50.982] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-12 14:23:50.982] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-12 14:23:50.982] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-12 14:23:50.983] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-12 14:23:50.983] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-12 14:23:50.983] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-12 14:23:50.983] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-12 14:23:50.983] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-12 14:23:50.983] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-12 14:23:50.983] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-12 14:23:50.984] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-12 14:23:50.984] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-12 14:23:50.984] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-12 14:23:50.984] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-12 14:23:50.984] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-12 14:23:50.984] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-12 14:23:51.005] [info] AbstractTool IK loading model C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-12 14:23:51.056] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-12 14:23:51.057] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-12 14:23:51.057] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-12 14:23:51.057] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-12 14:23:51.057] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-12 14:23:51.057] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-12 14:23:51.057] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-12 14:23:51.058] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-12 14:23:51.058] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-12 14:23:51.058] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-12 14:23:51.058] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-12 14:23:51.058] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-12 14:23:51.058] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-12 14:23:51.058] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-12 14:23:51.059] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-12 14:23:51.059] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-12 14:23:51.059] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-12 14:23:51.059] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-12 14:23:51.059] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-12 14:23:51.059] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-12 14:23:51.060] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-12 14:23:51.071] [info] No external loads will be applied (external loads file not specified).
+[2021-11-12 14:23:51.092] [info] Loading coordinates from file 'IK.mot'.
+[2021-11-12 14:23:51.092] [info] Storage: read data file = IK.mot (nr=121 nc=24)
+[2021-11-12 14:23:51.139] [info] Found 121 state vectors with time stamps ranging from 0.5 to 2.5.
+[2021-11-12 14:23:51.139] [info] Executing the analyses from 0.517 to 1.95...
+[2021-11-12 14:23:58.858] [info] Printing results of investigation IK to C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\MuscleAnalysis
+[2021-11-12 14:26:56.431] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-12 14:26:56.432] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-12 14:26:56.432] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-12 14:26:56.432] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-12 14:26:56.432] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-12 14:26:56.432] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-12 14:26:56.432] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-12 14:26:56.433] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-12 14:26:56.433] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-12 14:26:56.433] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-12 14:26:56.433] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-12 14:26:56.433] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-12 14:26:56.433] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-12 14:26:56.434] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-12 14:26:56.434] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-12 14:26:56.434] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-12 14:26:56.434] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-12 14:26:56.434] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-12 14:26:56.434] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-12 14:26:56.434] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-12 14:26:56.435] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-12 14:32:50.196] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-12 14:32:50.197] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-12 14:32:50.197] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-12 14:32:50.197] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-12 14:32:50.197] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-12 14:32:50.197] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-12 14:32:50.197] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-12 14:32:50.198] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-12 14:32:50.198] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-12 14:32:50.198] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-12 14:32:50.198] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-12 14:32:50.198] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-12 14:32:50.198] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-12 14:32:50.199] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-12 14:32:50.199] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-12 14:32:50.199] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-12 14:32:50.199] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-12 14:32:50.199] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-12 14:32:50.199] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-12 14:32:50.199] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-12 14:32:50.200] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-12 14:32:50.213] [info] AbstractTool IK loading model C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-12 14:32:50.264] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-12 14:32:50.265] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-12 14:32:50.265] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-12 14:32:50.265] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-12 14:32:50.265] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-12 14:32:50.266] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-12 14:32:50.266] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-12 14:32:50.266] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-12 14:32:50.266] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-12 14:32:50.266] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-12 14:32:50.266] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-12 14:32:50.266] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-12 14:32:50.267] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-12 14:32:50.267] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-12 14:32:50.267] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-12 14:32:50.267] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-12 14:32:50.267] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-12 14:32:50.267] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-12 14:32:50.268] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-12 14:32:50.268] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-12 14:32:50.268] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-12 14:32:50.279] [info] No external loads will be applied (external loads file not specified).
+[2021-11-12 14:32:50.300] [info] Loading coordinates from file 'IK.mot'.
+[2021-11-12 14:32:50.300] [info] Storage: read data file = IK.mot (nr=121 nc=24)
+[2021-11-12 14:32:50.346] [info] Found 121 state vectors with time stamps ranging from 0.5 to 2.5.
+[2021-11-12 14:32:50.346] [info] Executing the analyses from 0.517 to 1.95...
+[2021-11-12 14:32:58.295] [info] Printing results of investigation IK to C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\MuscleAnalysis
+[2021-11-12 14:33:03.555] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-12 14:33:03.556] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-12 14:33:03.556] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-12 14:33:03.556] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-12 14:33:03.556] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-12 14:33:03.556] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-12 14:33:03.557] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-12 14:33:03.557] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-12 14:33:03.557] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-12 14:33:03.557] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-12 14:33:03.557] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-12 14:33:03.557] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-12 14:33:03.557] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-12 14:33:03.558] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-12 14:33:03.558] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-12 14:33:03.558] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-12 14:33:03.558] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-12 14:33:03.558] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-12 14:33:03.558] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-12 14:33:03.559] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-12 14:33:03.559] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-16 12:02:43.868] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-16 12:02:43.869] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-16 12:02:43.869] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-16 12:02:43.869] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-16 12:02:43.870] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-16 12:02:43.870] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-16 12:02:43.870] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-16 12:02:43.870] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-16 12:02:43.870] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-16 12:02:43.870] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-16 12:02:43.871] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-16 12:02:43.871] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-16 12:02:43.871] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-16 12:02:43.871] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-16 12:02:43.871] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-16 12:02:43.871] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-16 12:02:43.872] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-16 12:02:43.872] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-16 12:02:43.872] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-16 12:02:43.872] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-16 12:02:43.872] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-16 12:02:43.919] [info] AbstractTool IK loading model C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-16 12:02:43.969] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-16 12:02:43.970] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-16 12:02:43.970] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-16 12:02:43.970] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-16 12:02:43.970] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-16 12:02:43.971] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-16 12:02:43.971] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-16 12:02:43.971] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-16 12:02:43.971] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-16 12:02:43.971] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-16 12:02:43.971] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-16 12:02:43.972] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-16 12:02:43.972] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-16 12:02:43.972] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-16 12:02:43.972] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-16 12:02:43.972] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-16 12:02:43.972] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-16 12:02:43.972] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-16 12:02:43.973] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-16 12:02:43.973] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-16 12:02:43.973] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-16 12:02:43.987] [info] No external loads will be applied (external loads file not specified).
+[2021-11-16 12:02:44.010] [info] Loading coordinates from file 'IK.mot'.
+[2021-11-16 12:02:44.010] [info] Storage: read data file = IK.mot (nr=121 nc=24)
+[2021-11-16 12:02:44.057] [info] Found 121 state vectors with time stamps ranging from 0.5 to 2.5.
+[2021-11-16 12:02:44.057] [info] Executing the analyses from 0.517 to 1.95...
+[2021-11-16 12:02:51.890] [info] Printing results of investigation IK to C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\MuscleAnalysis
+[2021-11-16 12:03:26.446] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-16 12:03:26.447] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-16 12:03:26.447] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-16 12:03:26.447] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-16 12:03:26.447] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-16 12:03:26.448] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-16 12:03:26.448] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-16 12:03:26.448] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-16 12:03:26.448] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-16 12:03:26.448] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-16 12:03:26.448] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-16 12:03:26.449] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-16 12:03:26.449] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-16 12:03:26.449] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-16 12:03:26.449] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-16 12:03:26.449] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-16 12:03:26.449] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-16 12:03:26.450] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-16 12:03:26.450] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-16 12:03:26.450] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-16 12:03:26.450] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-16 12:03:26.462] [info] AbstractTool IK loading model C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-16 12:03:26.516] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-16 12:03:26.517] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-16 12:03:26.517] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-16 12:03:26.517] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-16 12:03:26.518] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-16 12:03:26.518] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-16 12:03:26.518] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-16 12:03:26.518] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-16 12:03:26.518] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-16 12:03:26.518] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-16 12:03:26.519] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-16 12:03:26.519] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-16 12:03:26.519] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-16 12:03:26.519] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-16 12:03:26.519] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-16 12:03:26.519] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-16 12:03:26.520] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-16 12:03:26.520] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-16 12:03:26.520] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-16 12:03:26.520] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-16 12:03:26.520] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-16 12:03:26.532] [info] No external loads will be applied (external loads file not specified).
+[2021-11-16 12:03:26.555] [info] Loading coordinates from file 'IK.mot'.
+[2021-11-16 12:03:26.555] [info] Storage: read data file = IK.mot (nr=121 nc=24)
+[2021-11-16 12:03:26.602] [info] Found 121 state vectors with time stamps ranging from 0.5 to 2.5.
+[2021-11-16 12:03:26.602] [info] Executing the analyses from 0.517 to 1.95...
+[2021-11-16 12:03:34.356] [info] Printing results of investigation IK to C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\MuscleAnalysis
+[2021-11-16 12:03:35.077] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-16 12:03:35.078] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-16 12:03:35.078] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-16 12:03:35.078] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-16 12:03:35.078] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-16 12:03:35.078] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-16 12:03:35.078] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-16 12:03:35.079] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-16 12:03:35.079] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-16 12:03:35.079] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-16 12:03:35.079] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-16 12:03:35.079] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-16 12:03:35.079] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-16 12:03:35.079] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-16 12:03:35.080] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-16 12:03:35.080] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-16 12:03:35.080] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-16 12:03:35.080] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-16 12:03:35.080] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-16 12:03:35.080] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-16 12:03:35.081] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-16 12:03:35.090] [info] AbstractTool IK loading model C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-16 12:03:35.144] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-16 12:03:35.145] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-16 12:03:35.145] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-16 12:03:35.146] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-16 12:03:35.146] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-16 12:03:35.146] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-16 12:03:35.146] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-16 12:03:35.146] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-16 12:03:35.146] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-16 12:03:35.147] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-16 12:03:35.147] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-16 12:03:35.147] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-16 12:03:35.147] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-16 12:03:35.147] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-16 12:03:35.147] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-16 12:03:35.147] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-16 12:03:35.148] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-16 12:03:35.148] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-16 12:03:35.148] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-16 12:03:35.148] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-16 12:03:35.148] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-16 12:03:35.159] [info] No external loads will be applied (external loads file not specified).
+[2021-11-16 12:03:35.182] [info] Loading coordinates from file 'IK.mot'.
+[2021-11-16 12:03:35.182] [info] Storage: read data file = IK.mot (nr=121 nc=24)
+[2021-11-16 12:03:35.229] [info] Found 121 state vectors with time stamps ranging from 0.5 to 2.5.
+[2021-11-16 12:03:35.229] [info] Executing the analyses from 0.517 to 1.95...
+[2021-11-16 12:03:43.075] [info] Printing results of investigation IK to C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\MuscleAnalysis
+[2021-11-16 12:29:45.906] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-16 12:29:45.907] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-16 12:29:45.908] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-16 12:29:45.908] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-16 12:29:45.908] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-16 12:29:45.908] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-16 12:29:45.908] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-16 12:29:45.908] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-16 12:29:45.909] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-16 12:29:45.909] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-16 12:29:45.909] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-16 12:29:45.909] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-16 12:29:45.909] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-16 12:29:45.909] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-16 12:29:45.910] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-16 12:29:45.910] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-16 12:29:45.910] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-16 12:29:45.910] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-16 12:29:45.910] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-16 12:29:45.910] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-16 12:29:45.910] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-16 12:29:45.929] [info] AbstractTool IK loading model C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-16 12:29:45.982] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-16 12:29:45.982] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-16 12:29:45.983] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-16 12:29:45.983] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-16 12:29:45.983] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-16 12:29:45.983] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-16 12:29:45.983] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-16 12:29:45.983] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-16 12:29:45.984] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-16 12:29:45.984] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-16 12:29:45.984] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-16 12:29:45.984] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-16 12:29:45.984] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-16 12:29:45.984] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-16 12:29:45.984] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-16 12:29:45.985] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-16 12:29:45.985] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-16 12:29:45.985] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-16 12:29:45.985] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-16 12:29:45.985] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-16 12:29:45.985] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-16 12:29:45.998] [info] No external loads will be applied (external loads file not specified).
+[2021-11-16 12:29:46.021] [info] Loading coordinates from file 'IK.mot'.
+[2021-11-16 12:29:46.021] [info] Storage: read data file = IK.mot (nr=121 nc=24)
+[2021-11-16 12:29:46.067] [info] Found 121 state vectors with time stamps ranging from 0.5 to 2.5.
+[2021-11-16 12:29:46.068] [info] Executing the analyses from 0.517 to 1.95...
+[2021-11-16 12:29:54.024] [info] Printing results of investigation IK to C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\MuscleAnalysis\Trial1
+[2021-11-16 12:29:54.756] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-16 12:29:54.757] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-16 12:29:54.757] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-16 12:29:54.757] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-16 12:29:54.758] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-16 12:29:54.758] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-16 12:29:54.758] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-16 12:29:54.758] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-16 12:29:54.758] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-16 12:29:54.758] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-16 12:29:54.759] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-16 12:29:54.759] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-16 12:29:54.759] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-16 12:29:54.759] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-16 12:29:54.759] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-16 12:29:54.759] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-16 12:29:54.759] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-16 12:29:54.760] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-16 12:29:54.760] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-16 12:29:54.760] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-16 12:29:54.760] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-16 12:29:54.775] [info] AbstractTool IK loading model C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-16 12:29:54.830] [info] Loaded model subject01 from file C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\gait2392_simbody_scaled.osim
+[2021-11-16 12:29:54.831] [warning] Couldn't find file 'treadmill.vtp'.
+[2021-11-16 12:29:54.831] [warning] Couldn't find file 'sacrum.vtp'.
+[2021-11-16 12:29:54.831] [warning] Couldn't find file 'pelvis.vtp'.
+[2021-11-16 12:29:54.832] [warning] Couldn't find file 'l_pelvis.vtp'.
+[2021-11-16 12:29:54.832] [warning] Couldn't find file 'femur_r.vtp'.
+[2021-11-16 12:29:54.832] [warning] Couldn't find file 'tibia_r.vtp'.
+[2021-11-16 12:29:54.832] [warning] Couldn't find file 'fibula.vtp'.
+[2021-11-16 12:29:54.832] [warning] Couldn't find file 'talus.vtp'.
+[2021-11-16 12:29:54.832] [warning] Couldn't find file 'foot.vtp'.
+[2021-11-16 12:29:54.832] [warning] Couldn't find file 'bofoot.vtp'.
+[2021-11-16 12:29:54.833] [warning] Couldn't find file 'femur_l.vtp'.
+[2021-11-16 12:29:54.833] [warning] Couldn't find file 'tibia_l.vtp'.
+[2021-11-16 12:29:54.833] [warning] Couldn't find file 'l_fibula.vtp'.
+[2021-11-16 12:29:54.833] [warning] Couldn't find file 'l_talus.vtp'.
+[2021-11-16 12:29:54.833] [warning] Couldn't find file 'l_foot.vtp'.
+[2021-11-16 12:29:54.833] [warning] Couldn't find file 'l_bofoot.vtp'.
+[2021-11-16 12:29:54.834] [warning] Couldn't find file 'hat_spine.vtp'.
+[2021-11-16 12:29:54.834] [warning] Couldn't find file 'hat_jaw.vtp'.
+[2021-11-16 12:29:54.834] [warning] Couldn't find file 'hat_skull.vtp'.
+[2021-11-16 12:29:54.834] [warning] Couldn't find file 'hat_ribs.vtp'.
+[2021-11-16 12:29:54.845] [info] No external loads will be applied (external loads file not specified).
+[2021-11-16 12:29:54.867] [info] Loading coordinates from file 'IK.mot'.
+[2021-11-16 12:29:54.867] [info] Storage: read data file = IK.mot (nr=121 nc=24)
+[2021-11-16 12:29:54.914] [info] Found 121 state vectors with time stamps ranging from 0.5 to 2.5.
+[2021-11-16 12:29:54.914] [info] Executing the analyses from 0.517 to 1.95...
+[2021-11-16 12:30:02.857] [info] Printing results of investigation IK to C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\MutilPhase\MuscleAnalysis\Trial2
