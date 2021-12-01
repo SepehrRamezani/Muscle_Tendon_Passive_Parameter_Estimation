@@ -3,7 +3,7 @@ clear all; clc;
 model_path  = fullfile(cd,'ScaledModel.osim');
 Misc.IKfile = {fullfile('IK_gait.mot'),fullfile('IK_gait.mot')};
 Misc.IDfile = {fullfile('ID_gait.sto'),fullfile('ID_gait.sto')};
-Misc.EMGfile = {fullfile(pwd,'EMG_gait.mot'),fullfile(pwd,'EMG_gait.mot')};    
+Misc.EMGfile = {fullfile(pwd,'EMG_gait.mot')};    
 time=[1.2 2.3;1.2 2.3];
 % Misc.DofNames_Input={'ankle_angle_r','knee_angle_r','hip_flexion_r','hip_adduction_r','hip_rotation_r','ankle_angle_l','knee_angle_l','hip_flexion_l','hip_adduction_l','hip_rotation_l'}; 
 Misc.DofNames_Input={'ankle_angle_l','knee_angle_l','hip_flexion_l'};
@@ -25,12 +25,7 @@ Misc.EMGconstr  = 1;     		% Boolean to select EMG constrained option
 Misc.EMGbounds  = [-0.001 0.001];  	% upper and lower bound for difference between simulated and measured muscle activity
 Misc.BoundsScaleEMG = [0.01 5];  % maximal value to scale EMG
 
-Misc.wEMG   = 0.001;   % weight on tracking EMG
-Misc.wAct   = 0.001;
-Misc.wTres  = 10;
-Misc.wVm    = 0.00001;
-
-Misc.PlotBool = 1;
+Misc.PlotBool = 0;
 Misc.OutName = 'Knee_Flexion_';
 Misc.MRSBool=1;
 [Results,DatStore] = solveMuscleRedundancy(model_path,time,Out_path,Misc);
