@@ -1,4 +1,4 @@
-function [osimmodel,TSlack,Passive,MinMTCLength]=Modelcreator(Hipangle,SimMusclename,DeGrooteflage,osimmodel)
+function [osimmodel,TSlack,Passive,MinMTCLength]=Modelcreator(Hipangle,SimMusclename,ComplianacMusclename,DeGrooteflage,osimmodel)
 import org.opensim.modeling.*;
 % osimmodel = Model('subject_walk_armless_RLeg_justknee.osim');
 Qrange=90*pi()/180;
@@ -30,10 +30,15 @@ for m = 0:osimmodel.getForceSet().getSize()-1
         c=c+1;
         if ~strcmp(char(frcset.getName()), 'knee_act')
             musc=Muscle.safeDownCast(frcset);
+            
             musc.set_ignore_activation_dynamics(true);
             
             if DeGrooteflage
-                musc.set_ignore_tendon_compliance(false);
+%                 if sum(strcmp(char(frcset.getName()), ComplianacMusclename))
+                    musc.set_ignore_tendon_compliance(false);
+%                 else
+%                     musc.set_ignore_tendon_compliance(true);
+%                 end
                 dgf = DeGrooteFregly2016Muscle.safeDownCast(musc);
                 dgf.set_min_control(0.0);
                 dgf.set_max_control(0.0);

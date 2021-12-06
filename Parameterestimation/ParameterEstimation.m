@@ -1,4 +1,4 @@
-function [kneeTrackingParamSolution]=ParameterEstimation(StateTrackTable,ControlTrackTable,osimmodel,Hipangle,MinMTCLength,Solverinterval,Etime)
+function [kneeTrackingParamSolution]=ParameterEstimation(StateTrackTable,ControlTrackTable,osimmodel,ComplianacMusclename,Hipangle,MinMTCLength,Solverinterval,Etime)
 % pause(30)
 import org.opensim.modeling.*;
 % myLog = JavaLogSink();
@@ -54,8 +54,12 @@ for i=0:1:osimmodel.getMuscles().getSize()-1
 %         musclelength(c)=osimmodel.getMuscles().get(i).getLength(state);
 %     end
     MaxTendonSlack=MinMTCLength(i+1);
-    param1= MocoParameter(append('passive_fiber_',char(Musname)),MusPath,'passive_fiber_strain_at_one_norm_force', MocoBounds(0.2,0.8));
     param = MocoParameter(append('tendon_slack_',char(Musname)),MusPath,'tendon_slack_length', MocoBounds(0.2*MaxTendonSlack,MaxTendonSlack));
+    param1= MocoParameter(append('passive_fiber_',char(Musname)),MusPath,'passive_fiber_strain_at_one_norm_force', MocoBounds(0.2,0.8));
+    param2= MocoParameter(append('tendon_strain',char(Musname)),MusPath,'tendon_strain_at_one_norm_force', MocoBounds(0.01,0.06));
+    if sum(strcmp(char(Musname), ComplianacMusclename))
+        problem.addParameter(param2);
+    end
     problem.addParameter(param);
     problem.addParameter(param1);
 end
