@@ -5,37 +5,33 @@ Logger.addSink(myLog)
 % path=[cd '\TorqueSimulation']
 % SimMusclename=["knee_act","bflh_r","bfsh_r","gaslat_r","gasmed_r","recfem_r","sart_r","semimem_r","semiten_r","tfl_r","vasint_r","vaslat_r","vasmed_r"];
 % SimMusclename=["knee_act"];
-SimMusclename=["knee_act","bflh_r","bfsh_r","gaslat_r","gasmed_r","recfem_r","semimem_r","semiten_r","vasint_r","vaslat_r","vasmed_r"];
-ComplianacMusclename=["gaslat_r","gasmed_r"];
-DeGrooteflage=1;
+Data.SimMusclename=["knee_act","bflh_r","bfsh_r","gaslat_r","gasmed_r","recfem_r","semimem_r","semiten_r","vasint_r","vaslat_r","vasmed_r"];
+Data.ComplianacMusclename=["gaslat_r","gasmed_r"];
+Data.DeGrooteflage=1;
 % Hipangle=0;%deg
-RefModelpath=append(cd,'\ModelGenerator\subject_walk_armless_RLeg_justknee.osim');
-RefStatepath=append(cd,'\TorqueSimulation\referenceCoordinates.sto');
-tableProcessor=TableProcessor(RefStatepath);
-TorqueSolverinterval=20;
-ParamSolverinterval=40;
-Etime=20;
+Data.RefModelpath=append(cd,'\ModelGenerator\subject_walk_armless_RLeg_justknee.osim');
+Data.RefStatepath=append(cd,'\TorqueSimulation\referenceCoordinates.sto');
+tableProcessor=TableProcessor(Data.RefStatepath);
+Data.TorqueSolverinterval=20;
+Data.ParamSolverinterval=40;
+Data.Etime=20;
+Data.Stime=0;
 ce=0;
-for Hipangle=45:45:90
-% Hipangle=90-Hipangle;
-SimulPath=[cd '\TorqueSimulation\Kneeflexion_solution_Degroot_Hip' num2str(Hipangle) '.sto'];
-DataTable=TableProcessor(SimulPath);
-kneeTrackingSolutionTable=DataTable.process;
-Refmmodel = Model(RefModelpath);
+for Hipangle=0:45:90
 ce=ce+1;
-[osimmodel,TSlack(ce,:),Passive,MinMTCLength(ce,:)]=Modelcreator(Hipangle,SimMusclename,ComplianacMusclename,DeGrooteflage,Refmmodel);
-% [kneeTrackingSolution]=TorqueSimulation(tableProcessor,osimmodel,Hipangle,TorqueSolverinterval,Etime);
-% [kneeTrackingParamSolution]=ParameterEstimation(kneeTrackingSolution.exportToStatesTable(),kneeTrackingSolution.exportToControlsTable(),osimmodel,ComplianacMusclename,Hipangle,MinMTCLength,ParamSolverinterval,Etime);
-% [kneeTrackingParamSolution]=ParameterEstimation(kneeTrackingSolutionTable,kneeTrackingSolutionTable,osimmodel,ComplianacMusclename,Hipangle,MinMTCLength,ParamSolverinterval,Etime);
+Data.Hipangle(ce)=Hipangle;
+Hiplable=append('Hip',num2str(Hipangle));
+Data.(Hiplable).SimulPath=[cd '\TorqueSimulation\Kneeflexion_solution_Degroot_Hip' num2str(Hipangle) '.sto'];
+DataTable=TableProcessor(Data.(Hiplable).SimulPath);
+kneeTrackingSolutionTable=DataTable.process;
+Refmmodel = Model(Data.RefModelpath);
+[osimmodel,Data.(Hiplable)]=Modelcreator(Hipangle,Data,Refmmodel);
+% [kneeTrackingSolution]=TorqueSimulation(tableProcessor,osimmodel,Hipangle,Data);
+% [kneeTrackingParamSolution]=ParameterEstimation(kneeTrackingSolution.exportToStatesTable(),kneeTrackingSolution.exportToControlsTable(),osimmodel,Hipangle,Data);
+% [kneeTrackingParamSolution]=ParameterEstimation(kneeTrackingSolutionTable,kneeTrackingSolutionTable,osimmodel,Hiplable,Data);
 
-for t=1:kneeTrackingParamSolution.getNumParameters()
-    OptimziedPar=kneeTrackingParamSolution.getParameters().get(t-1);  
-    OptParam1(ce,t)=OptimziedPar(1);
-    OptParam2(ce,t)=OptimziedPar(2);
 end
-Error1(ce,:)=(OptParam1(ce,:)-TSlack(ce,:))./TSlack(ce,:).*100;
-Error2(ce,:)=(OptParam2(ce,:)-TSlack(ce,:))./TSlack(ce,:).*100;
-ParName=kneeTrackingParamSolution.getParameterNames();
-clear osimmodel kneeTrackingSolution kneeTrackingParamSolution
-end
+save([cd '\SimData.mat'],'Data');
+% Save(Data)
 % bar(Error)
+Plotting()

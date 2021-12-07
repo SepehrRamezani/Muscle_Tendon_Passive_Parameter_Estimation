@@ -2102,7 +2102,7 @@
 					<!--Optimal length of the muscle fibers-->
 					<optimal_fiber_length>0.074326781632001598</optimal_fiber_length>
 					<!--Resting length of the tendon-->
-					<tendon_slack_length>0.41325493206287101</tendon_slack_length>
+					<tendon_slack_length>0.41325373785923281</tendon_slack_length>
 					<!--Angle between tendon and fibers at optimal fiber length expressed in radians-->
 					<pennation_angle_at_optimal>0.21701490000000001</pennation_angle_at_optimal>
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->

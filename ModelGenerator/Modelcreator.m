@@ -1,4 +1,4 @@
-function [osimmodel,TSlack,Passive,MinMTCLength]=Modelcreator(Hipangle,SimMusclename,ComplianacMusclename,DeGrooteflage,osimmodel)
+function [osimmodel,Muscleinfo]=Modelcreator(Hipangle,Data,osimmodel)
 import org.opensim.modeling.*;
 % osimmodel = Model('subject_walk_armless_RLeg_justknee.osim');
 Qrange=90*pi()/180;
@@ -17,14 +17,14 @@ Hipcoord.setDefaultValue(Hipangle/180*pi());
 %%% Knee_corrdiante
 %% setup muscle properties
 
-if DeGrooteflage
+if Data.DeGrooteflage
     DeGrooteFregly2016Muscle().replaceMuscles(osimmodel);
 end
 c=0;
 
 for m = 0:osimmodel.getForceSet().getSize()-1
     frcset = osimmodel.updForceSet().get(c);
-    if ~sum(strcmp(char(frcset.getName()), SimMusclename))
+    if ~sum(strcmp(char(frcset.getName()), Data.SimMusclename))
         isremove=osimmodel.updForceSet().remove(c);
     else
         c=c+1;
@@ -33,8 +33,8 @@ for m = 0:osimmodel.getForceSet().getSize()-1
             
             musc.set_ignore_activation_dynamics(true);
             
-            if DeGrooteflage
-%                 if sum(strcmp(char(frcset.getName()), ComplianacMusclename))
+            if Data.DeGrooteflage
+%                 if sum(strcmp(char(frcset.getName()), Data.ComplianacMusclename))
                     musc.set_ignore_tendon_compliance(false);
 %                 else
 %                     musc.set_ignore_tendon_compliance(true);
@@ -65,6 +65,7 @@ end
 state=osimmodel.initSystem();
 KneeCoor=osimmodel.updCoordinateSet().get(1);
 for i=0:1:osimmodel.getMuscles().getSize()-1
+    newi=0;
     k=0;
     for q=0:0.3:Qrange
         k=k+1;
@@ -80,15 +81,20 @@ for i=0:1:osimmodel.getMuscles().getSize()-1
         warning('buckeling will be happend in %s',CurrentMuscle.getName())
         TSlack(i+1)=0.98*MinMTCLength(i+1);
         CurrentMuscle.set_tendon_slack_length(TSlack(i+1));
+        Muscleinfo.TSlack(i+1)=TSlack(i+1);
     else
         
-        TSlack(i+1)=CurrentMuscle.get_tendon_slack_length();
+        Muscleinfo.TSlack(i+1)=CurrentMuscle.get_tendon_slack_length();
     end
-%     dgf = DeGrooteFregly2016Muscle.safeDownCast(CurrentMuscle);
-        Passive(i+1)=DeGrooteFregly2016Muscle.safeDownCast(CurrentMuscle).get_passive_fiber_strain_at_one_norm_force();
+    %     dgf = DeGrooteFregly2016Muscle.safeDownCast(CurrentMuscle);
+    Muscleinfo.Passive(i+1)=DeGrooteFregly2016Muscle.safeDownCast(CurrentMuscle).get_passive_fiber_strain_at_one_norm_force();
+    if sum(strcmp(char(CurrentMuscle.getName()), Data.ComplianacMusclename))
+        newi=newi+1;
+        Muscleinfo.Tstrain(newi)= DeGrooteFregly2016Muscle.safeDownCast(CurrentMuscle).get_tendon_strain_at_one_norm_force();
+    else
 end
 osimmodel.initSystem();
-if DeGrooteflage
+if Data.DeGrooteflage
     osimmodel.print([cd '\ModelGenerator\OneDOF_Knee_DeGroote' num2str(Hipangle) '.osim']);
 else
     osimmodel.print([cd '\ModelGenerator\OneDOF_Knee_Thelen' num2str(Hipangle) '.osim']);

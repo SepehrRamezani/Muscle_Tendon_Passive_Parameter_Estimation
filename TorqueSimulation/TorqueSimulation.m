@@ -1,5 +1,7 @@
-function [kneeTrackingSolution]=TorqueSimulation(tableProcessor,osimmodel,Hipangle,Solverinterval,Etime)
+function [kneeTrackingSolution]=TorqueSimulation(tableProcessor,osimmodel,Hipangle,Data)
 % ModelPath=[cd '\..\ModelGenerator\OneDOF_Knee_DeGroote.osim'];
+Solverinterval=Data.TorqueSolverinterval;
+Etime=Data.Etime;
 import org.opensim.modeling.*;
 % myLog = JavaLogSink();
 % Logger.addSink(myLog);

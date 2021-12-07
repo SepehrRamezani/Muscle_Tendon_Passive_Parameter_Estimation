@@ -1,19 +1,15 @@
-function [kneeTrackingParamSolution]=ParameterEstimation(StateTrackTable,ControlTrackTable,osimmodel,ComplianacMusclename,Hipangle,MinMTCLength,Solverinterval,Etime)
-% pause(30)
+function [kneeTrackingParamSolution]=ParameterEstimation(StateTrackTable,ControlTrackTable,osimmodel,Hiplable,Data)
 import org.opensim.modeling.*;
-% myLog = JavaLogSink();
-% Logger.addSink(myLog)
-% ModelPath=[cd '\..\ModelGenerator\OneDOF_Knee_DeGroote.osim'];
-% SimulPath=[cd '\..\TorqueSimulation\Kneeflexion_solution_Degroot.sto'];
-% osimmodel = Model(ModelPath);
+ComplianacMusclename=Data.ComplianacMusclename;
+MinMTCLength=Data.(Hiplable).MinMTCLength;
+Solverinterval=Data.ParamSolverinterval;
+Etime=Data.Etime;
+Stime=Data.Stime;
 state = osimmodel.initSystem();
 ControlWight=1;
 % w=1/osimmodel.getForceSet().getSize();
 StateWeight = 10.0/osimmodel.getNumCoordinates();
 Qrange=pi()/2;
-Stime=0;
-% Etime=20;
-% Solverinterval=10;
 %% Define tracking problem
 track = MocoTrack();
 track.setName('kneestateTracking');
@@ -56,7 +52,7 @@ for i=0:1:osimmodel.getMuscles().getSize()-1
     MaxTendonSlack=MinMTCLength(i+1);
     param = MocoParameter(append('tendon_slack_',char(Musname)),MusPath,'tendon_slack_length', MocoBounds(0.2*MaxTendonSlack,MaxTendonSlack));
     param1= MocoParameter(append('passive_fiber_',char(Musname)),MusPath,'passive_fiber_strain_at_one_norm_force', MocoBounds(0.2,0.8));
-    param2= MocoParameter(append('tendon_strain',char(Musname)),MusPath,'tendon_strain_at_one_norm_force', MocoBounds(0.01,0.06));
+    param2= MocoParameter(append('tendon_strain_',char(Musname)),MusPath,'tendon_strain_at_one_norm_force', MocoBounds(0.01,0.06));
     if sum(strcmp(char(Musname), ComplianacMusclename))
         problem.addParameter(param2);
     end
@@ -90,5 +86,5 @@ solver.set_parameters_require_initsystem(false);
 solver.resetProblem(problem);
 % solver.setGuessFile([cd '\Parameterestimation\Parameter_Initial_Guess.sto']);
 kneeTrackingParamSolution = study.solve();
-kneeTrackingParamSolution.write([cd '\Parameterestimation\Parameter_Opt_Hip' num2str(Hipangle) '.sto']);
+kneeTrackingParamSolution.write([cd '\Parameterestimation\Parameter_Opt_' Hiplable '.sto']);
 end
