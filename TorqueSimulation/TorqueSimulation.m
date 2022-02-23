@@ -1,4 +1,4 @@
-function [kneeTrackingSolution]=TorqueSimulation(tableProcessor,osimmodel,Hipangle,Data)
+function [kneeTrackingSolution]=TorqueSimulation(tableProcessor,osimmodel,Hiplable,Data)
 % ModelPath=[cd '\..\ModelGenerator\OneDOF_Knee_DeGroote.osim'];
 Solverinterval=Data.TorqueSolverinterval;
 Etime=Data.Etime;
@@ -60,9 +60,9 @@ solver.set_optim_constraint_tolerance(1e-1);
 solver.set_optim_max_iterations(3000);
 solver.set_implicit_auxiliary_derivatives_weight(0.00001)
 solver.resetProblem(problem);
-% solver.setGuessFile([cd '\TorqueSimulation\Tracking_Initial_Guess.sto']);
+solver.setGuessFile([cd '\TorqueSimulation\Tracking_Initial_Guess.sto']);
 kneeTrackingSolution = study.solve();
-kneeTrackingSolution.write([cd '\TorqueSimulation\Kneeflexion_solution_Degroot_Hip' num2str(Hipangle) '.sto']);
+kneeTrackingSolution.write([cd '\TorqueSimulation\Kneeflexion_solution_Degroot_Hip' Hiplable '.sto']);
 % study.visualize(kneeTrackingSolution);
 end
 
