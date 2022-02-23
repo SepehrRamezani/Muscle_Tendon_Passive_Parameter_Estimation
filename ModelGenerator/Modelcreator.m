@@ -2,9 +2,10 @@ function [osimmodel,Muscleinfo]=Modelcreator(Hipangle,Data,osimmodel)
 import org.opensim.modeling.*;
 % osimmodel = Model('subject_walk_armless_RLeg_justknee.osim');
 Qrange=90*pi()/180;
+%% change the name
+osimmodel.setName(['Hip_' num2str(Hipangle)])
 %% Setup angles
 %%% Pelvis
-
 modeljointSet=osimmodel.getJointSet();
 Pelvisjoint=modeljointSet.get(0);
 Pelvisweldjoint=WeldJoint.safeDownCast(Pelvisjoint);
@@ -64,8 +65,8 @@ for m = 0:osimmodel.getForceSet().getSize()-1
 end
 state=osimmodel.initSystem();
 KneeCoor=osimmodel.updCoordinateSet().get(1);
+newi=0;
 for i=0:1:osimmodel.getMuscles().getSize()-1
-    newi=0;
     k=0;
     for q=0:0.3:Qrange
         k=k+1;
@@ -75,23 +76,24 @@ for i=0:1:osimmodel.getMuscles().getSize()-1
         CurrentMuscle=osimmodel.getMuscles().get(i);
         musclelength(k)=CurrentMuscle.getLength(state);
     end
-    MinMTCLength(i+1)=min(musclelength);
+    Muscleinfo.MinMTCLength(i+1)=min(musclelength);
     
-    if MinMTCLength(i+1) < CurrentMuscle.get_tendon_slack_length()
+    if Muscleinfo.MinMTCLength(i+1) < CurrentMuscle.get_tendon_slack_length()
         warning('buckeling will be happend in %s',CurrentMuscle.getName())
-        TSlack(i+1)=0.98*MinMTCLength(i+1);
+        TSlack(i+1)=0.98*Muscleinfo.MinMTCLength(i+1);
         CurrentMuscle.set_tendon_slack_length(TSlack(i+1));
         Muscleinfo.TSlack(i+1)=TSlack(i+1);
     else
         
         Muscleinfo.TSlack(i+1)=CurrentMuscle.get_tendon_slack_length();
+        Muscleinfo.MaxIso(i+1)=CurrentMuscle.get_max_isometric_force(); 
     end
     %     dgf = DeGrooteFregly2016Muscle.safeDownCast(CurrentMuscle);
     Muscleinfo.Passive(i+1)=DeGrooteFregly2016Muscle.safeDownCast(CurrentMuscle).get_passive_fiber_strain_at_one_norm_force();
     if sum(strcmp(char(CurrentMuscle.getName()), Data.ComplianacMusclename))
         newi=newi+1;
         Muscleinfo.Tstrain(newi)= DeGrooteFregly2016Muscle.safeDownCast(CurrentMuscle).get_tendon_strain_at_one_norm_force();
-    else
+    end
 end
 osimmodel.initSystem();
 if Data.DeGrooteflage
