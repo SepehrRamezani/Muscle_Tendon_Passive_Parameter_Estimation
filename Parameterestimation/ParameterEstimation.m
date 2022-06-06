@@ -52,13 +52,14 @@ for i=0:1:osimmodel.getMuscles().getSize()-1
     MaxTendonSlack=MinMTCLength(i+1);
     param = MocoParameter(append('tendon_slack_',char(Musname)),MusPath,'tendon_slack_length', MocoBounds(0.2*MaxTendonSlack,MaxTendonSlack));
     param1= MocoParameter(append('passive_fiber_',char(Musname)),MusPath,'passive_fiber_strain_at_one_norm_force', MocoBounds(0.2,0.8));
-    param2= MocoParameter(append('tendon_strain_',char(Musname)),MusPath,'tendon_strain_at_one_norm_force', MocoBounds(0.01,0.06));
     if sum(strcmp(char(Musname), ComplianacMusclename))
+        param2= MocoParameter(append('tendon_strain_',char(Musname)),MusPath,'tendon_strain_at_one_norm_force', MocoBounds(0.01,0.09));
         problem.addParameter(param2);
+    else
+        problem.addParameter(param1);
     end
-    problem.addParameter(param);
-    problem.addParameter(param1);
-end
+        problem.addParameter(param);
+    end
 
 ContTracking.setReferenceLabel('/forceset/knee_act','/forceset/knee_act');
 ContTracking.setWeightForControl('/forceset/knee_act',ControlWight);
