@@ -1,3 +1,4 @@
+
 clear all
 close all
 load ([cd '\SimData.mat']);
@@ -33,9 +34,13 @@ for i=1:length(Data.Hipangle)
     TSlack=Data.(Hiplable(i)).TSlack;
     Passive=Data.(Hiplable(i)).Passive;
     Tstrain=Data.(Hiplable(i)).Tstrain;
-    Error1(i,:)=(OptParam1(i,:)-TSlack)./TSlack.*100;
-    Error2(i,:)=(OptParam2(i,:)-Passive)./Passive.*100;
-    Error3(i,:)=(OptParam3(i,:)-Tstrain)./Tstrain.*100;
+    TSError(i,:)=(OptParam1(i,:)-TSlack)./TSlack.*100;
+    kps2=1./(1+OptParam2(i,:));
+    kps1=1./(1+Passive);
+    PSkError(i,:)=(kps2-kps1)./kps1.*100;
+    k2=1./(1+OptParam3(i,:));
+    k1=1./(1+Tstrain);
+    TkError(i,:)=(k2-k1)./k1.*100;
  %%       
     Header=OptData.colheaders;
     Ddata=OptData.data;
@@ -56,20 +61,21 @@ end
 ylabel ('Error(Deg)')
 xlabel ('Time (s)')
 title('Knee angle')
-% legend(Name,'Location','southeast')
+legend(Hiplable,'Location','southeast')
 % end
 figure
 X = categorical(Muscname);
-bar(X,Error1)
+bar(X,TSError)
 ylabel ('TS Estimation Error(%)')
 legend(Hiplable,'Location','northeast')
 figure
 X = categorical(Muscname);
-bar(X,Error2)
+bar(X,PSkError)
 ylabel ('PS Estimation Error(%)')
 legend(Hiplable,'Location','northeast')
 figure
+%% stiffness
 X2 = categorical(Data.ComplianacMusclename);
-bar(X2,Error3)
-ylabel ('PS Estimation Error(%)')
+bar(X2,TkError)
+ylabel ('Tendon Stiffness Estimation Error(%)')
 legend(Hiplable,'Location','northeast')
