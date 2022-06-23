@@ -30,6 +30,7 @@ track.set_initial_time(Stime);
 track.set_final_time(Etime);
 stateWeights = MocoWeightSet();
 stateWeights.cloneAndAppend(MocoWeight('/jointset/walker_knee_r/knee_angle_r/value',StateWeight));
+stateWeights.cloneAndAppend(MocoWeight('/jointset/walker_knee_r/knee_angle_r/speed',StateWeight*0.1));
 track.set_states_weight_set(stateWeights);
 study = track.initialize();
 %% Updating problem
@@ -62,7 +63,7 @@ solver.set_implicit_auxiliary_derivatives_weight(0.00001)
 solver.resetProblem(problem);
 solver.setGuessFile([cd '\TorqueSimulation\Tracking_Initial_Guess.sto']);
 kneeTrackingSolution = study.solve();
-kneeTrackingSolution.write([cd '\TorqueSimulation\Kneeflexion_solution_Degroot_Hip' Hiplable '.sto']);
+kneeTrackingSolution.write([cd '\TorqueSimulation\Kneeflexion_solution_Degroot_' Hiplable '.sto']);
 % study.visualize(kneeTrackingSolution);
 end
 
