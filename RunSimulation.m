@@ -22,14 +22,14 @@ for Hipangle=0:45:90
 ce=ce+1;
 Data.Hipangle(ce)=Hipangle;
 Hiplable=append('Hip',num2str(Hipangle));
-Data.(Hiplable).SimulPath=[cd '\TorqueSimulation\Kneeflexion_solution_Degroot_Hip' num2str(Hipangle) '.sto'];
+Data.(Hiplable).SimulPath=[cd '\TorqueSimulation\Kneeflexion_solution_Degroot_' Hiplable '.sto'];
 DataTable=TableProcessor(Data.(Hiplable).SimulPath);
 kneeTrackingSolutionTable=DataTable.process;
 Refmmodel = Model(Data.RefModelpath);
 [osimmodel,Data.(Hiplable)]=Modelcreator(Hipangle,Data,Refmmodel);
-% [kneeTrackingSolution]=TorqueSimulation(tableProcessor,osimmodel,Hiplable,Data);
-% [kneeTrackingParamSolution]=ParameterEstimation(kneeTrackingSolution.exportToStatesTable(),kneeTrackingSolution.exportToControlsTable(),osimmodel,Hiplable,Data);
-[kneeTrackingParamSolution]=ParameterEstimation(kneeTrackingSolutionTable,kneeTrackingSolutionTable,osimmodel,Hiplable,Data);
+[kneeTrackingSolution]=TorqueSimulation(tableProcessor,osimmodel,Hiplable,Data);
+[kneeTrackingParamSolution]=ParameterEstimation(kneeTrackingSolution.exportToStatesTable(),kneeTrackingSolution.exportToControlsTable(),osimmodel,Hiplable,Data);
+%[kneeTrackingParamSolution]=ParameterEstimation(kneeTrackingSolutionTable,kneeTrackingSolutionTable,osimmodel,Hiplable,Data);
 
 end
 save([cd '\SimData.mat'],'Data');

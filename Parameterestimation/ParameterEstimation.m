@@ -85,7 +85,7 @@ solver.set_optim_max_iterations(4000);
 solver.set_implicit_auxiliary_derivatives_weight(0.00001)
 solver.set_parameters_require_initsystem(false);
 solver.resetProblem(problem);
-% solver.setGuessFile([cd '\Parameterestimation\Parameter_Initial_Guess.sto']);
+solver.setGuessFile([cd '\Parameterestimation\Parameter_Initial_Guess_' Hiplable '.sto']);
 kneeTrackingParamSolution = study.solve();
 kneeTrackingParamSolution.write([cd '\Parameterestimation\Parameter_Opt_' Hiplable '.sto']);
 end
