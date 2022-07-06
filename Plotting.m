@@ -43,10 +43,10 @@ for i=1:length(Data.Hipangle)
     c1=0.2;
     c2=1;
     c3=0.2;
-    %     tendon_stiffness=1./(1+OptParam3(i,:));
-    tendon_stiffness = log((1.0 + c3) / c1) ./ (1.0 + OptParam3(i,:) - c2);
-    %     tendon_stiffness_ref=1./(1+tendon_strain_at_norm_ref);
-    tendon_stiffness_ref=log((1.0 + c3) / c1) ./ (1.0 + tendon_strain_at_norm_ref - c2);
+%          tendon_stiffness=1./(1+OptParam3(i,:));
+     tendon_stiffness = log((1.0 + c3) / c1) ./ (1.0 + OptParam3(i,:) - c2);
+%          tendon_stiffness_ref=1./(1+tendon_strain_at_norm_ref);
+     tendon_stiffness_ref=log((1.0 + c3) / c1) ./ (1.0 + tendon_strain_at_norm_ref - c2);
     TkErrortendon_stiffness_error(i,:)=(tendon_stiffness-tendon_stiffness_ref)./tendon_stiffness_ref.*100;
  %%       
     Header=OptData.colheaders;

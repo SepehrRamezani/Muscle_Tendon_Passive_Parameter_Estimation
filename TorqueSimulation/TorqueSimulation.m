@@ -30,7 +30,7 @@ track.set_initial_time(Stime);
 track.set_final_time(Etime);
 stateWeights = MocoWeightSet();
 stateWeights.cloneAndAppend(MocoWeight('/jointset/walker_knee_r/knee_angle_r/value',StateWeight));
-stateWeights.cloneAndAppend(MocoWeight('/jointset/walker_knee_r/knee_angle_r/speed',StateWeight*0.1));
+stateWeights.cloneAndAppend(MocoWeight('/jointset/walker_knee_r/knee_angle_r/speed',StateWeight*0.5));
 track.set_states_weight_set(stateWeights);
 study = track.initialize();
 %% Updating problem

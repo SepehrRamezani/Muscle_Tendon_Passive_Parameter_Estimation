@@ -96,9 +96,7 @@ for i=0:1:osimmodel.getMuscles().getSize()-1
     end
 end
 osimmodel.initSystem();
-if Data.DeGrooteflage
-    osimmodel.print([cd '\ModelGenerator\OneDOF_Knee_DeGroote' num2str(Hipangle) '.osim']);
-else
-    osimmodel.print([cd '\ModelGenerator\OneDOF_Knee_Thelen' num2str(Hipangle) '.osim']);
-end
+
+osimmodel.print(Data.(['Hip' num2str(Hipangle)]).ModelPath);
+
 end
