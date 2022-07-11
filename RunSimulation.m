@@ -13,7 +13,7 @@ Data.TorqueSolverinterval=20;
 Data.ParamSolverinterval=40;
 Data.Etime=20;
 Data.Stime=0;
-Data.justparameter=0;
+Data.justparameter=1;
 ce=0;
 for Hipangle=0:45:90
     Hipangle=90-Hipangle;
@@ -26,16 +26,15 @@ for Hipangle=0:45:90
     else
         Data.(Hiplable).ModelPath=[cd '\ModelGenerator\OneDOF_Knee_Thelen_' Hiplable '.osim'];
     end
-
+    Refmmodel = Model(Data.RefModelpath);
+    [osimmodel,Data.(Hiplable).MuscleInfo]=Modelcreator(Hipangle,Data,Refmmodel);
     if ~Data.justparameter
-        Refmmodel = Model(Data.RefModelpath);
-        [osimmodel,Data.(Hiplable)]=Modelcreator(Hipangle,Data,Refmmodel);
+        
         [kneeTrackingSolution]=TorqueSimulation(tableProcessor,osimmodel,Hiplable,Data);
         [kneeTrackingParamSolution]=ParameterEstimation(kneeTrackingSolution.exportToStatesTable(),kneeTrackingSolution.exportToControlsTable(),osimmodel,Hiplable,Data);
     else
         DataTable=TableProcessor(Data.(Hiplable).SimulPath);
         kneeTrackingSolutionTable=DataTable.process;
-        osimmodel=Model(Data.(Hiplable).ModelPath);
         [kneeTrackingParamSolution]=ParameterEstimation(kneeTrackingSolutionTable,kneeTrackingSolutionTable,osimmodel,Hiplable,Data);
     end
 end

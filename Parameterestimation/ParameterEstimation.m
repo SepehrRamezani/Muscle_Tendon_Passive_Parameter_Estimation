@@ -1,7 +1,7 @@
 function [kneeTrackingParamSolution]=ParameterEstimation(StateTrackTable,ControlTrackTable,osimmodel,Hiplable,Data)
 import org.opensim.modeling.*;
 ComplianacMusclename=Data.ComplianacMusclename;
-MinMTCLength=Data.(Hiplable).MinMTCLength;
+MinMTCLength=Data.(Hiplable).MuscleInfo.MinMTCLength;
 Solverinterval=Data.ParamSolverinterval;
 Etime=Data.Etime;
 Stime=Data.Stime;

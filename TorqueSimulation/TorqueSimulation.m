@@ -63,7 +63,7 @@ solver.set_implicit_auxiliary_derivatives_weight(0.00001)
 solver.resetProblem(problem);
 solver.setGuessFile([cd '\TorqueSimulation\Tracking_Initial_Guess.sto']);
 kneeTrackingSolution = study.solve();
-kneeTrackingSolution.write([cd '\TorqueSimulation\Kneeflexion_solution_Degroot_' Hiplable '.sto']);
+kneeTrackingSolution.write(Data.(Hiplable).SimulPath);
 % study.visualize(kneeTrackingSolution);
 end
 
