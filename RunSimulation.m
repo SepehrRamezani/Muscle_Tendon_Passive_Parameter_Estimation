@@ -13,7 +13,8 @@ Data.TorqueSolverinterval=20;
 Data.ParamSolverinterval=40;
 Data.Etime=20;
 Data.Stime=0;
-Data.justparameter=1;
+%% running just Parameter optimization
+Data.justparameterflag=1;
 ce=0;
 for Hipangle=0:45:90
     Hipangle=90-Hipangle;
@@ -28,7 +29,7 @@ for Hipangle=0:45:90
     end
     Refmmodel = Model(Data.RefModelpath);
     [osimmodel,Data.(Hiplable).MuscleInfo]=Modelcreator(Hipangle,Data,Refmmodel);
-    if ~Data.justparameter
+    if ~Data.justparameterflag
         
         [kneeTrackingSolution]=TorqueSimulation(tableProcessor,osimmodel,Hiplable,Data);
         [kneeTrackingParamSolution]=ParameterEstimation(kneeTrackingSolution.exportToStatesTable(),kneeTrackingSolution.exportToControlsTable(),osimmodel,Hiplable,Data);

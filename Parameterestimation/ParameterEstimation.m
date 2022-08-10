@@ -40,15 +40,6 @@ ContTracking.setReference(ConttableProcessor);
 for i=0:1:osimmodel.getMuscles().getSize()-1
     Musname = osimmodel.updMuscles().get(i).getName();
     MusPath=append('/forceset/',char(Musname));
-%     ContTracking.setReferenceLabel(MusPath,MusPath);
-%     c=0;
-    % finding maximum bound of tendon slack length
-%     for q=0:0.1:Qrange
-%         c=c+1;
-%         osimmodel.updCoordinateSet().get(1).setValue(state, q);
-%         osimmodel.realizePosition(state);
-%         musclelength(c)=osimmodel.getMuscles().get(i).getLength(state);
-%     end
     MaxTendonSlack=MinMTCLength(i+1);
     param = MocoParameter(append('tendon_slack_',char(Musname)),MusPath,'tendon_slack_length', MocoBounds(0.2*MaxTendonSlack,MaxTendonSlack));
     param1= MocoParameter(append('passive_fiber_',char(Musname)),MusPath,'passive_fiber_strain_at_one_norm_force', MocoBounds(0.2,0.8));

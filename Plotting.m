@@ -37,16 +37,19 @@ for i=1:length(Data.Hipangle)
     muscle_passive_fiber_at_norm_ref=Data.(Hiplable(i)).Passive(~contains(Muscname,Data.ComplianacMusclename));
     tendon_strain_at_norm_ref=Data.(Hiplable(i)).Tstrain;
     tendon_slack_Error(i,:)=(OptParam1(i,:)-tendod_slack_ref)./tendod_slack_ref.*100;
-    muscle_stiffness=1./(1+OptParam2(i,:));
-    muscle_stiffness_ref=1./(1+muscle_passive_fiber_at_norm_ref);
+    %     muscle_stiffness=1./(1+OptParam2(i,:));
+    muscle_stiffness=2./(OptParam2(i,:));
+    %     muscle_stiffness_ref=1./(1+muscle_passive_fiber_at_norm_ref);
+    muscle_stiffness_ref=2./(muscle_passive_fiber_at_norm_ref);
     muscle_stiffness_error(i,:)=(muscle_stiffness-muscle_stiffness_ref)./muscle_stiffness_ref.*100;
     c1=0.2;
     c2=1;
     c3=0.2;
 %          tendon_stiffness=1./(1+OptParam3(i,:));
-     tendon_stiffness = log((1.0 + c3) / c1) ./ (1.0 + OptParam3(i,:) - c2);
+     tendon_stiffness = 1.1*log((1.0 + c3) / c1) ./ (1.0 + OptParam3(i,:) - c2);
 %          tendon_stiffness_ref=1./(1+tendon_strain_at_norm_ref);
-     tendon_stiffness_ref=log((1.0 + c3) / c1) ./ (1.0 + tendon_strain_at_norm_ref - c2);
+     tendon_stiffness_ref=1.1*log((1.0 + c3) / c1) ./ (1.0 + tendon_strain_at_norm_ref - c2);
+     
     TkErrortendon_stiffness_error(i,:)=(tendon_stiffness-tendon_stiffness_ref)./tendon_stiffness_ref.*100;
  %%       
     Header=OptData.colheaders;
