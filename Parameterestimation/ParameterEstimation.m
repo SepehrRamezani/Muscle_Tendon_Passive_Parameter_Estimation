@@ -5,11 +5,9 @@ MinMTCLength=Data.(Hiplable).MuscleInfo.MinMTCLength;
 Solverinterval=Data.ParamSolverinterval;
 Etime=Data.Etime;
 Stime=Data.Stime;
-state = osimmodel.initSystem();
 ControlWight=1;
 % w=1/osimmodel.getForceSet().getSize();
 StateWeight = 10.0/osimmodel.getNumCoordinates();
-Qrange=pi()/2;
 %% Define tracking problem
 track = MocoTrack();
 track.setName('kneestateTracking');
@@ -29,6 +27,8 @@ track.set_minimize_control_effort(false);
 stateWeights = MocoWeightSet();
 stateWeights.cloneAndAppend(MocoWeight('/jointset/walker_knee_r/knee_angle_r/value',StateWeight));
 stateWeights.cloneAndAppend(MocoWeight('/jointset/walker_knee_r/knee_angle_r/speed',StateWeight*0.1));
+stateWeights.cloneAndAppend(MocoWeight('/jointset/ankle_r/ankle_angle_r/value',StateWeight*4));
+stateWeights.cloneAndAppend(MocoWeight('/jointset/ankle_r/ankle_angle_r/speed',StateWeight*0.4));
 track.set_states_weight_set(stateWeights);
 study = track.initialize();
 problem = study.updProblem();
@@ -54,6 +54,8 @@ end
 
 ContTracking.setReferenceLabel('/forceset/knee_act','/forceset/knee_act');
 ContTracking.setWeightForControl('/forceset/knee_act',ControlWight);
+ContTracking.setReferenceLabel('/forceset/ankle_act','/forceset/ankle_act');
+ContTracking.setWeightForControl('/forceset/ankle_act',ControlWight*10);
 problem.addGoal(ContTracking)
 model = modelProcessor.process();
 model.initSystem();
@@ -64,6 +66,7 @@ model.initSystem();
 % effort.setDivideByDisplacement(false);
 %% define parameter
 problem.setStateInfo('/jointset/walker_knee_r/knee_angle_r/value',[0, 1.6]);
+problem.setStateInfo('/jointset/ankle_r/ankle_angle_r/value',[-.4, .4]);
 %% optimal_fiber_length
 solver = study.initCasADiSolver();
 %% define solver
@@ -76,7 +79,11 @@ solver.set_optim_max_iterations(4000);
 solver.set_implicit_auxiliary_derivatives_weight(0.00001)
 solver.set_parameters_require_initsystem(false);
 solver.resetProblem(problem);
-solver.setGuessFile([cd '\Parameterestimation\Parameter_Initial_Guess_' Hiplable '.sto']);
+if isfile(Data.(Hiplable).ParamSimulPath)
+    solver.setGuessFile(Data.(Hiplable).ParamSimulPath);
+else
+%     solver.setGuessFile([cd '\Parameterestimation\Parameter_Initial_Guess_' Hiplable '.sto']);
+end
 kneeTrackingParamSolution = study.solve();
-kneeTrackingParamSolution.write([cd '\Parameterestimation\Parameter_Opt_' Hiplable '.sto']);
+kneeTrackingParamSolution.write(Data.(Hiplable).ParamSimulPath);
 end
