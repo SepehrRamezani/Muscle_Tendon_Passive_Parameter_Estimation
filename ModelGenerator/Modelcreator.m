@@ -1,7 +1,7 @@
-function [osimmodel,Muscleinfo]=Modelcreator(Hipangle,Data,osimmodel)
+function [osimmodel,Muscleinfo]=Modelcreator(Hipangle,Hiplable,Data,osimmodel)
 import org.opensim.modeling.*;
 % osimmodel = Model('subject_walk_armless_RLeg_justknee.osim');
-Qrange=90*pi()/180;
+Kneerange=90*pi()/180;
 %% change the name
 osimmodel.setName(['Hip_' num2str(Hipangle)])
 %% Setup angles
@@ -22,14 +22,14 @@ if Data.DeGrooteflage
     DeGrooteFregly2016Muscle().replaceMuscles(osimmodel);
 end
 c=0;
-
-for m = 0:osimmodel.getForceSet().getSize()-1
-    frcset = osimmodel.updForceSet().get(c);
+%% Setup Muscles
+for m = 0:osimmodel.getMuscles().getSize()-1
+    Muscname=osimmodel.getMuscles().get(m).getName();
+    frcset = osimmodel.updForceSet().get(Muscname);
     if ~sum(strcmp(char(frcset.getName()), Data.SimMusclename))
-        isremove=osimmodel.updForceSet().remove(c);
+        isremove=osimmodel.updForceSet().remove(frcset);
     else
         c=c+1;
-        if ~strcmp(char(frcset.getName()), 'knee_act')
             musc=Muscle.safeDownCast(frcset);
             
             musc.set_ignore_activation_dynamics(true);
@@ -58,24 +58,45 @@ for m = 0:osimmodel.getForceSet().getSize()-1
             %   musc.set_max_isometric_force(1.5 * musc.get_max_isometric_force());
             %   dgf.set_ignore_passive_fiber_force(true);
             % end
-        end
         
     end
     
 end
 state=osimmodel.initSystem();
-KneeCoor=osimmodel.updCoordinateSet().get(1);
+for corindx = 1:length(Data.ActiveCoordinates)
+osimmodel.updCoordinateSet().get(Data.ActiveCoordinates(corindx)).set_locked(false);
+end
+osimmodel.initSystem();
+KneeCoor=osimmodel.updCoordinateSet().get(Data.ActiveCoordinates(1));
+
 newi=0;
+
+%% change TSL to avoid buckling and save muscle information
 for i=0:1:osimmodel.getMuscles().getSize()-1
     k=0;
-    for q=0:0.3:Qrange
+    u=0;
+    %% finding minimum MTL 
+        %%Knee deformation
+        CurrentMuscle=osimmodel.getMuscles().get(i);
+    for q=0:0.3:Kneerange
         k=k+1;
         
         KneeCoor.setValue(state, q);
         osimmodel.realizePosition(state);
-        CurrentMuscle=osimmodel.getMuscles().get(i);
         musclelength(k)=CurrentMuscle.getLength(state);
     end
+    
+    if sum(strcmp(char(CurrentMuscle.getName),Data.ComplianacMusclename))&& sum(contains(Data.ActiveCoordinates,'ankle_angle_r'))
+        AnkleCoor=osimmodel.updCoordinateSet().get(Data.ActiveCoordinates(2));
+        KneeCoor.setValue(state, Kneerange);
+        for q=AnkleCoor.getRangeMin:0.1:AnkleCoor.getRangeMax
+            u=u+1;
+            AnkleCoor.setValue(state, q);
+            osimmodel.realizePosition(state);
+            musclelength(k+u)=CurrentMuscle.getLength(state);
+        end
+    end
+    
     Muscleinfo.MinMTCLength(i+1)=min(musclelength);
     
     if Muscleinfo.MinMTCLength(i+1) < CurrentMuscle.get_tendon_slack_length()
@@ -97,6 +118,6 @@ for i=0:1:osimmodel.getMuscles().getSize()-1
 end
 osimmodel.initSystem();
 
-osimmodel.print(Data.(['Hip' num2str(Hipangle)]).ModelPath);
+osimmodel.print(Data.(Hiplable).ModelPath);
 
 end
