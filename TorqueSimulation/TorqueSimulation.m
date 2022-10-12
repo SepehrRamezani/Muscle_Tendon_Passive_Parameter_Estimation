@@ -31,6 +31,8 @@ track.set_final_time(Etime);
 stateWeights = MocoWeightSet();
 stateWeights.cloneAndAppend(MocoWeight('/jointset/walker_knee_r/knee_angle_r/value',StateWeight));
 stateWeights.cloneAndAppend(MocoWeight('/jointset/walker_knee_r/knee_angle_r/speed',StateWeight*0.5));
+stateWeights.cloneAndAppend(MocoWeight('/jointset/ankle_r/ankle_angle_r/value',StateWeight*4));
+stateWeights.cloneAndAppend(MocoWeight('/jointset/ankle_r/ankle_angle_r/speed',StateWeight*2));
 track.set_states_weight_set(stateWeights);
 study = track.initialize();
 %% Updating problem
@@ -41,6 +43,7 @@ model.initSystem();
 effort = MocoControlGoal.safeDownCast(problem.updGoal('control_effort'));
 % effort.setWeight(1);
 effort.setWeightForControl('/forceset/knee_act',ControlWight);
+effort.setWeightForControl('/forceset/ankle_act',ControlWight);
 %%% disable muscles
 for i=0:1:osimmodel.getMuscles().getSize()-1
     Musname = osimmodel.updMuscles().get(i).getName();
@@ -51,19 +54,24 @@ effort.setExponent(2);
 effort.setDivideByDisplacement(false);
 %% Bounderies
 problem.setStateInfo('/jointset/walker_knee_r/knee_angle_r/value',[0, 1.6]);
+problem.setStateInfo('/jointset/ankle_r/ankle_angle_r/value',[-.4, .4]);
 %% Defining Solver 
 solver = study.initCasADiSolver();
 solver.set_num_mesh_intervals(Solverinterval);
 solver.set_verbosity(2);
 solver.set_optim_solver('ipopt');
-solver.set_optim_convergence_tolerance(1e-3);
-solver.set_optim_constraint_tolerance(1e-1);
+solver.set_optim_convergence_tolerance(1e-4);
+solver.set_optim_constraint_tolerance(1e-2);
 solver.set_optim_max_iterations(3000);
 solver.set_implicit_auxiliary_derivatives_weight(0.00001)
 solver.resetProblem(problem);
-solver.setGuessFile([cd '\TorqueSimulation\Tracking_Initial_Guess.sto']);
+if isfile(Data.(Hiplable).TorqeSimulPath)
+    solver.setGuessFile(Data.(Hiplable).TorqeSimulPath);
+else
+    solver.setGuessFile([cd '\TorqueSimulation\Tracking_Initial_Guess.sto']);
+end
 kneeTrackingSolution = study.solve();
-kneeTrackingSolution.write(Data.(Hiplable).SimulPath);
+kneeTrackingSolution.write(Data.(Hiplable).TorqeSimulPath);
 % study.visualize(kneeTrackingSolution);
 end
 
