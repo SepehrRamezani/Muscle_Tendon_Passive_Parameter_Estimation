@@ -1,7 +1,8 @@
 function [osimmodel,Muscleinfo]=Modelcreator(Hipangle,Hiplable,Data,osimmodel)
 import org.opensim.modeling.*;
 % osimmodel = Model('subject_walk_armless_RLeg_justknee.osim');
-Kneerange=90*pi()/180;
+Kneerange=0;
+optForce=3000;
 %% change the name
 osimmodel.setName(['Hip_' num2str(Hipangle)])
 %% Setup angles
@@ -64,10 +65,13 @@ for m = 0:osimmodel.getMuscles().getSize()-1
 end
 state=osimmodel.initSystem();
 for corindx = 1:length(Data.ActiveCoordinates)
-osimmodel.updCoordinateSet().get(Data.ActiveCoordinates(corindx)).set_locked(false);
+    %%% Unlock the active coordinate
+    osimmodel.updCoordinateSet().get(Data.ActiveCoordinates(corindx)).set_locked(false);
+    %%% Adding the coordinate actuator
+    addCoordinateActuator(osimmodel, Data.ActiveCoordinates(corindx), optForce)
 end
 osimmodel.initSystem();
-KneeCoor=osimmodel.updCoordinateSet().get(Data.ActiveCoordinates(1));
+KneeCoor=osimmodel.updCoordinateSet().get('knee_angle_r');
 
 newi=0;
 
@@ -87,7 +91,7 @@ for i=0:1:osimmodel.getMuscles().getSize()-1
     end
     
     if sum(strcmp(char(CurrentMuscle.getName),Data.ComplianacMusclename))&& sum(contains(Data.ActiveCoordinates,'ankle_angle_r'))
-        AnkleCoor=osimmodel.updCoordinateSet().get(Data.ActiveCoordinates(2));
+        AnkleCoor=osimmodel.updCoordinateSet().get('ankle_angle_r');
         KneeCoor.setValue(state, Kneerange);
         for q=AnkleCoor.getRangeMin:0.1:AnkleCoor.getRangeMax
             u=u+1;
@@ -119,5 +123,21 @@ end
 osimmodel.initSystem();
 
 osimmodel.print(Data.(Hiplable).ModelPath);
+
+end
+function addCoordinateActuator(model, coordName, optForce)
+
+import org.opensim.modeling.*;
+
+coordSet = model.updCoordinateSet();
+
+actu = CoordinateActuator();
+actu.setName(append(coordName,'_act'));
+actu.setCoordinate(coordSet.get(coordName));
+actu.setOptimalForce(optForce);
+actu.setMinControl(-1);
+actu.setMaxControl(1);
+% model.updForceSet().add(actu);
+model.addForce(actu);
 
 end

@@ -1259,7 +1259,7 @@
 							<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 							<clamped>true</clamped>
 							<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
-							<locked>false</locked>
+							<locked>true</locked>
 							<!--If specified, the coordinate can be prescribed by a function of time. It can be any OpenSim Function with valid second order derivatives.-->
 							<prescribed_function />
 							<!--Flag indicating whether or not the values of the coordinates should be prescribed according to the function above. It is ignored if the no prescribed function is specified.-->
@@ -1694,26 +1694,6 @@
 		<!--Forces in the model (includes Actuators).-->
 		<ForceSet name="forceset">
 			<objects>
-				<CoordinateActuator name="knee_act">
-					<!--Minimum allowed value for control signal. Used primarily when solving for control values.-->
-					<min_control>-1</min_control>
-					<!--Maximum allowed value for control signal. Used primarily when solving for control values.-->
-					<max_control>1</max_control>
-					<!--Name of the generalized coordinate to which the actuator applies.-->
-					<coordinate>knee_angle_r</coordinate>
-					<!--The maximum generalized force produced by this actuator.-->
-					<optimal_force>3000</optimal_force>
-				</CoordinateActuator>
-				<CoordinateActuator name="ankle_act">
-					<!--Minimum allowed value for control signal. Used primarily when solving for control values.-->
-					<min_control>-1</min_control>
-					<!--Maximum allowed value for control signal. Used primarily when solving for control values.-->
-					<max_control>1</max_control>
-					<!--Name of the generalized coordinate to which the actuator applies.-->
-					<coordinate>ankle_angle_r</coordinate>
-					<!--The maximum generalized force produced by this actuator.-->
-					<optimal_force>3000</optimal_force>
-				</CoordinateActuator>
 				<DeGrooteFregly2016Muscle name="bflh_r">
 					<!--Flag indicating whether the force is applied or not. If true the forceis applied to the MultibodySystem otherwise the force is not applied.NOTE: Prior to OpenSim 4.0, this behavior was controlled by the 'isDisabled' property, where 'true' meant that force was not being applied. Thus, if 'isDisabled' is true, then 'appliesForce` is false.-->
 					<appliesForce>true</appliesForce>
@@ -2112,7 +2092,7 @@
 					<!--Optimal length of the muscle fibers-->
 					<optimal_fiber_length>0.074326781632001598</optimal_fiber_length>
 					<!--Resting length of the tendon-->
-					<tendon_slack_length>0.41325419028171168</tendon_slack_length>
+					<tendon_slack_length>0.41325373785923281</tendon_slack_length>
 					<!--Angle between tendon and fibers at optimal fiber length expressed in radians-->
 					<pennation_angle_at_optimal>0.21701490000000001</pennation_angle_at_optimal>
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
@@ -2600,6 +2580,16 @@
 					<!--The dynamics method used to enforce tendon compliance dynamics. Options: 'explicit' or 'implicit'. Default: 'explicit'. -->
 					<tendon_compliance_dynamics_mode>implicit</tendon_compliance_dynamics_mode>
 				</DeGrooteFregly2016Muscle>
+				<CoordinateActuator name="ankle_angle_r_act">
+					<!--Minimum allowed value for control signal. Used primarily when solving for control values.-->
+					<min_control>-1</min_control>
+					<!--Maximum allowed value for control signal. Used primarily when solving for control values.-->
+					<max_control>1</max_control>
+					<!--Name of the generalized coordinate to which the actuator applies.-->
+					<coordinate>ankle_angle_r</coordinate>
+					<!--The maximum generalized force produced by this actuator.-->
+					<optimal_force>3000</optimal_force>
+				</CoordinateActuator>
 			</objects>
 			<groups />
 		</ForceSet>
