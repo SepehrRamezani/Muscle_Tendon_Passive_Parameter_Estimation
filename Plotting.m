@@ -18,11 +18,12 @@ for i=1:3:length(Data.Hiplable)
         
     end
         reftime=RefData.data(:,1);
-        Kneeref=RefData.data(:,(contains(RefData.colheaders,'knee_angle_r/value')))*180/3.14;
+        
         Ankleref=RefData.data(:,(contains(RefData.colheaders,'ankle_angle_r/value')))*180/3.14;
 %     indx=find(strncmp(OptData.textdata,'num_parameters',14));
 %     ParNum=erase(OptData.textdata(indx),'num_parameters=');
 %     ParNum=str2num(ParNum{1,1});
+OptPassiveFiber=[];
     for m=1:length(Muscname)
         M_indx=find(contains(OptData.colheaders,Muscname(m))&~contains(OptData.colheaders,'force'));
         for y=1:length(M_indx)
@@ -42,12 +43,16 @@ for i=1:3:length(Data.Hiplable)
     tendod_slack_ref=Data.(Data.Hiplable{i}).MuscleInfo.TSlack;
     muscle_passive_fiber_at_norm_ref=Data.(Data.Hiplable{i}).MuscleInfo.Passive(~contains(Muscname,Data.ComplianacMusclename));
     tendon_strain_at_norm_ref=Data.(Data.Hiplable{i}).MuscleInfo.Tstrain;
+    
+   %% calculating error
     tendon_slack_Error(i,:)=(OptTSL(i,:)-tendod_slack_ref)./tendod_slack_ref.*100;
-    %     muscle_stiffness=1./(1+OptParam2(i,:));
-    muscle_stiffness=2./(OptPassiveFiber(i,:));
-    %     muscle_stiffness_ref=1./(1+muscle_passive_fiber_at_norm_ref);
-    muscle_stiffness_ref=2./(muscle_passive_fiber_at_norm_ref);
-    muscle_stiffness_error(i,:)=(muscle_stiffness-muscle_stiffness_ref)./muscle_stiffness_ref.*100;
+    if OptPassiveFiber
+        %     muscle_stiffness=1./(1+OptParam2(i,:));
+        muscle_stiffness=2./(OptPassiveFiber(i,:));
+        %     muscle_stiffness_ref=1./(1+muscle_passive_fiber_at_norm_ref);
+        muscle_stiffness_ref=2./(muscle_passive_fiber_at_norm_ref);
+        muscle_stiffness_error(i,:)=(muscle_stiffness-muscle_stiffness_ref)./muscle_stiffness_ref.*100;
+    end
     c1=0.2;
     c2=1;
     c3=0.2;
@@ -62,17 +67,27 @@ for i=1:3:length(Data.Hiplable)
     Header=OptData.colheaders;
     Ddata=OptData.data;
     time=Ddata(:,1);
-    Angle_idx=find(contains(Header,'knee_angle_r/value'));
-    Kneeangle=Ddata(:,Angle_idx)*180/3.14;
-    activation_idx=find(contains(Header,'/forceset/knee_act'));
-    KneeActuator=Ddata(:,activation_idx)*3000;
+    for corindx = 1:length(Data.ActiveCoordinates)
+        Angle_idx=find(contains(Header,append(Data.ActiveCoordinates,'/value')));
+        
+        Activecoor(:,corindx)=Ddata(:,Angle_idx)*180/3.14; 
+        RefAngle_idx=(contains(RefData.colheaders,append(Data.ActiveCoordinates,'/value')));
+        RefActivecoor(:,corindx)=RefData.data(:,RefAngle_idx)*180/3.14;
+        
+    end
+    
+    
+%     activation_idx=find(contains(Header,'/forceset/knee_act'));
+%     KneeActuator=Ddata(:,activation_idx)*3000;
     % plot(Kneeangle,KneeActuator)
-    vq1 = interp1(time,Kneeangle,reftime);
-    Error=Kneeref-vq1;
+    vq1 = interp1(time,Activecoor,reftime);
+    Error=RefActivecoor-vq1;
 %     Ankle=
     plot(reftime,Error)
+   
     hold on
 end
+
 % xlabel ('Knee Angle(Deg)')
 % ylabel ('External Torque(N.m)')
 % legend(Name,'Location','southeast')
@@ -90,25 +105,26 @@ ylabel ('Tendon Slack length Estimation Error(%)')
 legend(Data.Hiplable,'Location','northeast')
 
 %% Muscle Stiffness
+if OptPassiveFiber
 figure
 X = categorical(Muscname(~contains(Muscname,Data.ComplianacMusclename)));
-bar(X,muscle_stiffness_error([1,4],:)')
+bar(X,muscle_stiffness_error')
 ylabel ('Muscle Stiffness Estimation Error(%)')
-legend([Data.Hiplable{1},Data.Hiplable{4}],'Location','southeast')
+legend(Data.Hiplable,'Location','southeast')
 % legend(Data.Hiplable,'Location','northeast')
-
+end
 %% Tendon stiffness
 figure
 X2 = categorical(Data.ComplianacMusclename);
-bar(X2,TkErrortendon_stiffness_error([1,4],:)')
+bar(X2,TkErrortendon_stiffness_error')
 ylabel ('Tendon Stiffness Estimation Error(%)')
 % legend(Data.Hiplable,'Location','northeast')
-legend([Data.Hiplable{1},Data.Hiplable{4}],'Location','southeast')
+legend(Data.Hiplable{1},'Location','southeast')
 
 
 figure
 X2 = categorical(Data.ComplianacMusclename);
-bar(X2,epsilonerror([1,4],:)')
+bar(X2,epsilonerror')
 ylabel ('Epsilon Estimation Error(%)')
 % legend(Data.Hiplable,'Location','northeast')
-legend([Data.Hiplable{1},Data.Hiplable{4}],'Location','southeast')
+legend(Data.Hiplable,'Location','southeast')

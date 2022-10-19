@@ -3,7 +3,8 @@ import org.opensim.modeling.*;
 myLog = JavaLogSink();
 Logger.addSink(myLog)
 
-Data.SimMusclename=["bflh_r","bfsh_r","gaslat_r","gasmed_r","recfem_r","semimem_r","semiten_r","vasint_r","vaslat_r","vasmed_r"];
+% Data.SimMusclename=["bflh_r","bfsh_r","gaslat_r","gasmed_r","recfem_r","semimem_r","semiten_r","vasint_r","vaslat_r","vasmed_r"];
+Data.SimMusclename=["gaslat_r","gasmed_r"];
 Data.ComplianacMusclename=["gaslat_r","gasmed_r"];
 Data.DeGrooteflage=1;
 % Hipangle=0;%deg
@@ -12,7 +13,7 @@ Data.RefStatepath=append(cd,'\TorqueSimulation\referenceCoordinates.sto');
 Data.RefStatepathAnkleMoving=append(cd,'\TorqueSimulation\referenceCoordinatesAnkleMoving.sto');
 
 Data.TorqueSolverinterval=40;
-Data.ParamSolverinterval=60;
+Data.ParamSolverinterval=40;
 Data.Etime=20;
 Data.Stime=0;
 % Trialas=["Hip","AnkleMovingHip"];
@@ -23,7 +24,7 @@ Data.justparameterflag=0;
 qe=1;
 for t=1:length(Trialas)
     if contains(Trialas(t),"AnkleMoving")
-        Data.ActiveCoordinates=["knee_angle_r","ankle_angle_r"];
+        Data.ActiveCoordinates=["ankle_angle_r"];
         tableProcessor=TableProcessor(Data.RefStatepathAnkleMoving);
     else
         Data.ActiveCoordinates=["knee_angle_r"];
@@ -34,13 +35,13 @@ for t=1:length(Trialas)
         Data.Hiplable(qe)={append(Trialas(t),num2str(HipAngle(ce)))};
         Data.(Data.Hiplable{qe}).TorqeSimulPath=append(cd,'\TorqueSimulation\Kneeflexion_solution_Degroot_',Data.Hiplable{qe},'.sto');
         Data.(Data.Hiplable{qe}).ParamSimulPath=append(cd,'\Parameterestimation\Parameter_Opt_',Data.Hiplable{qe},'.sto');
-        if Data.DeGrooteflage
-            Data.(Data.Hiplable{qe}).ModelPath=append(cd,'\ModelGenerator\OneDOF_Knee_DeGroote_',Data.Hiplable{qe},'.osim');
-        else
-            Data.(Data.Hiplable{qe}).ModelPath=append(cd,'\ModelGenerator\OneDOF_Knee_Thelen_',Data.Hiplable{qe},'.osim');
-        end
+%         if Data.DeGrooteflage
+        Data.(Data.Hiplable{qe}).ModelPath=append(cd,'\ModelGenerator\OneDOF_Knee_DeGroote_',Data.Hiplable{qe},'.osim');
+%         else
+%             Data.(Data.Hiplable{qe}).ModelPath=append(cd,'\ModelGenerator\OneDOF_Knee_Thelen_',Data.Hiplable{qe},'.osim');
+%         end
         Refmmodel = Model(Data.RefModelpath);
-        [osimmodel,Data.(Data.Hiplable{qe}).MuscleInfo]=Modelcreator(HipAngle(t),Data.Hiplable{qe},Data,Refmmodel);
+        [osimmodel,Data.(Data.Hiplable{qe}).MuscleInfo]=Modelcreator(HipAngle(ce),Data.Hiplable{qe},Data,Refmmodel);
             if ~Data.justparameterflag
         
                 [kneeTrackingSolution]=TorqueSimulation(tableProcessor,osimmodel,Data.Hiplable{ce},Data);
@@ -53,5 +54,5 @@ for t=1:length(Trialas)
         qe=qe+1;
     end
 end
-% save([cd '\SimData.mat'],'Data');
-% Plotting()
+save([cd '\SimData.mat'],'Data');
+Plotting()
