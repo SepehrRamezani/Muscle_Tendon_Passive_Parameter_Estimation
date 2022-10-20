@@ -16,43 +16,51 @@ Data.TorqueSolverinterval=40;
 Data.ParamSolverinterval=40;
 Data.Etime=20;
 Data.Stime=0;
-% Trialas=["Hip","AnkleMovingHip"];
-Trialas=["AnkleMovingHip"];
+% Trialas=["KneeMove","AnkleMove","KneeAnkleMove"];
+Trialas=["AnkleMove"];
 HipAngle=[90];
+Kneeangle=[0,45,90];
+Ankleangle=[25];
 %% running just Parameter optimization
 Data.justparameterflag=0;
 qe=1;
 for t=1:length(Trialas)
-    if contains(Trialas(t),"AnkleMoving")
+    if contains(Trialas(t),"AnkleMove")
         Data.ActiveCoordinates=["ankle_angle_r"];
         tableProcessor=TableProcessor(Data.RefStatepathAnkleMoving);
     else
         Data.ActiveCoordinates=["knee_angle_r"];
         tableProcessor=TableProcessor(Data.RefStatepath);
     end
-    for ce=1:length(HipAngle)
-        Data.Hipangle(qe)=HipAngle(ce);
-        Data.Hiplable(qe)={append(Trialas(t),num2str(HipAngle(ce)))};
-        Data.(Data.Hiplable{qe}).TorqeSimulPath=append(cd,'\TorqueSimulation\Kneeflexion_solution_Degroot_',Data.Hiplable{qe},'.sto');
-        Data.(Data.Hiplable{qe}).ParamSimulPath=append(cd,'\Parameterestimation\Parameter_Opt_',Data.Hiplable{qe},'.sto');
-%         if Data.DeGrooteflage
-        Data.(Data.Hiplable{qe}).ModelPath=append(cd,'\ModelGenerator\OneDOF_Knee_DeGroote_',Data.Hiplable{qe},'.osim');
-%         else
-%             Data.(Data.Hiplable{qe}).ModelPath=append(cd,'\ModelGenerator\OneDOF_Knee_Thelen_',Data.Hiplable{qe},'.osim');
-%         end
-        Refmmodel = Model(Data.RefModelpath);
-        [osimmodel,Data.(Data.Hiplable{qe}).MuscleInfo]=Modelcreator(HipAngle(ce),Data.Hiplable{qe},Data,Refmmodel);
-            if ~Data.justparameterflag
-        
-                [kneeTrackingSolution]=TorqueSimulation(tableProcessor,osimmodel,Data.Hiplable{ce},Data);
-                [kneeTrackingParamSolution]=ParameterEstimation(kneeTrackingSolution.exportToStatesTable(),kneeTrackingSolution.exportToControlsTable(),osimmodel,Data.Hiplable{ce},Data);
-            else
-                DataTable=TableProcessor(Data.(Data.Hiplable{ce}).TorqeSimulPath);
-                kneeTrackingSolutionTable=DataTable.process;
-                [kneeTrackingParamSolution]=ParameterEstimation(kneeTrackingSolutionTable,kneeTrackingSolutionTable,osimmodel,Data.Hiplable{ce},Data);
+    for Hipindx=1:length(HipAngle)
+        for kneeindx=1:length(Kneeangle)
+            for ankleindx=1:length(Ankleangle)
+                Data.Coordlable(qe)={append(Trialas(t),'_Hip',num2str(HipAngle(Hipindx)),'_Knee',num2str(Kneeangle(kneeindx)))};
+                Data.(Data.Coordlable{qe}).Hipangle=HipAngle(Hipindx);
+                Data.(Data.Coordlable{qe}).Kneeangle=Kneeangle(kneeindx);
+                Data.(Data.Coordlable{qe}).Ankleangle=Ankleangle(ankleindx);
+                Data.(Data.Coordlable{qe}).TorqeSimulPath=append(cd,'\TorqueSimulation\Torque_Est_',Data.Coordlable{qe},'.sto');
+                Data.(Data.Coordlable{qe}).ParamSimulPath=append(cd,'\Parameterestimation\Parameter_Opt_',Data.Coordlable{qe},'.sto');
+                %         if Data.DeGrooteflage
+                Data.(Data.Coordlable{qe}).ModelPath=append(cd,'\ModelGenerator\Model_',Data.Coordlable{qe},'.osim');
+                %         else
+                %             Data.(Data.Coordlable{qe}).ModelPath=append(cd,'\ModelGenerator\OneDOF_Knee_Thelen_',Data.Coordlable{qe},'.osim');
+                %         end
+                Refmmodel = Model(Data.RefModelpath);
+                [osimmodel,Data.(Data.Coordlable{qe}).MuscleInfo]=Modelcreator(Data.Coordlable{qe},Data,Refmmodel);
+                if ~Data.justparameterflag
+                    
+                    [kneeTrackingSolution]=TorqueSimulation(tableProcessor,osimmodel,Data.Coordlable{qe},Data);
+                    [kneeTrackingParamSolution]=ParameterEstimation(kneeTrackingSolution.exportToStatesTable(),kneeTrackingSolution.exportToControlsTable(),osimmodel,Data.Coordlable{qe},Data);
+                else
+                    DataTable=TableProcessor(Data.(Data.Coordlable{qe}).TorqeSimulPath);
+                    kneeTrackingSolutionTable=DataTable.process;
+                    [kneeTrackingParamSolution]=ParameterEstimation(kneeTrackingSolutionTable,kneeTrackingSolutionTable,osimmodel,Data.Coordlable{qe},Data);
+                end
+                qe=qe+1;
             end
-        qe=qe+1;
+        end
     end
 end
 save([cd '\SimData.mat'],'Data');
-Plotting()
+% Plotting()

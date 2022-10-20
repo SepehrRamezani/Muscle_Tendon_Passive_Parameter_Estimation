@@ -1,4 +1,4 @@
-function [kneeTrackingSolution]=TorqueSimulation(tableProcessor,osimmodel,Hiplable,Data)
+function [kneeTrackingSolution]=TorqueSimulation(tableProcessor,osimmodel,Coordlable,Data)
 % ModelPath=[cd '\..\ModelGenerator\OneDOF_Knee_DeGroote.osim'];
 Solverinterval=Data.TorqueSolverinterval;
 Etime=Data.Etime;
@@ -32,7 +32,7 @@ stateWeights = MocoWeightSet();
 stateWeights.cloneAndAppend(MocoWeight('/jointset/walker_knee_r/knee_angle_r/value',StateWeight));
 stateWeights.cloneAndAppend(MocoWeight('/jointset/walker_knee_r/knee_angle_r/speed',StateWeight*0.5));
 stateWeights.cloneAndAppend(MocoWeight('/jointset/ankle_r/ankle_angle_r/value',StateWeight*2));
-stateWeights.cloneAndAppend(MocoWeight('/jointset/ankle_r/ankle_angle_r/speed',StateWeight*2));
+stateWeights.cloneAndAppend(MocoWeight('/jointset/ankle_r/ankle_angle_r/speed',StateWeight*1));
 track.set_states_weight_set(stateWeights);
 study = track.initialize();
 %% Updating problem
@@ -70,13 +70,13 @@ solver.set_optim_max_iterations(3000);
 solver.set_implicit_auxiliary_derivatives_weight(0.00001)
 solver.set_parameters_require_initsystem(false);
 solver.resetProblem(problem);
-if isfile(Data.(Hiplable).TorqeSimulPath)
-     solver.setGuessFile(Data.(Hiplable).TorqeSimulPath);
+if isfile(Data.(Coordlable).TorqeSimulPath)
+     solver.setGuessFile(Data.(Coordlable).TorqeSimulPath);
 else
 %     solver.setGuessFile([cd '\TorqueSimulation\Tracking_Initial_Guess.sto']);
 end
 kneeTrackingSolution = study.solve();
-kneeTrackingSolution.write(Data.(Hiplable).TorqeSimulPath);
+kneeTrackingSolution.write(Data.(Coordlable).TorqeSimulPath);
 % study.visualize(kneeTrackingSolution);
 end
 

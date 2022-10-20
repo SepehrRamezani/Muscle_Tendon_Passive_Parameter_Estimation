@@ -1,22 +1,27 @@
-function [osimmodel,Muscleinfo]=Modelcreator(Hipangle,Hiplable,Data,osimmodel)
+function [osimmodel,Muscleinfo]=Modelcreator(Coordlable,Data,osimmodel)
 import org.opensim.modeling.*;
 % osimmodel = Model('subject_walk_armless_RLeg_justknee.osim');
 Kneerange=0;
 optForce=3000;
 %% change the name
-osimmodel.setName(['Hip_' num2str(Hipangle)])
+osimmodel.setName(Coordlable)
 %% Setup angles
 %%% Pelvis
 modeljointSet=osimmodel.getJointSet();
 Pelvisjoint=modeljointSet.get(0);
 Pelvisweldjoint=WeldJoint.safeDownCast(Pelvisjoint);
 hipfram=Pelvisweldjoint.get_frames(0);
-hipfram.set_orientation(Vec3(0,0,(90-Hipangle)/180*pi()));
+hipfram.set_orientation(Vec3(0,0,(90-Data.(Coordlable).Hipangle)/180*pi()));
 %%% Hip_flexion
 modelCoordSet = osimmodel.getCoordinateSet();
 Hipcoord = modelCoordSet.get(0);
-Hipcoord.setDefaultValue(Hipangle/180*pi());
+Hipcoord.setDefaultValue(Data.(Coordlable).Hipangle/180*pi());
 %%% Knee_corrdiante
+Kneecoord = modelCoordSet.get(1);
+Kneecoord.setDefaultValue(Data.(Coordlable).Kneeangle/180*pi());
+%%% ankle_corrdiante
+Anklecoord = modelCoordSet.get(3);
+Anklecoord.setDefaultValue(Data.(Coordlable).Ankleangle/180*pi());
 %% setup muscle properties
 
 if Data.DeGrooteflage
@@ -122,7 +127,7 @@ for i=0:1:osimmodel.getMuscles().getSize()-1
 end
 osimmodel.initSystem();
 
-osimmodel.print(Data.(Hiplable).ModelPath);
+osimmodel.print(Data.(Coordlable).ModelPath);
 
 end
 function addCoordinateActuator(model, coordName, optForce)

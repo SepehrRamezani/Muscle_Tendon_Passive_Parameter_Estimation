@@ -1,7 +1,7 @@
-function [kneeTrackingParamSolution]=ParameterEstimation(StateTrackTable,ControlTrackTable,osimmodel,Hiplable,Data)
+function [kneeTrackingParamSolution]=ParameterEstimation(StateTrackTable,ControlTrackTable,osimmodel,Coordlable,Data)
 import org.opensim.modeling.*;
 ComplianacMusclename=Data.ComplianacMusclename;
-MinMTCLength=Data.(Hiplable).MuscleInfo.MinMTCLength;
+MinMTCLength=Data.(Coordlable).MuscleInfo.MinMTCLength;
 Solverinterval=Data.ParamSolverinterval;
 Etime=Data.Etime;
 Stime=Data.Stime;
@@ -80,11 +80,11 @@ solver.set_optim_max_iterations(4000);
 solver.set_implicit_auxiliary_derivatives_weight(0.00001)
 solver.set_parameters_require_initsystem(false);
 solver.resetProblem(problem);
-if isfile(Data.(Hiplable).ParamSimulPath)
-    solver.setGuessFile(Data.(Hiplable).ParamSimulPath);
+if isfile(Data.(Coordlable).ParamSimulPath)
+    solver.setGuessFile(Data.(Coordlable).ParamSimulPath);
 else
-%     solver.setGuessFile([cd '\Parameterestimation\Parameter_Initial_Guess_' Hiplable '.sto']);
+%     solver.setGuessFile([cd '\Parameterestimation\Parameter_Initial_Guess_' Coordlable '.sto']);
 end
 kneeTrackingParamSolution = study.solve();
-kneeTrackingParamSolution.write(Data.(Hiplable).ParamSimulPath);
+kneeTrackingParamSolution.write(Data.(Coordlable).ParamSimulPath);
 end
