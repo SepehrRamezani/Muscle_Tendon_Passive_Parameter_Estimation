@@ -1,7 +1,7 @@
 function [osimmodel,Muscleinfo]=Modelcreator(Coordlable,Data,osimmodel)
 import org.opensim.modeling.*;
 % osimmodel = Model('subject_walk_armless_RLeg_justknee.osim');
-Kneerange=0;
+Kneerange=90/180*3.14;
 optForce=3000;
 %% change the name
 osimmodel.setName(Coordlable)
@@ -36,34 +36,34 @@ for m = 0:osimmodel.getMuscles().getSize()-1
         isremove=osimmodel.updForceSet().remove(frcset);
     else
         c=c+1;
-            musc=Muscle.safeDownCast(frcset);
-            
-            musc.set_ignore_activation_dynamics(true);
-            
-            if Data.DeGrooteflage
-%                 if sum(strcmp(char(frcset.getName()), Data.ComplianacMusclename))
-                    musc.set_ignore_tendon_compliance(false);
-%                 else
-%                     musc.set_ignore_tendon_compliance(true);
-%                 end
-                dgf = DeGrooteFregly2016Muscle.safeDownCast(musc);
-                dgf.set_min_control(0.0);
-                dgf.set_max_control(0.0);
-                dgf.set_active_force_width_scale(1);
-                dgf.set_tendon_compliance_dynamics_mode('implicit');
-                dgf.set_ignore_passive_fiber_force(false);
-            else
-                musc.set_min_control(0.0);
-                musc.set_max_control(0.0);
-            end
-            
-            
-            % if strcmp(char(musc.getName()), 'soleus_r')
-            %   dgf.set_active_force_width_scale(10);
-            %   dgf.set_ignore_passive_fiber_force(true);
-            %   musc.set_max_isometric_force(1.5 * musc.get_max_isometric_force());
-            %   dgf.set_ignore_passive_fiber_force(true);
-            % end
+        musc=Muscle.safeDownCast(frcset);
+        
+        musc.set_ignore_activation_dynamics(true);
+        
+        if Data.DeGrooteflage
+            %                 if sum(strcmp(char(frcset.getName()), Data.ComplianacMusclename))
+            musc.set_ignore_tendon_compliance(false);
+            %                 else
+            %                     musc.set_ignore_tendon_compliance(true);
+            %                 end
+            dgf = DeGrooteFregly2016Muscle.safeDownCast(musc);
+            dgf.set_min_control(0.0);
+            dgf.set_max_control(0.0);
+            dgf.set_active_force_width_scale(1);
+            dgf.set_tendon_compliance_dynamics_mode('implicit');
+            dgf.set_ignore_passive_fiber_force(false);
+        else
+            musc.set_min_control(0.0);
+            musc.set_max_control(0.0);
+        end
+        
+        
+        % if strcmp(char(musc.getName()), 'soleus_r')
+        %   dgf.set_active_force_width_scale(10);
+        %   dgf.set_ignore_passive_fiber_force(true);
+        %   musc.set_max_isometric_force(1.5 * musc.get_max_isometric_force());
+        %   dgf.set_ignore_passive_fiber_force(true);
+        % end
         
     end
     
@@ -84,25 +84,26 @@ newi=0;
 for i=0:1:osimmodel.getMuscles().getSize()-1
     k=0;
     u=0;
-    %% finding minimum MTL 
-        %%Knee deformation
-        CurrentMuscle=osimmodel.getMuscles().get(i);
-    for q=0:0.3:Kneerange
-        k=k+1;
-        
-        KneeCoor.setValue(state, q);
-        osimmodel.realizePosition(state);
-        musclelength(k)=CurrentMuscle.getLength(state);
-    end
+    %% finding minimum MTL
+    %%Knee deformation
+    CurrentMuscle=osimmodel.getMuscles().get(i);
+    
     
     if sum(strcmp(char(CurrentMuscle.getName),Data.ComplianacMusclename))&& sum(contains(Data.ActiveCoordinates,'ankle_angle_r'))
         AnkleCoor=osimmodel.updCoordinateSet().get('ankle_angle_r');
-        KneeCoor.setValue(state, Kneerange);
         for q=AnkleCoor.getRangeMin:0.1:AnkleCoor.getRangeMax
             u=u+1;
             AnkleCoor.setValue(state, q);
             osimmodel.realizePosition(state);
             musclelength(k+u)=CurrentMuscle.getLength(state);
+        end
+    else
+        for q=0:Kneerange/20:Kneerange
+            k=k+1;
+            
+            KneeCoor.setValue(state, q);
+            osimmodel.realizePosition(state);
+            musclelength(k)=CurrentMuscle.getLength(state);
         end
     end
     
@@ -116,7 +117,7 @@ for i=0:1:osimmodel.getMuscles().getSize()-1
     else
         
         Muscleinfo.TSlack(i+1)=CurrentMuscle.get_tendon_slack_length();
-        Muscleinfo.MaxIso(i+1)=CurrentMuscle.get_max_isometric_force(); 
+        Muscleinfo.MaxIso(i+1)=CurrentMuscle.get_max_isometric_force();
     end
     %     dgf = DeGrooteFregly2016Muscle.safeDownCast(CurrentMuscle);
     Muscleinfo.Passive(i+1)=DeGrooteFregly2016Muscle.safeDownCast(CurrentMuscle).get_passive_fiber_strain_at_one_norm_force();

@@ -25,10 +25,15 @@ track.set_initial_time(Stime);
 track.set_final_time(Etime);
 track.set_minimize_control_effort(false);
 stateWeights = MocoWeightSet();
-stateWeights.cloneAndAppend(MocoWeight('/jointset/walker_knee_r/knee_angle_r/value',StateWeight));
-stateWeights.cloneAndAppend(MocoWeight('/jointset/walker_knee_r/knee_angle_r/speed',StateWeight*0.1));
-stateWeights.cloneAndAppend(MocoWeight('/jointset/ankle_r/ankle_angle_r/value',StateWeight*4));
-stateWeights.cloneAndAppend(MocoWeight('/jointset/ankle_r/ankle_angle_r/speed',StateWeight*0.4));
+
+if contains(Data.ActiveCoordinates,"knee_angle_r")
+    stateWeights.cloneAndAppend(MocoWeight('/jointset/walker_knee_r/knee_angle_r/value',StateWeight));
+    stateWeights.cloneAndAppend(MocoWeight('/jointset/walker_knee_r/knee_angle_r/speed',StateWeight*0.1));
+    
+else
+    stateWeights.cloneAndAppend(MocoWeight('/jointset/ankle_r/ankle_angle_r/value',StateWeight*4));
+    stateWeights.cloneAndAppend(MocoWeight('/jointset/ankle_r/ankle_angle_r/speed',StateWeight*0.4));
+end
 track.set_states_weight_set(stateWeights);
 study = track.initialize();
 problem = study.updProblem();

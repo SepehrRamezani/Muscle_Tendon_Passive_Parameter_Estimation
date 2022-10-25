@@ -23,20 +23,20 @@ modelProcessor = ModelProcessor(osimmodel);
 track.setModel(modelProcessor);
 track.setStatesReference(tableProcessor);
 track.set_states_global_tracking_weight(GlobalstateTrackingWeight);
-track.set_allow_unused_references(false);
+track.set_allow_unused_references(true);
 track.set_track_reference_position_derivatives(true);
 track.set_apply_tracked_states_to_guess(true);
 track.set_initial_time(Stime);
 track.set_final_time(Etime);
 stateWeights = MocoWeightSet();
-if contains(Data.ActiveCoordinates,"knee_angle_r")
-    stateWeights.cloneAndAppend(MocoWeight('/jointset/walker_knee_r/knee_angle_r/value',StateWeight));
-    stateWeights.cloneAndAppend(MocoWeight('/jointset/walker_knee_r/knee_angle_r/speed',StateWeight*0.5));
-    
-else
-    stateWeights.cloneAndAppend(MocoWeight('/jointset/ankle_r/ankle_angle_r/value',StateWeight*2));
-    stateWeights.cloneAndAppend(MocoWeight('/jointset/ankle_r/ankle_angle_r/speed',StateWeight*1));
+for corindx = 1:length(Data.ActiveCoordinates)
+CoordinateActuatorName=append('/jointset/walker_knee_r/',char(Data.ActiveCoordinates(corindx)),'/value');
+effort.setWeightForControl(CoordinateActuatorName,ControlWight);
 end
+stateWeights.cloneAndAppend(MocoWeight('/jointset/walker_knee_r/knee_angle_r/value',StateWeight));
+stateWeights.cloneAndAppend(MocoWeight('/jointset/walker_knee_r/knee_angle_r/speed',StateWeight*0.5));
+stateWeights.cloneAndAppend(MocoWeight('/jointset/ankle_r/ankle_angle_r/value',StateWeight*2));
+stateWeights.cloneAndAppend(MocoWeight('/jointset/ankle_r/ankle_angle_r/speed',StateWeight*1));
 track.set_states_weight_set(stateWeights);
 study = track.initialize();
 %% Updating problem
