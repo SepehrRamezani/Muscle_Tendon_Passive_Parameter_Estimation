@@ -6,6 +6,7 @@ path=append(cd,'\Parameterestimation\');
 OptTendonStrain=[];
 Dir1='C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\TorqueSimulation\';
 Muscname=Data.SimMusclename;
+OptPassiveFiber=[];
 for i=1:1:length(Data.Coordlable)
     u=0;
     stiff_tendon_counter=0;
@@ -22,7 +23,7 @@ for i=1:1:length(Data.Coordlable)
 %     ParNum=erase(OptData.textdata(indx),'num_parameters=');
 %     ParNum=str2num(ParNum{1,1});
 %% getting mucsles parameters 
-OptPassiveFiber=[];
+
     for m=1:length(Muscname)
         M_indx=find(contains(OptData.colheaders,Muscname(m))&~contains(OptData.colheaders,'force'));
         for y=1:length(M_indx)
@@ -46,13 +47,13 @@ OptPassiveFiber=[];
     
 %% Calculating parameter error
     tendon_slack_Error(i,:)=(OptTSL(i,:)-tendod_slack_ref)./tendod_slack_ref.*100;
-    if OptPassiveFiber
+     if OptPassiveFiber
         %     muscle_stiffness=1./(1+OptParam2(i,:));
         muscle_stiffness=2./(OptPassiveFiber(i,:));
         %     muscle_stiffness_ref=1./(1+muscle_passive_fiber_at_norm_ref);
         muscle_stiffness_ref=2./(muscle_passive_fiber_at_norm_ref);
         muscle_stiffness_error(i,:)=(muscle_stiffness-muscle_stiffness_ref)./muscle_stiffness_ref.*100;
-    end
+     end
     c1=0.2;
     c2=1;
     c3=0.2;
@@ -97,7 +98,7 @@ legend(Data.Coordlable,'Location','southeast')
 %% Tendon Slack Length
 figure
 X = categorical(Muscname);
-bar(X,tendon_slack_Error)
+plot(X,tendon_slack_Error,'.')
 ylabel ('Tendon Slack length Estimation Error(%)')
 legend(Data.Coordlable,'Location','northeast')
 
@@ -105,7 +106,7 @@ legend(Data.Coordlable,'Location','northeast')
 if OptPassiveFiber
 figure
 X = categorical(Muscname(~contains(Muscname,Data.ComplianacMusclename)));
-bar(X,muscle_stiffness_error')
+plot(X,muscle_stiffness_error','.')
 ylabel ('Muscle Stiffness Estimation Error(%)')
 legend(Data.Coordlable,'Location','southeast')
 % legend(Data.Coordlable,'Location','northeast')
@@ -113,7 +114,7 @@ end
 %% Tendon stiffness
 figure
 X2 = categorical(Data.ComplianacMusclename);
-bar(X2,TkErrortendon_stiffness_error')
+plot(X2,TkErrortendon_stiffness_error','.')
 ylabel ('Tendon Stiffness Estimation Error(%)')
 % legend(Data.Coordlable,'Location','northeast')
 legend(Data.Coordlable,'Location','southeast')
@@ -121,7 +122,7 @@ legend(Data.Coordlable,'Location','southeast')
 
 figure
 X2 = categorical(Data.ComplianacMusclename);
-bar(X2,epsilonerror')
+plot(X2,epsilonerror','.')
 ylabel ('Epsilon Estimation Error(%)')
 % legend(Data.Coordlable,'Location','northeast')
 legend(Data.Coordlable,'Location','southeast')

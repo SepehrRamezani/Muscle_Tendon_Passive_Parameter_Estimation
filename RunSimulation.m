@@ -20,7 +20,7 @@ Data.Stime=0;
 Trialas=["KneeMove"];
 HipAngle=[90,45,0];
 Kneeangle=[0];
-Ankleangle=[25];
+Ankleangle=[0, -25,25];
 %% running just Parameter optimization
 Data.justparameterflag=0;
 qe=1;
@@ -40,7 +40,12 @@ for t=1:length(Trialas)
                     Data.Coordlable(qe)={append(Trialas(t),'_H',num2str(HipAngle(Hipindx)),'_K',num2str(Kneeangle(kneeindx)))};
                     Data.ActiveCoordinates=["ankle_angle_r"];
                 elseif contains(Trialas(t),"KneeMove")
-                    Data.Coordlable(qe)={append(Trialas(t),'_H',num2str(HipAngle(Hipindx)),'_A',num2str(Ankleangle(ankleindx)))};
+                    if Ankleangle(ankleindx)>=0
+                        anklename=num2str(Ankleangle(ankleindx));
+                    else
+                        anklename=[num2str(abs(Ankleangle(ankleindx))),'Plan'];
+                    end
+                    Data.Coordlable(qe)={append(Trialas(t),'_H',num2str(HipAngle(Hipindx)),'_A',anklename)};
                     Data.ActiveCoordinates=["knee_angle_r"];
                 end
                 Data.(Data.Coordlable{qe}).Hipangle=HipAngle(Hipindx);
@@ -57,8 +62,8 @@ for t=1:length(Trialas)
                 [osimmodel,Data.(Data.Coordlable{qe}).MuscleInfo]=Modelcreator(Data.Coordlable{qe},Data,Refmmodel);
                 if ~Data.justparameterflag
                     
-%                     [kneeTrackingSolution]=TorqueSimulation(tableProcessor,osimmodel,Data.Coordlable{qe},Data);
-%                     [kneeTrackingParamSolution]=ParameterEstimation(kneeTrackingSolution.exportToStatesTable(),kneeTrackingSolution.exportToControlsTable(),osimmodel,Data.Coordlable{qe},Data);
+%                       [kneeTrackingSolution]=TorqueSimulation(tableProcessor,osimmodel,Data.Coordlable{qe},Data);
+%                       [kneeTrackingParamSolution]=ParameterEstimation(kneeTrackingSolution.exportToStatesTable(),kneeTrackingSolution.exportToControlsTable(),osimmodel,Data.Coordlable{qe},Data);
                 else
                     DataTable=TableProcessor(Data.(Data.Coordlable{qe}).TorqeSimulPath);
                     kneeTrackingSolutionTable=DataTable.process;
