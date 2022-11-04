@@ -6,6 +6,8 @@ optForce=3000;
 %% change the name
 osimmodel.setName(Coordlable)
 %% Setup angles
+Ankleangle=Data.(Coordlable).Ankleangle/180*pi();
+Kneeangle=Data.(Coordlable).Kneeangle/180*pi();
 %%% Pelvis
 modeljointSet=osimmodel.getJointSet();
 Pelvisjoint=modeljointSet.get(0);
@@ -18,10 +20,10 @@ Hipcoord = modelCoordSet.get(0);
 Hipcoord.setDefaultValue(Data.(Coordlable).Hipangle/180*pi());
 %%% Knee_corrdiante
 Kneecoord = modelCoordSet.get(1);
-Kneecoord.setDefaultValue(Data.(Coordlable).Kneeangle/180*pi());
+Kneecoord.setDefaultValue(Kneeangle);
 %%% ankle_corrdiante
 Anklecoord = modelCoordSet.get(3);
-Anklecoord.setDefaultValue(Data.(Coordlable).Ankleangle/180*pi());
+Anklecoord.setDefaultValue(Ankleangle);
 %% setup muscle properties
 
 if Data.DeGrooteflage
@@ -86,12 +88,12 @@ for i=0:1:osimmodel.getMuscles().getSize()-1
     u=0;
     %% finding minimum MTL
     %%Knee deformation
-    CurrentMuscle=osimmodel.getMuscles().get(i);
+    CurrentMuscle=osimmodel.getMuscles().get(Data.SimMusclename(i+1));
     
     
     if sum(strcmp(char(CurrentMuscle.getName),Data.ComplianacMusclename))&& sum(contains(Data.ActiveCoordinates,'ankle_angle_r'))
         AnkleCoor=osimmodel.updCoordinateSet().get('ankle_angle_r');
-        for q=AnkleCoor.getRangeMin:0.1:AnkleCoor.getRangeMax
+        for q=-Ankleangle:Ankleangle/20:Ankleangle
             u=u+1;
             AnkleCoor.setValue(state, q);
             osimmodel.realizePosition(state);
@@ -107,11 +109,12 @@ for i=0:1:osimmodel.getMuscles().getSize()-1
         end
     end
     
-    Muscleinfo.MinMTCLength(i+1)=min(musclelength);
+    Muscleinfo.MinMTLength(i+1)=min(musclelength);
     
-    if Muscleinfo.MinMTCLength(i+1) < CurrentMuscle.get_tendon_slack_length()
+    if Muscleinfo.MinMTLength(i+1) < CurrentMuscle.get_tendon_slack_length()
         warning('buckeling will be happend in %s',CurrentMuscle.getName())
-        TSlack(i+1)=0.98*Muscleinfo.MinMTCLength(i+1);
+        %% "0.99" is for making TSL a little bit smaller than minimum MT length   
+        TSlack(i+1)=0.99*Muscleinfo.MinMTLength(i+1);
         CurrentMuscle.set_tendon_slack_length(TSlack(i+1));
         Muscleinfo.TSlack(i+1)=TSlack(i+1);
     else

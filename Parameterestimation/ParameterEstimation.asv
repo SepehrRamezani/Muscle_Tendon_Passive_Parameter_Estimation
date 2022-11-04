@@ -43,7 +43,7 @@ ContTracking = MocoControlTrackingGoal('kneeControlTracking');
 % controlsRef = TableProcessor('Kneeflexion_solution.sto');
 ConttableProcessor = TableProcessor(ControlTrackTable);
 ContTracking.setReference(ConttableProcessor);
-
+    param = MocoParameter('WrappingR','/bodyset/tibia_r','mass', MocoBounds(1,5));
 for i=0:1:osimmodel.getMuscles().getSize()-1
     Musname = osimmodel.updMuscles().get(i).getName();
     MusPath=append('/forceset/',char(Musname));
@@ -89,7 +89,7 @@ solver.set_implicit_auxiliary_derivatives_weight(0.00001)
 solver.set_parameters_require_initsystem(false);
 solver.resetProblem(problem);
 if isfile(Data.(Coordlable).ParamSimulPath)
-%     solver.setGuessFile(Data.(Coordlable).ParamSimulPath);
+    solver.setGuessFile(Data.(Coordlable).ParamSimulPath);
 else
 %     solver.setGuessFile([cd '\Parameterestimation\Parameter_Initial_Guess_' Coordlable '.sto']);
 end

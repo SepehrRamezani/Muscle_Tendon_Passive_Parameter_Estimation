@@ -2,10 +2,12 @@ clear all
 import org.opensim.modeling.*;
 myLog = JavaLogSink();
 Logger.addSink(myLog)
-
-Data.SimMusclename=["bflh_r","bfsh_r","gaslat_r","gasmed_r","recfem_r","semimem_r","semiten_r","vasint_r","vaslat_r","vasmed_r"];
-% Data.SimMusclename=["gaslat_r","gasmed_r"];
+% Make sure if you have common name in the Rigidtendon and Compliance
+% Muscle put them at the 
+%  Data.Rigidtendon=["bflh_r","bfsh_r","recfem_r","gaslat_r","semimem_r","semiten_r","vasint_r","vaslat_r","vasmed_r"];
+Data.Rigidtendon=["gaslat_r","gasmed_r"];
 Data.ComplianacMusclename=["gaslat_r","gasmed_r"];
+Data.SimMusclename=[Data.Rigidtendon(~contains(Data.Rigidtendon,Data.ComplianacMusclename)),Data.ComplianacMusclename];
 Data.DeGrooteflage=1;
 % Hipangle=0;%deg
 Data.RefModelpath=append(cd,'\ModelGenerator\subject_walk_armless_RLeg_justknee.osim');
@@ -16,18 +18,19 @@ Data.TorqueSolverinterval=40;
 Data.ParamSolverinterval=40;
 Data.Etime=20;
 Data.Stime=0;
+Data.PassiveFiberBound=[0.2,0.8];
+Data.TendonStrainBound=[0.01,0.1];
 % Trialas=["KneeMove","AnkleMove","KneeAnkleMove"];
-Trialas=["KneeMove"];
-HipAngle=[90,45,0];
+Trialas=["AnkleMove"];
+HipAngle=[90];
 Kneeangle=[0];
-Ankleangle=[0, -25,25];
+Ankleangle=[25];
 %% running just Parameter optimization
-Data.justparameterflag=0;
+Data.justparameterflag=1;
 qe=1;
 
 for t=1:length(Trialas)
-%     if contains(Trialas(t),"AnkleMove")
-        
+%     if contains(Trialas(t),"AnkleMove")       
 %         tableProcessor=TableProcessor(Data.RefStatepathAnkleMoving);
 %     else
 %         Data.ActiveCoordinates=["knee_angle_r"];
@@ -39,6 +42,7 @@ for t=1:length(Trialas)
                 if contains(Trialas(t),"AnkleMove")
                     Data.Coordlable(qe)={append(Trialas(t),'_H',num2str(HipAngle(Hipindx)),'_K',num2str(Kneeangle(kneeindx)))};
                     Data.ActiveCoordinates=["ankle_angle_r"];
+%                     Data.SimMusclename=["gaslat_r","gasmed_r"]
                 elseif contains(Trialas(t),"KneeMove")
                     if Ankleangle(ankleindx)>=0
                         anklename=num2str(Ankleangle(ankleindx));
@@ -62,8 +66,8 @@ for t=1:length(Trialas)
                 [osimmodel,Data.(Data.Coordlable{qe}).MuscleInfo]=Modelcreator(Data.Coordlable{qe},Data,Refmmodel);
                 if ~Data.justparameterflag
                     
-%                       [kneeTrackingSolution]=TorqueSimulation(tableProcessor,osimmodel,Data.Coordlable{qe},Data);
-%                       [kneeTrackingParamSolution]=ParameterEstimation(kneeTrackingSolution.exportToStatesTable(),kneeTrackingSolution.exportToControlsTable(),osimmodel,Data.Coordlable{qe},Data);
+                       [kneeTrackingSolution]=TorqueSimulation(tableProcessor,osimmodel,Data.Coordlable{qe},Data);
+                       [kneeTrackingParamSolution]=ParameterEstimation(kneeTrackingSolution.exportToStatesTable(),kneeTrackingSolution.exportToControlsTable(),osimmodel,Data.Coordlable{qe},Data);
                 else
                     DataTable=TableProcessor(Data.(Data.Coordlable{qe}).TorqeSimulPath);
                     kneeTrackingSolutionTable=DataTable.process;
@@ -75,4 +79,4 @@ for t=1:length(Trialas)
     end
 end
 save([cd '\SimData.mat'],'Data');
-% Plotting()
+Plotting()

@@ -6,6 +6,7 @@ path=append(cd,'\Parameterestimation\');
 OptTendonStrain=[];
 Dir1='C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\TorqueSimulation\';
 Muscname=Data.SimMusclename;
+MarkerSize=15;
 OptPassiveFiber=[];
 for i=1:1:length(Data.Coordlable)
     u=0;
@@ -39,13 +40,14 @@ for i=1:1:length(Data.Coordlable)
         end
         
     end
-%     Coordlable(i,1)=append("Hip",num2str(Data.Hipangle(i)));
-%% Getting refference parameter  
+    %     Coordlable(i,1)=append("Hip",num2str(Data.Hipangle(i)));
+    %% Getting refference parameter
     tendod_slack_ref=Data.(Data.Coordlable{i}).MuscleInfo.TSlack;
-    muscle_passive_fiber_at_norm_ref=Data.(Data.Coordlable{i}).MuscleInfo.Passive(~contains(Muscname,Data.ComplianacMusclename));
+    muscle_passive_fiber_at_norm_ref=Data.(Data.Coordlable{i}).MuscleInfo.Passive(contains(Muscname,Data.Rigidtendon));
+%     muscle_passive_fiber_at_norm_ref=Data.(Data.Coordlable{i}).MuscleInfo.Passive;
     tendon_strain_at_norm_ref=Data.(Data.Coordlable{i}).MuscleInfo.Tstrain;
     
-%% Calculating parameter error
+    %% Calculating parameter error
     tendon_slack_Error(i,:)=(OptTSL(i,:)-tendod_slack_ref)./tendod_slack_ref.*100;
      if OptPassiveFiber
         %     muscle_stiffness=1./(1+OptParam2(i,:));
@@ -94,35 +96,34 @@ xlabel ('Time (s)')
 title('Knee angle')
 legend(Data.Coordlable,'Location','southeast')
 % end
+tiledlayout(2,2)
 
 %% Tendon Slack Length
-figure
+nexttile
 X = categorical(Muscname);
-plot(X,tendon_slack_Error,'.')
+plot(X,tendon_slack_Error,'.','MarkerSize',MarkerSize)
 ylabel ('Tendon Slack length Estimation Error(%)')
-legend(Data.Coordlable,'Location','northeast')
+% legend(Data.Coordlable,'Location','northeast')
 
 %% Muscle Stiffness
 if OptPassiveFiber
-figure
-X = categorical(Muscname(~contains(Muscname,Data.ComplianacMusclename)));
-plot(X,muscle_stiffness_error','.')
+nexttile
+X = categorical(Data.Rigidtendon);
+plot(X,muscle_stiffness_error','.','MarkerSize',MarkerSize)
 ylabel ('Muscle Stiffness Estimation Error(%)')
-legend(Data.Coordlable,'Location','southeast')
-% legend(Data.Coordlable,'Location','northeast')
+% legend(Data.Coordlable,'Location','southeast')
 end
 %% Tendon stiffness
-figure
+
+nexttile
 X2 = categorical(Data.ComplianacMusclename);
-plot(X2,TkErrortendon_stiffness_error','.')
+plot(X2,TkErrortendon_stiffness_error','.','MarkerSize',MarkerSize)
 ylabel ('Tendon Stiffness Estimation Error(%)')
 % legend(Data.Coordlable,'Location','northeast')
-legend(Data.Coordlable,'Location','southeast')
 
 
-figure
+nexttile
 X2 = categorical(Data.ComplianacMusclename);
-plot(X2,epsilonerror','.')
+plot(X2,epsilonerror','.','MarkerSize',MarkerSize)
 ylabel ('Epsilon Estimation Error(%)')
-% legend(Data.Coordlable,'Location','northeast')
-legend(Data.Coordlable,'Location','southeast')
+legend(Data.Coordlable,'Location','northeast')
