@@ -1,6 +1,6 @@
 function [P_Gonio_H,P_Gonio_K,P_Gonio_A]= GnCalib (Datafolder,psname,plotflage)
 
-Fname =append(psname,"GnCalib_");
+Fname =append(psname,"_GnCalib_");
 Names=["AnkleDorsi15","AnkleDorsi10","Ankle0","AnklePlant10","AnklePlant30","AnklePlant50"...
     ,"Hip0","Hip30","Hip60","Hip90"...
     ,"Knee0","Knee30","Knee45","Knee60","Knee90"];
@@ -32,11 +32,11 @@ for i=1:length(Names)
 end
 y=[15,10,0,-10,-30,-50];
 y=y./180*pi();
-x=AnkelGnCalibdata;
-P_Gonio_A = polyfit(x(:,2)',y,1);
-y1 = polyval(P_Gonio_A,x(:,2));
+xa=AnkelGnCalibdata;
+P_Gonio_A = polyfit(xa(:,2)',y,1);
+y1 = polyval(P_Gonio_A,xa(:,2));
 if plotflage
-    plot(x(:,1),y,'*',x(:,2),y,'*',x(:,2),y1);
+    plot(xa(:,1),y,'*',xa(:,2),y,'*',xa(:,2),y1);
     xlabel('Biodex Output (Voltage)');
     ylabel('Angle (Degree)');
     legend('Ch A','Ch B');
@@ -46,27 +46,30 @@ end
 
 ydeg=[0,30,60,90];
 y=ydeg./180*pi();
-x=HipGnCalibdata;
-P_Gonio_H = polyfit(x(:,2)',y,2);
-y1 = polyval(P_Gonio_H,x(:,2));
+xh=HipGnCalibdata;
+P_Gonio_H = polyfit(xh(:,2)',y,2);
+new_xh=xh(1,2):xh(1,2)/20:xh(end,2);
+y1 = polyval(P_Gonio_H,new_xh);
 if plotflage
     figure
-    plot(x(:,1),ydeg,'*',x(:,2),ydeg,'*',x(:,2),y1*180/3.14);
+    plot(xh(:,1),ydeg,'*',xh(:,2),ydeg,'*',new_xh,y1*180/3.14);
     xlabel('Biodex Output (Voltage)');
     ylabel('Angle (Degree)');
     legend('Ch A','Ch B');
     title('Goinometer Calibration Data for Hip');
 end
 
-
-y=[0,0,45,60,90];
+%% 2 zeros added for regression since zero is important angle
+y=[0,45,60,90];
 y=y./180*pi();
-x=[KneeGnCalibdata(1,:);KneeGnCalibdata([1,3,4,5],:)];
-P_Gonio_K = polyfit(x(:,2)',y,2);
-y1 = polyval(P_Gonio_K,x(:,2));
+% xk=[KneeGnCalibdata(1,:);KneeGnCalibdata([1,3,4,5],:)];
+xk=KneeGnCalibdata([1,3,4,5],:);
+P_Gonio_K = polyfit(xk(:,2)',y,2);
+new_xk=xk(1,2):xk(end,2)/20:xk(end,2);
+y1 = polyval(P_Gonio_K,new_xk);
 if plotflage
     figure
-    plot(x(:,1),y,'*',x(:,2),y,'*',x(:,2),y1);
+    plot(xk(:,1),y,'*',xk(:,2),y,'*',new_xk,y1);
     xlabel('Biodex Output (Voltage)');
     ylabel('Angle (Degree)');
     legend('Ch A','Ch B');

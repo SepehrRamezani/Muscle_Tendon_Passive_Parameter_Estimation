@@ -43,7 +43,7 @@ ContTracking = MocoControlTrackingGoal('kneeControlTracking');
 % controlsRef = TableProcessor('Kneeflexion_solution.sto');
 ConttableProcessor = TableProcessor(ControlTrackTable);
 ContTracking.setReference(ConttableProcessor);
-
+% param3 = MocoParameter('WrappingR','/bodyset/tibia_r/wrapobjectset/GasMed_at_shank_r','radius', MocoBounds(0.2,0.8));
 for i=0:1:osimmodel.getMuscles().getSize()-1
     Musname = osimmodel.updMuscles().get(i).getName();
     MusPath=append('/forceset/',char(Musname));
