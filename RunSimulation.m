@@ -11,7 +11,10 @@ Data.SimMusclename=[Data.Rigidtendon(~contains(Data.Rigidtendon,Data.ComplianacM
 Data.DeGrooteflage=1;
 % Hipangle=0;%deg
 Data.RefModelpath=append(cd,'\ModelGenerator\subject_walk_armless_RLeg_justknee.osim');
-Data.RefStatepath=append(cd,'\TorqueSimulation\referenceCoordinates.sto');
+% Data.RefStatepath=append(cd,'\TorqueSimulation\referenceCoordinates.sto');
+Data.RefStatepath=append('C:\MyCloud\OneDriveUcf\Real\Simulation\Source\P006\T002\Data\P006_T002_RKnee_Fl_H90_Motion.mot');
+Data.RefControlpath=append('C:\MyCloud\OneDriveUcf\Real\Simulation\Source\P006\T002\Data\P006_T002_RKnee_Fl_H90_Torque.mot');
+
 Data.RefStatepathAnkleMoving=append(cd,'\TorqueSimulation\referenceCoordinatesAnkleMoving.sto');
 
 Data.TorqueSolverinterval=40;
@@ -21,7 +24,7 @@ Data.Stime=0;
 Data.PassiveFiberBound=[0.2,0.8];
 Data.TendonStrainBound=[0.01,0.1];
 % Trialas=["KneeMove","AnkleMove","KneeAnkleMove"];
-Trialas=["AnkleMove"];
+Trialas=["KneeMove"];
 HipAngle=[90];
 Kneeangle=[0];
 Ankleangle=[25];
@@ -69,9 +72,11 @@ for t=1:length(Trialas)
                        [kneeTrackingSolution]=TorqueSimulation(tableProcessor,osimmodel,Data.Coordlable{qe},Data);
                        [kneeTrackingParamSolution]=ParameterEstimation(kneeTrackingSolution.exportToStatesTable(),kneeTrackingSolution.exportToControlsTable(),osimmodel,Data.Coordlable{qe},Data);
                 else
-                    DataTable=TableProcessor(Data.(Data.Coordlable{qe}).TorqeSimulPath);
+                    %DataTable=TableProcessor(Data.(Data.Coordlable{qe}).TorqeSimulPath);
+                    StateDataTable=TableProcessor(Data.RefStatepath);
+                    ControlDataTable=TableProcessor(Data.RefControlpath);
                     kneeTrackingSolutionTable=DataTable.process;
-                    [kneeTrackingParamSolution]=ParameterEstimation(kneeTrackingSolutionTable,kneeTrackingSolutionTable,osimmodel,Data.Coordlable{qe},Data);
+                    [kneeTrackingParamSolution]=ParameterEstimation(StateDataTable,ControlDataTable,osimmodel,Data.Coordlable{qe},Data);
                 end
                 qe=qe+1;
             end

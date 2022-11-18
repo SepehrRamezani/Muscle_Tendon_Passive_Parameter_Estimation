@@ -1,4 +1,4 @@
-function Events = EventDetection(filename,DStime,FTable,ForceRatio,MTable,Threshold)
+function Events = EventDetection(filename,DStime,MTable,Threshold)
 if contains(filename,"RKnee")
     ref = mean(MTable(1:200,5));
     MTable(:,5)=MTable(:,5)-ref;
@@ -62,5 +62,5 @@ elseif contains(filename,"RAnkle")
 else
     fprintf('\nERROR: %s unknown trail ...\n\n', filename);
 end
-Events=[Stime,Etime];
+Events=[Sindx,Eindx];
 end

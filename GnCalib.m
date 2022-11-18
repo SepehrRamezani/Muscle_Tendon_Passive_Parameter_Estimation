@@ -1,4 +1,4 @@
-function [P_Gonio_H,P_Gonio_K,P_Gonio_A]= GnCalib (Datafolder,psname,plotflage)
+function [P_Gonio_H,P_Gonio_K,P_Gonio_A,Torqueref]= GnCalib (Datafolder,psname,DStime,plotflage)
 
 Fname =append(psname,"_GnCalib_");
 Names=["AnkleDorsi15","AnkleDorsi10","Ankle0","AnklePlant10","AnklePlant30","AnklePlant50"...
@@ -75,5 +75,12 @@ if plotflage
     legend('Ch A','Ch B');
     title('Goinometer Calibration Data for Knee');
 end
+Fname =append(psname,"_BiodexCalib");
+BiodexCaldata=importdata(append(Datafolder,"\",Fname,".csv"));
+[Gdata,Gheader]= ReshapingData(BiodexCaldata,DStime);
+[Gr,Gc]=find(strncmp(Gheader,'Biodex',6));
+timeindx=(Gdata(:,1)>=2&Gdata(:,1)<=4);
+Torqueref=mean(Gdata(timeindx,Gc(1)));
+
 
 end
