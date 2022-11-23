@@ -8,7 +8,7 @@ Stime=Data.Stime;
 ControlWight=1;
 % w=1/osimmodel.getForceSet().getSize();
 StateWeight = 10.0/osimmodel.getNumCoordinates();
-osimmodel=changemodelproperty(osimmodel,Data);
+osimmodel=changemodelproperty(osimmodel,Coordlable,Data,0);
 %% Define tracking problem
 track = MocoTrack();
 track.setName('kneestateTracking');

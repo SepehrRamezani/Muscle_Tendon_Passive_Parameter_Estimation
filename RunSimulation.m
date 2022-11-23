@@ -88,16 +88,18 @@ for t=1:length(Trialas)
                     %DataTable=TableProcessor(Data.(Data.Coordlable{qe}).TorqeSimulPath);
                     StateDataTable=TableProcessor(Data.RefStatepath);
                     Etimeindx=StateDataTable.process.getNumRows();
-                    Data.Etime=double(StateDataTable.process.getIndependentColumn().get(Etimeindx-1));
                     ControlDataTable=TableProcessor(Data.RefControlpath);
                     StateSolutionTable=StateDataTable.process;
                     ControlSolutionTable=ControlDataTable.process;
-                    [kneeTrackingParamSolution]=ParameterEstimation(StateSolutionTable,ControlSolutionTable,osimmodel,Data.Coordlable{qe},Data);
+                    Data.Etime=double(StateSolutionTable.getIndependentColumn().get(Etimeindx-1));
+%                     [kneeTrackingParamSolution]=ParameterEstimation(StateSolutionTable,ControlSolutionTable,osimmodel,Data.Coordlable{qe},Data);
+                    osimmodel=changemodelproperty(osimmodel,Data.Coordlable{qe},Data,1);
                 end
                 qe=qe+1;
             end
         end
     end
 end
+
 save([Basepath '\SimData.mat'],'Data');
 % Plotting()

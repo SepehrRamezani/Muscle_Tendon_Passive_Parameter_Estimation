@@ -1,26 +1,26 @@
 close all
-load ([cd '\SimData.mat']);
-path=append(cd,'\Parameterestimation\');
+import org.opensim.modeling.*;
+SubjectNumber='T002';
+Project='P006';
+Basepath=append(['C:\MyCloud\OneDriveUcf\Real\Simulation\Source'],'\',Project,'\',SubjectNumber);
+load ([Basepath '\SimData.mat']);
 OptTendonStrain=[];
-Dir1='C:\MyCloud\GitHub\Muscle_Tendon_Passive_Parameter_Estimation\TorqueSimulation\';
 Muscname=Data.SimMusclename;
 MarkerSize=15;
 OptPassiveFiber=[];
+RefState=TableProcessor(Data.RefStatepath).process;
+reftime=RefState.getDependentColumnAtIndex(1).getAsMat();
+RefData.data=RefState.getMatrix().getAsMat();
+RefData.colheaders=[];
+for iLabel=0:RefState.getNumColumns()-1 
+RefData.colheaders=[RefData.colheaders string(RefState.getColumnLabels.get(iLabel))];
+end
+
 for i=1:1:length(Data.Coordlable)
     u=0;
     stiff_tendon_counter=0;
     OptData=importdata(Data.(Data.Coordlable{i}).ParamSimulPath);
-    if contains(Data.Coordlable{i},'Mov')
-        RefData=importdata(Data.RefStatepathAnkleMoving);
-    else
-        RefData=importdata(Data.RefStatepath);
         
-    end
-        reftime=RefData.data(:,1);
-        
-%     indx=find(strncmp(OptData.textdata,'num_parameters',14));
-%     ParNum=erase(OptData.textdata(indx),'num_parameters=');
-%     ParNum=str2num(ParNum{1,1});
 %% getting mucsles parameters 
 
     for m=1:length(Muscname)
@@ -39,31 +39,31 @@ for i=1:1:length(Data.Coordlable)
         
     end
     %     Coordlable(i,1)=append("Hip",num2str(Data.Hipangle(i)));
-    %% Getting refference parameter
-    tendod_slack_ref=Data.(Data.Coordlable{i}).MuscleInfo.TSlack;
-    muscle_passive_fiber_at_norm_ref=Data.(Data.Coordlable{i}).MuscleInfo.Passive(contains(Muscname,Data.Rigidtendon));
-%     muscle_passive_fiber_at_norm_ref=Data.(Data.Coordlable{i}).MuscleInfo.Passive;
-    tendon_strain_at_norm_ref=Data.(Data.Coordlable{i}).MuscleInfo.Tstrain;
-    
     %% Calculating parameter error
+    tendod_slack_ref=Data.(Data.Coordlable{i}).MuscleInfo.TSlack;
     tendon_slack_Error(i,:)=(OptTSL(i,:)-tendod_slack_ref)./tendod_slack_ref.*100;
      if OptPassiveFiber
         %     muscle_stiffness=1./(1+OptParam2(i,:));
         muscle_stiffness=2./(OptPassiveFiber(i,:));
         %     muscle_stiffness_ref=1./(1+muscle_passive_fiber_at_norm_ref);
+        muscle_passive_fiber_at_norm_ref=Data.(Data.Coordlable{i}).MuscleInfo.Passive(contains(Muscname,Data.Rigidtendon));
         muscle_stiffness_ref=2./(muscle_passive_fiber_at_norm_ref);
         muscle_stiffness_error(i,:)=(muscle_stiffness-muscle_stiffness_ref)./muscle_stiffness_ref.*100;
      end
-    c1=0.2;
-    c2=1;
-    c3=0.2;
-%          tendon_stiffness=1./(1+OptParam3(i,:));
-     tendon_stiffness = 1.1*log((1.0 + c3) / c1) ./ (1.0 + OptTendonStrain(i,:) - c2);
-%          tendon_stiffness_ref=1./(1+tendon_strain_at_norm_ref);
-     tendon_stiffness_ref=1.1*log((1.0 + c3) / c1) ./ (1.0 + tendon_strain_at_norm_ref - c2);
+     if OptTendonStrain
+         c1=0.2;
+         c2=1;
+         c3=0.2;
+         tendon_stiffness = 1.1*log((1.0 + c3) / c1) ./ (1.0 + OptTendonStrain(i,:) - c2);
+         %tendon_stiffness=1./(1+OptParam3(i,:));
+         tendon_strain_at_norm_ref=Data.(Data.Coordlable{i}).MuscleInfo.Tstrain;
+         %tendon_stiffness_ref=1./(1+tendon_strain_at_norm_ref);
+         tendon_stiffness_ref=1.1*log((1.0 + c3) / c1) ./ (1.0 + tendon_strain_at_norm_ref - c2);
+         TkErrortendon_stiffness_error(i,:)=(tendon_stiffness-tendon_stiffness_ref)./tendon_stiffness_ref.*100;
+         epsilonerror(i,:)=(OptTendonStrain(i,:)-tendon_strain_at_norm_ref)./tendon_strain_at_norm_ref.*100;
+     end
      
-    TkErrortendon_stiffness_error(i,:)=(tendon_stiffness-tendon_stiffness_ref)./tendon_stiffness_ref.*100;
-    epsilonerror(i,:)=(OptTendonStrain(i,:)-tendon_strain_at_norm_ref)./tendon_strain_at_norm_ref.*100;
+    
  %% Getting ref and FD states       
     Header=OptData.colheaders;
     Ddata=OptData.data;
@@ -85,6 +85,8 @@ for i=1:1:length(Data.Coordlable)
    
     hold on
 end
+
+
 
 % xlabel ('Knee Angle(Deg)')
 % ylabel ('External Torque(N.m)')
@@ -112,16 +114,19 @@ ylabel ('Muscle Stiffness Estimation Error(%)')
 % legend(Data.Coordlable,'Location','southeast')
 end
 %% Tendon stiffness
-
+if OptTendonStrain
 nexttile
 X2 = categorical(Data.ComplianacMusclename);
 plot(X2,TkErrortendon_stiffness_error','.','MarkerSize',MarkerSize)
 ylabel ('Tendon Stiffness Estimation Error(%)')
 % legend(Data.Coordlable,'Location','northeast')
-
-
 nexttile
+
 X2 = categorical(Data.ComplianacMusclename);
 plot(X2,epsilonerror','.','MarkerSize',MarkerSize)
 ylabel ('Epsilon Estimation Error(%)')
 legend(Data.Coordlable,'Location','northeast')
+end
+
+
+
