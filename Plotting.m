@@ -1,5 +1,3 @@
-
-clear all
 close all
 load ([cd '\SimData.mat']);
 path=append(cd,'\Parameterestimation\');

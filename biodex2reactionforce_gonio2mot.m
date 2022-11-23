@@ -27,7 +27,7 @@ ArmCOM=0.27;
 Fdata=[];
 k=0;
 % DStime=0.0005192; % desired sampling time
-DStime=0.01;
+DStime=0.5;
 %
 ExpMuscle=["RBICF","RSEMT","RMGAS","RRECF","RVASL","RVASM"];
 
@@ -55,7 +55,9 @@ Dataheadermotion=['time' delimiterIn '/jointset/hip_r/hip_flexion_r/value' ...
     delimiterIn '/jointset/ankle_r/ankle_angle_r/value' ...
     delimiterIn 'BiodexAngle'];
 Dataheaderforce=['time' delimiterIn '/forceset/knee_angle_r_act'];
-Title='\nversion=1\nnRows=%d\nnColumns=%d\nInDegrees=no\nendheader\n';
+TitleM='\nversion=1\nnRows=%d\nnColumns=%d\ninDegrees=no\nendheader\n';
+Title='\ninDegrees=no\nnum_controls=1\nnum_derivatives=0\nDataType=double\nversion=3\nnRows=%d\nnColumns=%d\nendheader\n';
+
 %getting goniometer calibration coefficient
 
 [Ph,Pk,Pa,Torqueref]= GnCalib(Datafolder,psname,DStime,0);
@@ -97,9 +99,11 @@ for T1=1:length(Terials1)
         %% Save Motion        
         F_fnames=append(char(filename),'_Motion.mot');
         TrimMTable=MTable(Sindx:Eindx,:);
+        %%% removing offset 
+        TrimMTable(:,1)=TrimMTable(:,1)-TrimMTable(1,1);
         [TMr,TMc]=size(TrimMTable);
         Titledata=[TMr TMc];
-        makefile(Datafolder,F_fnames,Title,Titledata,Dataheadermotion,TrimMTable,5,delimiterIn);    
+        makefile(Datafolder,F_fnames,TitleM,Titledata,Dataheadermotion,TrimMTable,5,delimiterIn);    
         %% Process Force
         %%% Caculating Torque from Arm
         % ArmTorque=cos(BiodexAngle*pi()/180)*ArmWeight*9.8*ArmCOM;
@@ -112,10 +116,10 @@ for T1=1:length(Terials1)
         ActuatorControl=Mb/3000;
         %% Save Force
         F_fnames=append(char(filename),'_Torque.mot');
-        FDatadata=[Data(Sindx:Eindx,1),ActuatorControl(Sindx:Eindx,1)];
-        [TFr,TFc]=size(FDatadata);
+        FData=[Data(Sindx:Eindx,1),ActuatorControl(Sindx:Eindx,1)];
+        [TFr,TFc]=size(FData);
         Titledata=[TFr TFc];
-        makefile(Datafolder,F_fnames,Title,Titledata,Dataheaderforce,FDatadata,7,delimiterIn);      
+        makefile(Datafolder,F_fnames,Title,Titledata,Dataheaderforce,FData,7,delimiterIn);      
         
 
         %% Trail check
@@ -123,7 +127,7 @@ for T1=1:length(Terials1)
 %             fprintf('\nERROR: %s Wrong trail ...\n\n', filename);
 %         end
         %% Strat reading Simulation files
-        ResultData.(char(filename)).('ExpTorque').('full')=FDatadata;
+        ResultData.(char(filename)).('ExpTorque').('full')=FData;
         ResultData.(char(filename)).('ExpMotion').('full')=TrimMTable;
         
 

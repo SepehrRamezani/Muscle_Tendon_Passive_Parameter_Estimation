@@ -8,32 +8,23 @@ osimmodel.setName(Coordlable)
 %% Setup angles
 Ankleangle=Data.(Coordlable).Ankleangle/180*pi();
 Kneeangle=Data.(Coordlable).Kneeangle/180*pi();
-%%% Pelvis
 modeljointSet=osimmodel.getJointSet();
-Pelvisjoint=modeljointSet.get(0);
-Pelvisweldjoint=WeldJoint.safeDownCast(Pelvisjoint);
-hipfram=Pelvisweldjoint.get_frames(0);
+Currjoint=modeljointSet.get('ground_pelvis');
+% Pelvisweldjoint=WeldJoint.safeDownCast(Pelvisjoint);
+hipfram=Currjoint.get_frames(0);
 hipfram.set_orientation(Vec3(0,0,(90-Data.(Coordlable).Hipangle)/180*pi()));
-%%% Hip_flexion
-modelCoordSet = osimmodel.getCoordinateSet();
-Hipcoord = modelCoordSet.get(0);
-Hipcoord.setDefaultValue(Data.(Coordlable).Hipangle/180*pi());
-%%% Knee_corrdiante
-Kneecoord = modelCoordSet.get(1);
-Kneecoord.setDefaultValue(Kneeangle);
-%%% ankle_corrdiante
-Anklecoord = modelCoordSet.get(3);
-Anklecoord.setDefaultValue(Ankleangle);
+hipfram.set_translation(Vec3(0,0.9,0));
+
 %% setup muscle properties
 
 if Data.DeGrooteflage
     DeGrooteFregly2016Muscle().replaceMuscles(osimmodel);
 end
 c=0;
-%% Setup Muscles
-for m = 0:osimmodel.getMuscles().getSize()-1
-    Muscname=osimmodel.getMuscles().get(m).getName();
-    frcset = osimmodel.updForceSet().get(Muscname);
+%% Configure Muscles and remove all other acuators
+for m = 0:osimmodel.getActuators().getSize()-1
+%     frcset.getName()
+    frcset = osimmodel.getActuators().get(m);
     if ~sum(strcmp(char(frcset.getName()), Data.SimMusclename))
         isremove=osimmodel.updForceSet().remove(frcset);
     else
@@ -69,18 +60,93 @@ for m = 0:osimmodel.getMuscles().getSize()-1
         
     end
     
+    
+end
+fgroupnames=ArrayStr();
+osimmodel.getForceSet().getGroupNames(fgroupnames)
+for fg = 0:1:fgroupnames.getSize()-1
+osimmodel.getForceSet().removeGroup(fgroupnames.get(fg))
 end
 state=osimmodel.initSystem();
+%% Configure markers
+for mar = 1:1:osimmodel.getMarkerSet.getSize()
+    osimmodel.getMarkerSet().remove(0);
+end
+%% setting up the constraints
+const=osimmodel.getConstraintSet.get('patellofemoral_knee_angle_l_con');
+osimmodel.updConstraintSet.remove(const);
+
+%% Configure Joints
+jonames=ArrayStr();
+osimmodel.getJointSet().getNames(jonames);
+for jo = 0:1:jonames.getSize()-1 
+    if ~sum(strcmp(char(jonames.get(jo)), Data.joints))
+        curjoint=osimmodel.getJointSet.get(jonames.get(jo));
+        osimmodel.updJointSet().remove(curjoint);
+    end
+end
+
+
+
+%% Configure Bodies
+bonames=ArrayStr();
+osimmodel.getBodySet().getNames(bonames);
+for bo = 0:1:bonames.getSize()-1   
+    if ~sum(strcmp(char(bonames.get(bo)), Data.bodies))
+        curbody=osimmodel.getBodySet.get(bonames.get(bo));
+        osimmodel.updBodySet().remove(curbody);
+    end
+end
+
+
+osimmodel.initSystem();
+newi=0;
+%% Change the joints type
+for i=1:1:length(Data.Weldjoints) 
+modeljointSet=osimmodel.getJointSet();
+Currjoint=modeljointSet.get(Data.Weldjoints(i));
+CurrjointParent=Currjoint.get_frames(0);
+CurrjointChild=Currjoint.get_frames(1);
+JointWelded=WeldJoint();
+JointWelded.setName(Currjoint.getName())
+JointWelded.set_frames(0,CurrjointParent)
+F1=JointWelded.get_frames(0);
+JointWelded.connectSocket_parent_frame(F1);
+JointWelded.set_frames(1,CurrjointChild)
+F2=JointWelded.get_frames(1);
+JointWelded.connectSocket_child_frame(F2)
+osimmodel.updJointSet().remove(Currjoint);
+osimmodel.addJoint(JointWelded);
+osimmodel.initSystem();
+end
+hipjoint=modeljointSet.get('hip_r');
+hipfram=hipjoint.upd_frames(0);
+hipfram.set_orientation(Vec3(0,0,(Data.(Coordlable).Hipangle)./180*pi()));
+
+for m = 0:osimmodel.getCoordinateSet().getSize()-1
+    Coord=osimmodel.getCoordinateSet().get(m);
+    Coord.setDefaultValue(0);
+    Coord.set_locked(true)
+end
 for corindx = 1:length(Data.ActiveCoordinates)
     %%% Unlock the active coordinate
-    osimmodel.updCoordinateSet().get(Data.ActiveCoordinates(corindx)).set_locked(false);
+    if strcmp(char(Data.ActiveCoordinates(corindx)),'knee_angle_r')
+        osimmodel.updCoordinateSet().get(Data.ActiveCoordinates(corindx)).set_locked(false);
+        osimmodel.updCoordinateSet().get('knee_angle_r_beta').set_locked(false);        
+    end
     %%% Adding the coordinate actuator
     addCoordinateActuator(osimmodel, Data.ActiveCoordinates(corindx), optForce)
 end
-osimmodel.initSystem();
-KneeCoor=osimmodel.updCoordinateSet().get('knee_angle_r');
+%%% Knee_corrdiante
+modelCoordSet = osimmodel.getCoordinateSet();
+Kneecoord = modelCoordSet.get('knee_angle_r');
+Kneecoord.setDefaultValue(Kneeangle);
+%%% ankle_corrdiante
+Anklecoord = modelCoordSet.get('ankle_angle_r');
+Anklecoord.setDefaultValue(Ankleangle);
 
-newi=0;
+
+osimmodel.initSystem();
 
 %% change TSL to avoid buckling and save muscle information
 for i=0:1:osimmodel.getMuscles().getSize()-1
@@ -103,7 +169,7 @@ for i=0:1:osimmodel.getMuscles().getSize()-1
         for q=0:Kneerange/20:Kneerange
             k=k+1;
             
-            KneeCoor.setValue(state, q);
+            Kneecoord.setValue(state, q);
             osimmodel.realizePosition(state);
             musclelength(k)=CurrentMuscle.getLength(state);
         end
@@ -134,12 +200,10 @@ osimmodel.initSystem();
 osimmodel.print(Data.(Coordlable).ModelPath);
 
 end
-function addCoordinateActuator(model, coordName, optForce)
+function addCoordinateActuator(osimmodel, coordName, optForce)
 
 import org.opensim.modeling.*;
-
-coordSet = model.updCoordinateSet();
-
+coordSet = osimmodel.updCoordinateSet();
 actu = CoordinateActuator();
 actu.setName(append(coordName,'_act'));
 actu.setCoordinate(coordSet.get(coordName));
@@ -147,6 +211,6 @@ actu.setOptimalForce(optForce);
 actu.setMinControl(-1);
 actu.setMaxControl(1);
 % model.updForceSet().add(actu);
-model.addForce(actu);
+osimmodel.addForce(actu);
 
 end

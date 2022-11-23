@@ -2,24 +2,37 @@ clear all
 import org.opensim.modeling.*;
 myLog = JavaLogSink();
 Logger.addSink(myLog)
+Data.joints=["ground_pelvis","hip_r","walker_knee_r","patellofemoral_r","ankle_r","mtp_r","subtalar_r"];
+Data.Weldjoints=["ground_pelvis","hip_r","mtp_r","subtalar_r"];
+Data.bodies=["pelvis","femur_r","tibia_r","patella_r","talus_r","calcn_r","toes_r"];
 % Make sure if you have common name in the Rigidtendon and Compliance
-% Muscle put them at the 
-%  Data.Rigidtendon=["bflh_r","bfsh_r","recfem_r","gaslat_r","semimem_r","semiten_r","vasint_r","vaslat_r","vasmed_r"];
-Data.Rigidtendon=["gaslat_r","gasmed_r"];
-Data.ComplianacMusclename=["gaslat_r","gasmed_r"];
-Data.SimMusclename=[Data.Rigidtendon(~contains(Data.Rigidtendon,Data.ComplianacMusclename)),Data.ComplianacMusclename];
+% Muscle put their name at the end of rigid tendon. 
+Data.Rigidtendon=["bflh_r","bfsh_r","recfem_r","semimem_r","semiten_r","vasint_r","vaslat_r","vasmed_r"];
+% Data.Rigidtendon=["gaslat_r","gasmed_r"];
+% Data.ComplianacMusclename=["gaslat_r","gasmed_r"];
+
+Data.ComplianacMusclename=[];
+if Data.ComplianacMusclename
+    Data.SimMusclename=[Data.Rigidtendon(~contains(Data.Rigidtendon,Data.ComplianacMusclename)),Data.ComplianacMusclename];
+else
+    Data.SimMusclename=Data.Rigidtendon;
+end
 Data.DeGrooteflage=1;
 % Hipangle=0;%deg
-Data.RefModelpath=append(cd,'\ModelGenerator\subject_walk_armless_RLeg_justknee.osim');
-% Data.RefStatepath=append(cd,'\TorqueSimulation\referenceCoordinates.sto');
-Data.RefStatepath=append('C:\MyCloud\OneDriveUcf\Real\Simulation\Source\P006\T002\Data\P006_T002_RKnee_Fl_H90_Motion.mot');
-Data.RefControlpath=append('C:\MyCloud\OneDriveUcf\Real\Simulation\Source\P006\T002\Data\P006_T002_RKnee_Fl_H90_Torque.mot');
+% Basepath=[cd];
+SubjectNumber='T002';
+Project='P006';
+Basepath=append(['C:\MyCloud\OneDriveUcf\Real\Simulation\Source'],'\',Project,'\',SubjectNumber);
+Data.RefModelpath=append(Basepath,'\Model\Rajagopal\P006_T002_Rajagopal_Scaled.osim');
+% Data.RefStatepath=append(Basepath,'\TorqueSimulation\referenceCoordinates.sto');
+Data.RefStatepath=append(Basepath,'\Data\P006_T002_RKnee_Fl_H90_Motion.mot');
+Data.RefControlpath=append(Basepath,'\Data\P006_T002_RKnee_Fl_H90_Torque.mot');
 
-Data.RefStatepathAnkleMoving=append(cd,'\TorqueSimulation\referenceCoordinatesAnkleMoving.sto');
+Data.RefStatepathAnkleMoving=append(Basepath,'\TorqueSimulation\referenceCoordinatesAnkleMoving.sto');
 
 Data.TorqueSolverinterval=40;
-Data.ParamSolverinterval=40;
-Data.Etime=20;
+Data.ParamSolverinterval=30;
+% Data.Etime=20;
 Data.Stime=0;
 Data.PassiveFiberBound=[0.2,0.8];
 Data.TendonStrainBound=[0.01,0.1];
@@ -58,12 +71,12 @@ for t=1:length(Trialas)
                 Data.(Data.Coordlable{qe}).Hipangle=HipAngle(Hipindx);
                 Data.(Data.Coordlable{qe}).Kneeangle=Kneeangle(kneeindx);
                 Data.(Data.Coordlable{qe}).Ankleangle=Ankleangle(ankleindx);
-                Data.(Data.Coordlable{qe}).TorqeSimulPath=append(cd,'\TorqueSimulation\Torque_Est_',Data.Coordlable{qe},'.sto');
-                Data.(Data.Coordlable{qe}).ParamSimulPath=append(cd,'\Parameterestimation\Parameter_Opt_',Data.Coordlable{qe},'.sto');
+                Data.(Data.Coordlable{qe}).TorqeSimulPath=append(Basepath,'\TorqueSimulation\Torque_Est_',Data.Coordlable{qe},'.sto');
+                Data.(Data.Coordlable{qe}).ParamSimulPath=append(Basepath,'\Parameterestimation\Parameter_Opt_',Data.Coordlable{qe},'.sto');
                 %         if Data.DeGrooteflage
-                Data.(Data.Coordlable{qe}).ModelPath=append(cd,'\ModelGenerator\Model_',Data.Coordlable{qe},'.osim');
+                Data.(Data.Coordlable{qe}).ModelPath=append(Basepath,'\Model\',Project,'_',SubjectNumber,'_Model_',Data.Coordlable{qe},'.osim');
                 %         else
-                %             Data.(Data.Coordlable{qe}).ModelPath=append(cd,'\ModelGenerator\OneDOF_Knee_Thelen_',Data.Coordlable{qe},'.osim');
+                %             Data.(Data.Coordlable{qe}).ModelPath=append(Basepath,'\ModelGenerator\OneDOF_Knee_Thelen_',Data.Coordlable{qe},'.osim');
                 %         end
                 Refmmodel = Model(Data.RefModelpath);
                 [osimmodel,Data.(Data.Coordlable{qe}).MuscleInfo]=Modelcreator(Data.Coordlable{qe},Data,Refmmodel);
@@ -74,14 +87,17 @@ for t=1:length(Trialas)
                 else
                     %DataTable=TableProcessor(Data.(Data.Coordlable{qe}).TorqeSimulPath);
                     StateDataTable=TableProcessor(Data.RefStatepath);
+                    Etimeindx=StateDataTable.process.getNumRows();
+                    Data.Etime=double(StateDataTable.process.getIndependentColumn().get(Etimeindx-1));
                     ControlDataTable=TableProcessor(Data.RefControlpath);
-                    kneeTrackingSolutionTable=DataTable.process;
-                    [kneeTrackingParamSolution]=ParameterEstimation(StateDataTable,ControlDataTable,osimmodel,Data.Coordlable{qe},Data);
+                    StateSolutionTable=StateDataTable.process;
+                    ControlSolutionTable=ControlDataTable.process;
+                    [kneeTrackingParamSolution]=ParameterEstimation(StateSolutionTable,ControlSolutionTable,osimmodel,Data.Coordlable{qe},Data);
                 end
                 qe=qe+1;
             end
         end
     end
 end
-save([cd '\SimData.mat'],'Data');
-Plotting()
+save([Basepath '\SimData.mat'],'Data');
+% Plotting()
