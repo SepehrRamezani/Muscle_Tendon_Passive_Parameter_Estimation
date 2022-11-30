@@ -2,8 +2,11 @@ clear all
 import org.opensim.modeling.*;
 myLog = JavaLogSink();
 Logger.addSink(myLog)
-
-Data.whichleg=["l"];
+SubjectNumber='T002';
+Project='P006';
+Basepath=append(['C:\MyCloud\OneDriveUcf\Real\Simulation\Source'],'\',Project,'\',SubjectNumber);
+Pardata=importdata(append(Basepath,"\Data\Parameters.csv"));
+Data.whichleg=string(extractBetween(Pardata.textdata{1},"=",","));
 Data.joints=["ground_pelvis","hip","walker_knee","patellofemoral","ankle","mtp","subtalar"];
 Data.joints(2:end)=addingleg(Data.joints(2:end),Data.whichleg);
 Data.Weldjoints=["ground_pelvis","hip","mtp","subtalar"];
@@ -25,10 +28,6 @@ end
 Data.DeGrooteflage=1;
 % Hipangle=0;%deg
 % Basepath=[cd];
-SubjectNumber='T003';
-Project='P006';
-Basepath=append(['C:\MyCloud\OneDriveUcf\Real\Simulation\Source'],'\',Project,'\',SubjectNumber);
-Pardata=importdata(append(Basepath,"\Data\Parameters.csv"));
 Data.optForce=Pardata.data(6);
 Data.RefModelpath=append(Basepath,'\Model\',Project,'_',SubjectNumber,'_','Rajagopal_Scaled.osim');
 % Data.RefStatepath=append(Basepath,'\TorqueSimulation\referenceCoordinates.sto');
@@ -42,7 +41,7 @@ Data.PassiveFiberBound=[0.05,0.9];
 Data.TendonStrainBound=[0.01,0.1];
 % Trialas=["KneeMove","AnkleMove","KneeAnkleMove"];
 Trialas=["KneeMove"];
-HipAngle=[70];
+HipAngle=[90];
 Kneeangle=[0];
 Ankleangle=[25];
 

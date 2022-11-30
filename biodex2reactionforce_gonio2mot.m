@@ -12,12 +12,13 @@ folder=append('C:\MyCloud\OneDriveUcf\Real\Simulation\Source\',Project,'\',Subje
 Datafolder=append(folder,'\Data');
 results_folder = append(folder,'\Result');
 Pardata=importdata(append(Datafolder,"\","Parameters.csv"));
+whichleg=string(extractBetween(Pardata.textdata{1},"=",","));
 ResultData.info.ForceRatio=Pardata.data(1);
 ResultData.info.M_ThresholdMin=Pardata.data(2);
 ResultData.info.M_ThresholdMax=Pardata.data(3);
 optForce=Pardata.data(6);
 psname=append(Project,'_',SubjectNumber);
-Jointname='LKnee';
+Jointname=append(upper(Data.whichleg),'Knee');
 Subjectname =append(psname,"_",Jointname);
 
 
@@ -59,7 +60,7 @@ Dataheadermotion=['time' delimiterIn '/jointset/hip_r/hip_flexion_r/value' ...
     delimiterIn '/jointset/ankle_r/ankle_angle_r/value' ...
     delimiterIn 'BiodexAngle'];
 Dataheaderforce=['time' delimiterIn '/forceset/knee_angle_r_act'];
-if contains(Jointname,'LKnee')
+if contains(whichleg,'l')
     Dataheadermotion=strrep(Dataheadermotion,'_r','_l');
     Dataheaderforce=strrep(Dataheaderforce,'_r','_l');
 end
@@ -122,7 +123,7 @@ for T1=1:length(Terials1)
         TotalTroque=polyval(P_Bidoex_Calibration,x);
         KneeTorque=TotalTroque-ArmTorque;
         
-        KneeControl=KneeTorque/optForce;
+        KneeControl=-1*(KneeTorque/optForce);
         %% Save Force
         F_fnames=append(char(filename),'_Torque.mot');
         FData=[Data(Sindx:Eindx,1),KneeControl(Sindx:Eindx,1)];
