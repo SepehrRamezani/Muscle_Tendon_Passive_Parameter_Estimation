@@ -1,6 +1,6 @@
 close all
 import org.opensim.modeling.*;
-SubjectNumber='T002';
+SubjectNumber='T003';
 Project='P006';
 Basepath=append(['C:\MyCloud\OneDriveUcf\Real\Simulation\Source'],'\',Project,'\',SubjectNumber);
 load ([Basepath '\SimData.mat']);
@@ -8,19 +8,33 @@ OptTendonStrain=[];
 Muscname=Data.SimMusclename;
 MarkerSize=15;
 OptPassiveFiber=[];
-RefState=TableProcessor(Data.RefStatepath).process;
-reftime=RefState.getDependentColumnAtIndex(1).getAsMat();
-RefData.data=RefState.getMatrix().getAsMat();
-RefData.colheaders=[];
-for iLabel=0:RefState.getNumColumns()-1 
-RefData.colheaders=[RefData.colheaders string(RefState.getColumnLabels.get(iLabel))];
-end
+reftime=[];
 
 for i=1:1:length(Data.Coordlable)
-    u=0;
-    stiff_tendon_counter=0;
-    OptData=importdata(Data.(Data.Coordlable{i}).ParamSimulPath);
-        
+    %getting refrence data
+    %Motion
+RefState=TableProcessor(Data.(Data.Coordlable{i}).RefStatepath).process;
+RefData.data=RefState.getMatrix().getAsMat();
+RefData.colheaders=[];
+for iLabel=0:RefState.getNumColumns()-1
+    RefData.colheaders=[RefData.colheaders string(RefState.getColumnLabels.get(iLabel))];
+end
+for iRow = 0 : RefState.getNumRows() - 1
+    reftime(iRow+1,1) = RefState.getIndependentColumn.get(iRow);
+end
+% Torque
+ControlDataTable=TableProcessor(Data.(Data.Coordlable{i}).RefControlpath).process;
+ControlRefData.data=ControlDataTable.getMatrix().getAsMat();
+ControlRefData.colheaders=[];
+for iLabel=0:ControlDataTable.getNumColumns()-1
+    ControlRefData.colheaders=[ControlRefData.colheaders string(ControlDataTable.getColumnLabels.get(iLabel))];
+end
+% getting optimization result 
+u=0;
+stiff_tendon_counter=0;
+OptData=importdata(Data.(Data.Coordlable{i}).ParamSimulPath);
+
+
 %% getting mucsles parameters 
 
     for m=1:length(Muscname)
@@ -69,21 +83,37 @@ for i=1:1:length(Data.Coordlable)
     Ddata=OptData.data;
     time=Ddata(:,1);
     for corindx = 1:length(Data.ActiveCoordinates)
+        % Angle
         Angle_idx=find(contains(Header,append(Data.ActiveCoordinates,'/value')));
         Activecoor(:,corindx)=Ddata(:,Angle_idx)*180/3.14; 
         RefAngle_idx=(contains(RefData.colheaders,append(Data.ActiveCoordinates,'/value')));
         RefActivecoor(:,corindx)=RefData.data(:,RefAngle_idx)*180/3.14;
+        % Toruqe
+        act_idx=find(contains(Header,append(Data.ActiveCoordinates,'_act')));
+        TorqueActivecoor(:,corindx)=Ddata(:,act_idx);
+        Ref_act_idx=(contains(ControlRefData.colheaders,append(Data.ActiveCoordinates,'_act')));
+        RefTorqueActivecoor(:,corindx)=ControlRefData.data(:,Ref_act_idx);
         
     end
-%     activation_idx=find(contains(Header,'/forceset/knee_act'));
 %     KneeActuator=Ddata(:,activation_idx)*3000;
     % plot(Kneeangle,KneeActuator)
     vq1 = interp1(time,Activecoor,reftime);
+    vq2 = interp1(time,TorqueActivecoor,reftime);
     Error=RefActivecoor-vq1;
 %     Ankle=
     plot(reftime,Error)
-   
-    hold on
+    
+ylabel ('Error(Deg)')
+xlabel ('Time (s)')
+title('Knee angle')
+legend(Data.Coordlable,'Location','southeast')
+figure
+%     hold on
+plot(reftime,[RefTorqueActivecoor,vq2])
+ylabel ('Activation')
+xlabel ('Time (s)')
+title('Knee actuator')
+legend(["experiment","simulation"],'Location','southeast')
 end
 
 
@@ -91,10 +121,7 @@ end
 % xlabel ('Knee Angle(Deg)')
 % ylabel ('External Torque(N.m)')
 % legend(Name,'Location','southeast')
-ylabel ('Error(Deg)')
-xlabel ('Time (s)')
-title('Knee angle')
-legend(Data.Coordlable,'Location','southeast')
+
 % end
 tiledlayout(2,2)
 
