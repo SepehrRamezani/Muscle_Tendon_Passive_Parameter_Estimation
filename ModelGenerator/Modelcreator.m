@@ -2,7 +2,10 @@ function [osimmodel,Muscleinfo]=Modelcreator(Coordlable,Data,osimmodel)
 import org.opensim.modeling.*;
 % osimmodel = Model('subject_walk_armless_RLeg_justknee.osim');
 Kneerange=90/180*3.14;
-optForce=3000;
+hiplable=append('hip_',Data.whichleg);
+kneelable=append('knee_angle_',Data.whichleg);
+anklelable=append('ankle_angle_',Data.whichleg);
+
 %% change the name
 osimmodel.setName(Coordlable)
 %% Setup angles
@@ -73,7 +76,11 @@ for mar = 1:1:osimmodel.getMarkerSet.getSize()
     osimmodel.getMarkerSet().remove(0);
 end
 %% setting up the constraints
-const=osimmodel.getConstraintSet.get('patellofemoral_knee_angle_l_con');
+if Data.whichleg==["r"]
+    const=osimmodel.getConstraintSet.get('patellofemoral_knee_angle_l_con');
+else
+    const=osimmodel.getConstraintSet.get('patellofemoral_knee_angle_r_con');
+end
 osimmodel.updConstraintSet.remove(const);
 
 %% Configure Joints
@@ -119,7 +126,7 @@ osimmodel.updJointSet().remove(Currjoint);
 osimmodel.addJoint(JointWelded);
 osimmodel.initSystem();
 end
-hipjoint=modeljointSet.get('hip_r');
+hipjoint=modeljointSet.get(hiplable);
 hipfram=hipjoint.upd_frames(0);
 hipfram.set_orientation(Vec3(0,0,(Data.(Coordlable).Hipangle)./180*pi()));
 
@@ -130,19 +137,19 @@ for m = 0:osimmodel.getCoordinateSet().getSize()-1
 end
 for corindx = 1:length(Data.ActiveCoordinates)
     %%% Unlock the active coordinate
-    if strcmp(char(Data.ActiveCoordinates(corindx)),'knee_angle_r')
+    if strcmp(char(Data.ActiveCoordinates(corindx)),kneelable)
         osimmodel.updCoordinateSet().get(Data.ActiveCoordinates(corindx)).set_locked(false);
-        osimmodel.updCoordinateSet().get('knee_angle_r_beta').set_locked(false);        
+        osimmodel.updCoordinateSet().get(append(kneelable,'_beta')).set_locked(false);        
     end
     %%% Adding the coordinate actuator
-    addCoordinateActuator(osimmodel, Data.ActiveCoordinates(corindx), optForce)
+    addCoordinateActuator(osimmodel, Data.ActiveCoordinates(corindx), Data.optForce)
 end
 %%% Knee_corrdiante
 modelCoordSet = osimmodel.getCoordinateSet();
-Kneecoord = modelCoordSet.get('knee_angle_r');
+Kneecoord = modelCoordSet.get(kneelable);
 Kneecoord.setDefaultValue(Kneeangle);
 %%% ankle_corrdiante
-Anklecoord = modelCoordSet.get('ankle_angle_r');
+Anklecoord = modelCoordSet.get(anklelable);
 Anklecoord.setDefaultValue(Ankleangle);
 
 
@@ -157,8 +164,8 @@ for i=0:1:osimmodel.getMuscles().getSize()-1
     CurrentMuscle=osimmodel.getMuscles().get(Data.SimMusclename(i+1));
     
     
-    if sum(strcmp(char(CurrentMuscle.getName),Data.ComplianacMusclename))&& sum(contains(Data.ActiveCoordinates,'ankle_angle_r'))
-        AnkleCoor=osimmodel.updCoordinateSet().get('ankle_angle_r');
+    if sum(strcmp(char(CurrentMuscle.getName),Data.ComplianacMusclename))&& sum(contains(Data.ActiveCoordinates,'ankle_angle'))
+        AnkleCoor=osimmodel.updCoordinateSet().get(anklelable);
         for q=-Ankleangle:Ankleangle/20:Ankleangle
             u=u+1;
             AnkleCoor.setValue(state, q);

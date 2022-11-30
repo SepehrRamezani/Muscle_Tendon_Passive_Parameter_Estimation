@@ -3,10 +3,11 @@ close all;
 clc;
 % Some times there is no need to import raw data because all data will
 % save in FinalDatafor first time. readflage=1 means import files again.
-readflage= 0;
+readflage= 1;
 % folder=uigetdir(); % get Data directory
-SubjectNumber='T002';
+SubjectNumber='T003';
 Project='P006';
+
 folder=append('C:\MyCloud\OneDriveUcf\Real\Simulation\Source\',Project,'\',SubjectNumber);
 Datafolder=append(folder,'\Data');
 results_folder = append(folder,'\Result');
@@ -14,9 +15,12 @@ Pardata=importdata(append(Datafolder,"\","Parameters.csv"));
 ResultData.info.ForceRatio=Pardata.data(1);
 ResultData.info.M_ThresholdMin=Pardata.data(2);
 ResultData.info.M_ThresholdMax=Pardata.data(3);
+optForce=Pardata.data(6);
 psname=append(Project,'_',SubjectNumber);
-Jointname='RKnee';
+Jointname='LKnee';
 Subjectname =append(psname,"_",Jointname);
+
+
 Terials1=["Fl"];
 Terials2=["H90","H70","H55","H40","H25","H10"];
 Terials3=["iter1","iter2","iter3"];
@@ -29,7 +33,6 @@ k=0;
 % DStime=0.0005192; % desired sampling time
 DStime=0.5;
 %
-ExpMuscle=["RBICF","RSEMT","RMGAS","RRECF","RVASL","RVASM"];
 
 if readflage
     for T1=1:length(Terials1)
@@ -49,18 +52,24 @@ end
 %%
 load ([Datafolder '\RawData.mat']);
 delimiterIn='\t';
-
+% joints=["hip","walker_knee","patellofemoral","ankle","mtp","subtalar"];
+% Data.joints(2:end)=makingstr(Data.joints(2:end),Data.whichleg);
 Dataheadermotion=['time' delimiterIn '/jointset/hip_r/hip_flexion_r/value' ...
     delimiterIn '/jointset/walker_knee_r/knee_angle_r/value' ...
     delimiterIn '/jointset/ankle_r/ankle_angle_r/value' ...
     delimiterIn 'BiodexAngle'];
 Dataheaderforce=['time' delimiterIn '/forceset/knee_angle_r_act'];
+if contains(Jointname,'LKnee')
+    Dataheadermotion=strrep(Dataheadermotion,'_r','_l');
+    Dataheaderforce=strrep(Dataheaderforce,'_r','_l');
+end
+
 TitleM='\nversion=1\nnRows=%d\nnColumns=%d\ninDegrees=no\nendheader\n';
 Title='\ninDegrees=no\nnum_controls=1\nnum_derivatives=0\nDataType=double\nversion=3\nnRows=%d\nnColumns=%d\nendheader\n';
 
 %getting goniometer calibration coefficient
 
-[Ph,Pk,Pa,Torqueref]= GnCalib(Datafolder,psname,DStime,0);
+[Ph,Pk,Pa,P_Bidoex_Calibration,Torqueref]= GnCalib(Datafolder,psname,DStime,0);
 
 for T1=1:length(Terials1)
     for T2=1:length(Terials2)
@@ -110,13 +119,13 @@ for T1=1:length(Terials1)
         ArmTorque=cos(BiodexAngle)*Torqueref;
         %%% Calcuating Torque from biodex
         x=1*Data(:,cb(1)); %data of a trial
-        TotalTorque=-1.*(141.81.*x-25.047);
-        %%% Arm weight compensation 
-        Mb=TotalTorque-ArmTorque;
-        ActuatorControl=Mb/3000;
+        TotalTroque=polyval(P_Bidoex_Calibration,x);
+        KneeTorque=TotalTroque-ArmTorque;
+        
+        KneeControl=KneeTorque/optForce;
         %% Save Force
         F_fnames=append(char(filename),'_Torque.mot');
-        FData=[Data(Sindx:Eindx,1),ActuatorControl(Sindx:Eindx,1)];
+        FData=[Data(Sindx:Eindx,1),KneeControl(Sindx:Eindx,1)];
         [TFr,TFc]=size(FData);
         Titledata=[TFr TFc];
         makefile(Datafolder,F_fnames,Title,Titledata,Dataheaderforce,FData,7,delimiterIn);      

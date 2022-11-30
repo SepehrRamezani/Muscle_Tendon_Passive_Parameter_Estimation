@@ -1,7 +1,8 @@
 function [osimmodel]=changemodelproperty(osimmodel,Coordlable,Data,Optimizedflag)
 import org.opensim.modeling.*;
-OptData=importdata(Data.(Coordlable).ParamSimulPath);
+
 if Optimizedflag
+    OptData=importdata(Data.(Coordlable).ParamSimulPath);
     Muscname=Data.SimMusclename;
     for m=1:1:osimmodel.getMuscles().getSize()-1
         M_indx=find(contains(OptData.colheaders,Muscname(m))&~contains(OptData.colheaders,'force'));
