@@ -1,7 +1,7 @@
-function [P_Gonio_H,P_Gonio_K,P_Gonio_A,Torqueref]= GnCalib (Datafolder,psname,DStime,plotflage)
-
+function [P_Gonio_H,P_Gonio_K,P_Gonio_A,P_Bidoex_Calibration,Torqueref]= GnCalib (Datafolder,psname,DStime,plotflage)
+P_Bidoex_Calibration=[139.01,-24.46];
 Fname =append(psname,"_GnCalib_");
-Names=["AnkleDorsi15","AnkleDorsi10","Ankle0","AnklePlant10","AnklePlant30","AnklePlant50"...
+Names=["AnkleDorsi20","AnkleDorsi10","Ankle0","AnklePlant10","AnklePlant30","AnklePlant50"...
     ,"Hip0","Hip30","Hip60","Hip90"...
     ,"Knee0","Knee30","Knee45","Knee60","Knee90"];
 AnkelGnCalibdata=[];
@@ -30,7 +30,7 @@ for i=1:length(Names)
     end
     
 end
-y=[15,10,0,-10,-30,-50];
+y=[20,10,0,-10,-30,-50];
 y=y./180*pi();
 xa=AnkelGnCalibdata;
 P_Gonio_A = polyfit(xa(:,2)',y,1);
@@ -80,7 +80,7 @@ BiodexCaldata=importdata(append(Datafolder,"\",Fname,".csv"));
 [Gdata,Gheader]= ReshapingData(BiodexCaldata,DStime);
 [Gr,Gc]=find(strncmp(Gheader,'Biodex',6));
 timeindx=(Gdata(:,1)>=2&Gdata(:,1)<=4);
-Torqueref=mean(Gdata(timeindx,Gc(1)));
-
+VolTorqueref=mean(Gdata(timeindx,Gc(1)));
+Torqueref=polyval(P_Bidoex_Calibration,VolTorqueref);
 
 end

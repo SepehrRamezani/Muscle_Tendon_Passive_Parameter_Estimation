@@ -1,16 +1,17 @@
 function Events = EventDetection(filename,DStime,MTable,Threshold)
-if contains(filename,"RKnee")
-    ref = mean(MTable(1:200,5));
+if contains(filename,"Knee")
+    indxref=find(diff(diff(MTable(:,5)))>0);
+    ref = mean(MTable(1:indxref(1),5));
     MTable(:,5)=MTable(:,5)-ref;
     [bb,aa] = butter(4, 0.02,'low');
-    datafilt=filter(bb,aa,MTable(:,5));
-    Biodexfilterdmotion=filter(bb,aa,datafilt);
+%     datafilt=filtfilt(bb,aa,MTable(:,5));
+    Biodexfilterdmotion=filtfilt(bb,aa,MTable(:,5));
     % & [0;diff(MTable(:,6))>0]
-    [indx,c]=find(abs(diff(Biodexfilterdmotion))>=0.0006);
+    [indx,c]=find(abs(diff(Biodexfilterdmotion))>=0.0004);
     %% we some constatnt data befor knee flexes and 200 is for that
-    Sindx=indx(1)-200;
+    Sindx=indxref(1)-1;
     %% 97 is a delayed samle because of filtering 
-    Eindx=indx(end)-97;
+    Eindx=indx(end);
     Stime=MTable(Sindx,1);
     Etime=MTable(Eindx,1);
 %     count=0;
