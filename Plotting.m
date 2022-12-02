@@ -1,6 +1,6 @@
 close all
 import org.opensim.modeling.*;
-SubjectNumber='T003';
+SubjectNumber='T002';
 Project='P006';
 Basepath=append(['C:\MyCloud\OneDriveUcf\Real\Simulation\Source'],'\',Project,'\',SubjectNumber);
 load ([Basepath '\SimData.mat']);
@@ -8,8 +8,21 @@ OptTendonStrain=[];
 Muscname=Data.SimMusclename;
 MarkerSize=15;
 OptPassiveFiber=[];
-reftime=[];
 
+figure1=figure;
+axes1 = axes('Parent',figure1);
+hold(axes1,'on');
+box(axes1,'on');
+figure2=figure;
+axes2 = axes('Parent',figure2);
+hold(axes2,'on');
+box(axes2,'on');
+figure3=figure;
+axes3 = axes('Parent',figure3);
+hold(axes3,'on');
+box(axes3,'on');
+Lege=[];
+newcolors = {'#F00','#F80','#FF0','#0B0','#00F','#50F','#A0F'};
 for i=1:1:length(Data.Coordlable)
     %getting refrence data
     %Motion
@@ -19,6 +32,7 @@ RefData.colheaders=[];
 for iLabel=0:RefState.getNumColumns()-1
     RefData.colheaders=[RefData.colheaders string(RefState.getColumnLabels.get(iLabel))];
 end
+reftime=[];
 for iRow = 0 : RefState.getNumRows() - 1
     reftime(iRow+1,1) = RefState.getIndependentColumn.get(iRow);
 end
@@ -53,6 +67,7 @@ OptData=importdata(Data.(Data.Coordlable{i}).ParamSimulPath);
         
     end
     %     Coordlable(i,1)=append("Hip",num2str(Data.Hipangle(i)));
+    
     %% Calculating parameter error
     tendod_slack_ref=Data.(Data.Coordlable{i}).MuscleInfo.TSlack;
     tendon_slack_Error(i,:)=(OptTSL(i,:)-tendod_slack_ref)./tendod_slack_ref.*100;
@@ -63,6 +78,7 @@ OptData=importdata(Data.(Data.Coordlable{i}).ParamSimulPath);
         muscle_passive_fiber_at_norm_ref=Data.(Data.Coordlable{i}).MuscleInfo.Passive(contains(Muscname,Data.Rigidtendon));
         muscle_stiffness_ref=2./(muscle_passive_fiber_at_norm_ref);
         muscle_stiffness_error(i,:)=(muscle_stiffness-muscle_stiffness_ref)./muscle_stiffness_ref.*100;
+        muscle_passive_fiber_at_norm_ref_Error(i,:)=100*(OptPassiveFiber(i,:)-muscle_passive_fiber_at_norm_ref)./muscle_passive_fiber_at_norm_ref;
      end
      if OptTendonStrain
          c1=0.2;
@@ -82,41 +98,54 @@ OptData=importdata(Data.(Data.Coordlable{i}).ParamSimulPath);
     Header=OptData.colheaders;
     Ddata=OptData.data;
     time=Ddata(:,1);
-    for corindx = 1:length(Data.ActiveCoordinates)
+%      for corindx = 1:length(Data.ActiveCoordinates)
         % Angle
         Angle_idx=find(contains(Header,append(Data.ActiveCoordinates,'/value')));
-        Activecoor(:,corindx)=Ddata(:,Angle_idx)*180/3.14; 
+        Activecoor=Ddata(:,Angle_idx)*180/3.14; 
         RefAngle_idx=(contains(RefData.colheaders,append(Data.ActiveCoordinates,'/value')));
-        RefActivecoor(:,corindx)=RefData.data(:,RefAngle_idx)*180/3.14;
+        RefActivecoor=RefData.data(:,RefAngle_idx)*180/3.14;
         % Toruqe
         act_idx=find(contains(Header,append(Data.ActiveCoordinates,'_act')));
-        TorqueActivecoor(:,corindx)=Ddata(:,act_idx);
+        TorqueActivecoor=Ddata(:,act_idx);
         Ref_act_idx=(contains(ControlRefData.colheaders,append(Data.ActiveCoordinates,'_act')));
-        RefTorqueActivecoor(:,corindx)=ControlRefData.data(:,Ref_act_idx);
+        RefTorqueActivecoor=ControlRefData.data(:,Ref_act_idx);
         
-    end
-%     KneeActuator=Ddata(:,activation_idx)*3000;
-    % plot(Kneeangle,KneeActuator)
+%      end
+
     vq1 = interp1(time,Activecoor,reftime);
     vq2 = interp1(time,TorqueActivecoor,reftime);
     Error=RefActivecoor-vq1;
-%     Ankle=
-    plot(reftime,Error)
-    
-ylabel ('Error(Deg)')
-xlabel ('Time (s)')
-title('Knee angle')
-legend(Data.Coordlable,'Location','southeast')
-figure
-%     hold on
-plot(reftime,[RefTorqueActivecoor,vq2])
-ylabel ('Activation')
-xlabel ('Time (s)')
-title('Knee actuator')
-legend(["experiment","simulation"],'Location','southeast')
+
+
+
+color=newcolors{i};
+plot(reftime,Error,'Color',color,'Parent',axes1);
+plot(reftime,[RefActivecoor,vq1],'Color',color,'Parent',axes2);
+plot(reftime,RefTorqueActivecoor,'--',reftime,vq2,'Color',color,'Parent',axes3)
+Lege=[Lege ,append(Data.Coordlable{i},"_Exp"), append(Data.Coordlable{i},"_Sim")];
+
 end
+hold(axes1,'off');
+hold(axes2,'off');
+hold(axes3,'off');
 
+ylabel(axes1,'Error(Deg)')
+xlabel(axes1,'Time (s)')
+title(axes1,'Knee angle')
 
+legend(axes1,Data.Coordlable,'Location','southeast')
+ 
+ylabel(axes2,'Angle (Deg)')
+xlabel(axes2,'Time (s)')
+title(axes2,'Knee angle')
+legend(axes2,["experiment","simulation"],'Location','southeast')
+
+ylabel(axes3,'Activation')
+xlabel(axes3,'Time (s)')
+title(axes3,'Knee actuator')
+colororder(axes3,newcolors)
+legend(axes3,Lege,'Location','southeast')
+figure
 
 % xlabel ('Knee Angle(Deg)')
 % ylabel ('External Torque(N.m)')
@@ -130,7 +159,7 @@ nexttile
 X = categorical(Muscname);
 plot(X,tendon_slack_Error,'.','MarkerSize',MarkerSize)
 ylabel ('Tendon Slack length Estimation Error(%)')
-% legend(Data.Coordlable,'Location','northeast')
+legend(Data.Coordlable,'Location','northeast')
 
 %% Muscle Stiffness
 if OptPassiveFiber
@@ -139,6 +168,11 @@ X = categorical(Data.Rigidtendon);
 plot(X,muscle_stiffness_error','.','MarkerSize',MarkerSize)
 ylabel ('Muscle Stiffness Estimation Error(%)')
 % legend(Data.Coordlable,'Location','southeast')
+nexttile
+X = categorical(Data.Rigidtendon);
+plot(X,muscle_passive_fiber_at_norm_ref_Error','.','MarkerSize',MarkerSize)
+ylabel ('Muscle passive force at one norm Error(%)')
+
 end
 %% Tendon stiffness
 if OptTendonStrain

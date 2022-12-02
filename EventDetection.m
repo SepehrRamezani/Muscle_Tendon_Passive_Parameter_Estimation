@@ -9,7 +9,10 @@ if contains(filename,"Knee")
     % & [0;diff(MTable(:,6))>0]
     [indx,c]=find(abs(diff(Biodexfilterdmotion))>=0.0004);
     %% we some constatnt data befor knee flexes and 200 is for that
-    Sindx=indxref(1)-1;
+    Sindx=indxref(1)-3;
+    if Sindx<=0 
+        Sindx=1; 
+    end
     %% 97 is a delayed samle because of filtering 
     Eindx=indx(end);
     Stime=MTable(Sindx,1);

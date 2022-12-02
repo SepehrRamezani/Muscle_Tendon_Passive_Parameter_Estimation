@@ -41,9 +41,9 @@ Data.PassiveFiberBound=[0.05,0.9];
 Data.TendonStrainBound=[0.01,0.1];
 % Trialas=["KneeMove","AnkleMove","KneeAnkleMove"];
 Trialas=["KneeMove"];
-HipAngle=[90];
+HipAngle=[90,70,55,40,25,10];
 Kneeangle=[0];
-Ankleangle=[25];
+Ankleangle=[0];
 
 %% running just Parameter optimization
 Data.justparameterflag=1;

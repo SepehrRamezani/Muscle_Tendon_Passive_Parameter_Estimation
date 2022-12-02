@@ -5,7 +5,7 @@ clc;
 % save in FinalDatafor first time. readflage=1 means import files again.
 readflage= 1;
 % folder=uigetdir(); % get Data directory
-SubjectNumber='T003';
+SubjectNumber='T002';
 Project='P006';
 
 folder=append('C:\MyCloud\OneDriveUcf\Real\Simulation\Source\',Project,'\',SubjectNumber);
@@ -18,9 +18,9 @@ ResultData.info.M_ThresholdMin=Pardata.data(2);
 ResultData.info.M_ThresholdMax=Pardata.data(3);
 optForce=Pardata.data(6);
 psname=append(Project,'_',SubjectNumber);
-Jointname=append(upper(Data.whichleg),'Knee');
+Jointname=append(upper(whichleg),'Knee');
 Subjectname =append(psname,"_",Jointname);
-
+Biodexcof=[0,1];
 
 Terials1=["Fl"];
 Terials2=["H90","H70","H55","H40","H25","H10"];
@@ -32,7 +32,7 @@ ArmCOM=0.27;
 Fdata=[];
 k=0;
 % DStime=0.0005192; % desired sampling time
-DStime=0.5;
+DStime=0.2;
 %
 
 if readflage
@@ -63,6 +63,7 @@ Dataheaderforce=['time' delimiterIn '/forceset/knee_angle_r_act'];
 if contains(whichleg,'l')
     Dataheadermotion=strrep(Dataheadermotion,'_r','_l');
     Dataheaderforce=strrep(Dataheaderforce,'_r','_l');
+    Biodexcof=[pi(),-1];
 end
 
 TitleM='\nversion=1\nnRows=%d\nnColumns=%d\ninDegrees=no\nendheader\n';
@@ -92,7 +93,7 @@ for T1=1:length(Terials1)
         %knee calibration
         GonK=Data(:,ck(2));
         GonCalibratedK = polyval(Pk,GonK);
-        GonCalibratedK(GonCalibratedK<0)=0;
+        GonCalibratedK=GonCalibratedK-GonCalibratedK(1);
         %Hip calibration
         GonH=Data(:,ch(2));
         GonCalibratedH = polyval(Ph,GonH);
@@ -100,7 +101,7 @@ for T1=1:length(Terials1)
         GonA=Data(:,ca(2));
         GonCalibratedA = polyval(Pa,GonA);
         %Biodex angle 
-        BiodexAngle=(-35.5*Data(:,cb(2))+103)*pi()/180;
+        BiodexAngle=Biodexcof(1)+Biodexcof(2)*(-35.5*Data(:,cb(2))+103)*pi()/180;
         MTable=[Data(:,1),GonCalibratedH,GonCalibratedK,GonCalibratedA,BiodexAngle];
         %% Finding events
         Event=EventDetection(filename,DStime,MTable,[ResultData.info.M_ThresholdMin ResultData.info.M_ThresholdMax]);
@@ -109,7 +110,7 @@ for T1=1:length(Terials1)
         %% Save Motion        
         F_fnames=append(char(filename),'_Motion.mot');
         TrimMTable=MTable(Sindx:Eindx,:);
-        %%% removing offset 
+        %%% removing time offset 
         TrimMTable(:,1)=TrimMTable(:,1)-TrimMTable(1,1);
         [TMr,TMc]=size(TrimMTable);
         Titledata=[TMr TMc];
@@ -123,10 +124,10 @@ for T1=1:length(Terials1)
         TotalTroque=polyval(P_Bidoex_Calibration,x);
         KneeTorque=TotalTroque-ArmTorque;
         
-        KneeControl=-1*(KneeTorque/optForce);
+        KneeControl=Biodexcof(2)*(KneeTorque/optForce);
         %% Save Force
         F_fnames=append(char(filename),'_Torque.mot');
-        FData=[Data(Sindx:Eindx,1),KneeControl(Sindx:Eindx,1)];
+        FData=[TrimMTable(:,1),KneeControl(Sindx:Eindx,1)];
         [TFr,TFc]=size(FData);
         Titledata=[TFr TFc];
         makefile(Datafolder,F_fnames,Title,Titledata,Dataheaderforce,FData,7,delimiterIn);      
