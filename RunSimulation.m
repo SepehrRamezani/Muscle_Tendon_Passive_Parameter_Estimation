@@ -2,7 +2,7 @@ clear all
 import org.opensim.modeling.*;
 myLog = JavaLogSink();
 Logger.addSink(myLog)
-SubjectNumber='T002';
+SubjectNumber='T003';
 Project='P006';
 Basepath=append(['C:\MyCloud\OneDriveUcf\Real\Simulation\Source'],'\',Project,'\',SubjectNumber);
 Pardata=importdata(append(Basepath,"\Data\Parameters.csv"));
