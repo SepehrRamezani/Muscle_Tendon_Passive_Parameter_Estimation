@@ -3,11 +3,12 @@ if contains(filename,"Knee")
     indxref=find(diff(diff(MTable(:,5)))>0);
     ref = mean(MTable(1:indxref(1),5));
     MTable(:,5)=MTable(:,5)-ref;
-    [bb,aa] = butter(4, 0.02,'low');
+    [bb,aa] = butter(4, 0.5*DStime*2,'low');
 %     datafilt=filtfilt(bb,aa,MTable(:,5));
     Biodexfilterdmotion=filtfilt(bb,aa,MTable(:,5));
+    normBiodex=Biodexfilterdmotion/max(Biodexfilterdmotion);
     % & [0;diff(MTable(:,6))>0]
-    [indx,c]=find(abs(diff(Biodexfilterdmotion))>=0.0004);
+    [indx,c]=find(abs(diff(normBiodex))>=0.0004);
     %% we some constatnt data befor knee flexes and 200 is for that
     Sindx=indxref(1)-3;
     if Sindx<=0 
