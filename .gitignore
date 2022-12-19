@@ -8,3 +8,6 @@ opensim.log
 RunSimulation.asv
 RunSimulation.asv
 ModelGenerator/Modelcreator.asv
+biodex2reactionforce_gonio2mot.asv
+EventDetection.asv
+GnCalib.asv
