@@ -9,14 +9,11 @@ anklelable=append('ankle_angle_',Data.whichleg);
 %% change the name
 osimmodel.setName(Coordlable)
 %% Setup angles
-Ankleangle=Data.(Coordlable).Ankleangle/180*pi();
-Kneeangle=Data.(Coordlable).Kneeangle/180*pi();
+Ankleangle=Data.(Coordlable).Ankleangle;
+Kneeangle=Data.(Coordlable).Kneeangle;
+Hipangle=Data.(Coordlable).Hipangle;
 modeljointSet=osimmodel.getJointSet();
-Currjoint=modeljointSet.get('ground_pelvis');
-% Pelvisweldjoint=WeldJoint.safeDownCast(Pelvisjoint);
-hipfram=Currjoint.get_frames(0);
-hipfram.set_orientation(Vec3(0,0,(90-Data.(Coordlable).Hipangle)/180*pi()));
-hipfram.set_translation(Vec3(0,0.9,0));
+
 
 %% setup muscle properties
 
@@ -83,27 +80,26 @@ else
 end
 osimmodel.updConstraintSet.remove(const);
 
-%% Configure Joints
-jonames=ArrayStr();
-osimmodel.getJointSet().getNames(jonames);
-for jo = 0:1:jonames.getSize()-1 
-    if ~sum(strcmp(char(jonames.get(jo)), Data.joints))
-        curjoint=osimmodel.getJointSet.get(jonames.get(jo));
-        osimmodel.updJointSet().remove(curjoint);
-    end
-end
-
-
 
 %% Configure Bodies
 bonames=ArrayStr();
 osimmodel.getBodySet().getNames(bonames);
 for bo = 0:1:bonames.getSize()-1   
     if ~sum(strcmp(char(bonames.get(bo)), Data.bodies))
-        curbody=osimmodel.getBodySet.get(bonames.get(bo));
+        curbody=osimmodel.getBodySet.get(bonames.get(bo))
         osimmodel.updBodySet().remove(curbody);
     end
 end
+%% Configure Joints
+jonames=ArrayStr();
+osimmodel.getJointSet().getNames(jonames);
+for jo = 0:1:jonames.getSize()-1 
+    if ~sum(strcmp(char(jonames.get(jo)), Data.joints))
+        curjoint=osimmodel.getJointSet.get(jonames.get(jo))
+        osimmodel.updJointSet().remove(curjoint);
+    end
+end
+
 
 
 osimmodel.initSystem();
@@ -126,33 +122,49 @@ osimmodel.updJointSet().remove(Currjoint);
 osimmodel.addJoint(JointWelded);
 osimmodel.initSystem();
 end
-hipjoint=modeljointSet.get(hiplable);
-hipfram=hipjoint.upd_frames(0);
-hipfram.set_orientation(Vec3(0,0,(Data.(Coordlable).Hipangle)./180*pi()));
 
 for m = 0:osimmodel.getCoordinateSet().getSize()-1
     Coord=osimmodel.getCoordinateSet().get(m);
+    
+    if sum(contains(Data.ActiveCoordinates,char(Coord.getName)))
+    osimmodel.updCoordinateSet().get(m).set_locked(false);
+    addCoordinateActuator(osimmodel,char(Coord.getName), Data.optForce)
+    else
+    
     Coord.setDefaultValue(0);
     Coord.set_locked(true)
-end
-for corindx = 1:length(Data.ActiveCoordinates)
-    %%% Unlock the active coordinate
-    if strcmp(char(Data.ActiveCoordinates(corindx)),kneelable)
-        osimmodel.updCoordinateSet().get(Data.ActiveCoordinates(corindx)).set_locked(false);
-        osimmodel.updCoordinateSet().get(append(kneelable,'_beta')).set_locked(false);        
     end
-    %%% Adding the coordinate actuator
-    addCoordinateActuator(osimmodel, Data.ActiveCoordinates(corindx), Data.optForce)
 end
-%%% Knee_corrdiante
+osimmodel.updCoordinateSet().get(append(kneelable,'_beta')).set_locked(false); 
+osimmodel.initSystem();
+%%% Setup Hip coordinate
 modelCoordSet = osimmodel.getCoordinateSet();
+if sum(contains(append('hip_',Data.whichleg), Data.Weldjoints))
+    hipjoint=modeljointSet.get(hiplable);
+    pelvisparentframe=hipjoint.upd_frames(0);
+    pelvisparentframe.set_orientation(Vec3(0,0,Hipangle));
+else
+    hipcoord = modelCoordSet.get(append('hip_flexion_',Data.whichleg));
+    hipcoord.setDefaultValue(Hipangle);
+end
+%%% Setup Knee_cordiante
 Kneecoord = modelCoordSet.get(kneelable);
 Kneecoord.setDefaultValue(Kneeangle);
-%%% ankle_corrdiante
+%%% Setup ankle_cordiante
 Anklecoord = modelCoordSet.get(anklelable);
+if Anklecoord.getRangeMin()>Ankleangle Anklecoord.setRangeMin(Ankleangle); end
 Anklecoord.setDefaultValue(Ankleangle);
+%%% Setup Pelvis-ground_cordiante
 
-
+Pelviscoord=modeljointSet.get('ground_pelvis');
+pelvisparentframe=Pelviscoord.get_frames(0);
+pelvisparentframe.set_translation(Vec3(0,0.9,0));
+% Pelvisweldjoint=WeldJoint.safeDownCast(Pelvisjoint);
+if contains(Data.ActiveCoordinates,'ankle')
+    pelvisparentframe.set_orientation(Vec3(0,0,Kneeangle-(Hipangle-pi()/2)));
+else
+    pelvisparentframe.set_orientation(Vec3(0,0,pi()/2-Hipangle));
+end
 osimmodel.initSystem();
 
 %% change TSL to avoid buckling and save muscle information
