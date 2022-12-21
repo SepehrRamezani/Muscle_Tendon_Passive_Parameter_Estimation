@@ -76,8 +76,11 @@ model.initSystem();
 % effort.setExponent(2);
 % effort.setDivideByDisplacement(false);
 %% define parameter
+
 problem.setStateInfo(append('/jointset/walker_knee_',Data.whichleg,'/knee_angle_',Data.whichleg,'/value'),[0, 1.6]);
-problem.setStateInfo(append('/jointset/ankle_',Data.whichleg,'/ankle_angle_',Data.whichleg,'/value'),[-.5, .5]);
+anklelable=append('ankle_angle_',Data.whichleg);
+Anklecoord =  osimmodel.getCoordinateSet().get(anklelable);
+problem.setStateInfo(append('/jointset/ankle_',Data.whichleg,'/',anklelable,'/value'),[Anklecoord.getRangeMin(), .5]);
 %% optimal_fiber_length
 solver = study.initCasADiSolver();
 %% define solver
