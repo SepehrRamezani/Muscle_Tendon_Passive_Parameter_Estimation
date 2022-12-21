@@ -3,11 +3,11 @@ close all;
 clc;
 % Some times there is no need to import raw data because all data will
 % save in FinalDatafor first time. readflage=1 means import files again.
-readflage= 1;
+readflage= 0;
 % folder=uigetdir(); % get Data directory
-SubjectNumber='T002';
-Project='P006';
 
+Project='P006';
+SubjectNumber='T006';
 folder=append('C:\MyCloud\OneDriveUcf\Real\Simulation\Source\',Project,'\',SubjectNumber);
 Datafolder=append(folder,'\Data');
 results_folder = append(folder,'\Result');
@@ -16,15 +16,18 @@ whichleg=string(extractBetween(Pardata.textdata{1},"=",","));
 ResultData.info.ForceRatio=Pardata.data(1);
 ResultData.info.M_ThresholdMin=Pardata.data(2);
 ResultData.info.M_ThresholdMax=Pardata.data(3);
+ResultData.info.MaxDorsi_Calib=Pardata.data(4);
+ResultData.info.MaxPlant_Calib=Pardata.data(5);
 optForce=Pardata.data(6);
 psname=append(Project,'_',SubjectNumber);
-Jointname=append(upper(whichleg),'Knee');
-Subjectname =append(psname,"_",Jointname);
+
+
 Biodexcof=[0,1];
 
-Terials1=["Fl"];
-Terials2=["H90","H70","H55","H40","H25","H10"];
-Terials3=["iter1","iter2","iter3"];
+% Terials1=["Fl"];
+% Terials2=["H90","H45","H0"];
+Joints=["Knee","Ankle"];
+Terials3=["L1","L2","L3"];
 % Terials1=["Fl"];
 % Terials2=["IsoK60"];
 ArmWeight=2.72;
@@ -32,18 +35,26 @@ ArmCOM=0.27;
 Fdata=[];
 k=0;
 % DStime=0.0005192; % desired sampling time
-DStime=0.2;
+ResultData.info.DStime=0.2;
 %
 
 if readflage
-    for T1=1:length(Terials1)
+    for T1=1:length(Joints)
+        if contains(Joints(T1),"Knee")
+            Terials2=["H90","H55","H15"];
+        else
+            Terials2=["K90","K45","K0"];
+        end
         for T2=1:length(Terials2)
-            filename=append(Subjectname,'_',Terials1(T1),'_',Terials2(T2));
-            Datadr=append(Datafolder,"\",Subjectname,'_',Terials1(T1),'_',Terials2(T2),'_Q.csv');
-            data=importdata(Datadr);
-            [Gdata,Gheader]= ReshapingData(data,DStime);
-            FinalData.(filename).data=Gdata;
-            FinalData.(filename).colheaders=Gheader;
+            for T3=1:length(Terials3)
+                
+                filename=append(psname,'_',upper(whichleg),Joints(T1),'_',Terials2(T2),'_',Terials3(T3));
+                Datadr=append(Datafolder,"\",filename,'.csv');
+                data=importdata(Datadr);
+                [Gdata,Gheader]= ReshapingData(data,ResultData.info.DStime);
+                FinalData.(filename).data=Gdata;
+                FinalData.(filename).colheaders=Gheader;
+            end
         end
     end
     
@@ -71,85 +82,101 @@ Title='\ninDegrees=no\nnum_controls=1\nnum_derivatives=0\nDataType=double\nversi
 
 %getting goniometer calibration coefficient
 
-[Ph,Pk,Pa,P_Bidoex_Calibration,Torqueref]= GnCalib(Datafolder,psname,DStime,0);
+[Ph,Pk,Pa,P_Bidoex_Calibration,Torqueref,P_Bidoex_Motion_Calibration]= GnCalib(Datafolder,psname,ResultData.info,0);
 
-for T1=1:length(Terials1)
+for T1=1:length(Joints)
+    if contains(Joints(T1),"Knee")
+        Terials2=["H90","H55","H15"];
+    else
+        Terials2=["K90","K45","K0"];
+    end
     for T2=1:length(Terials2)
-        EMGHDdata=[""];
-        filename=append(Subjectname,'_',Terials1(T1),'_',Terials2(T2));
-        Data=FinalData.(filename).data;
-        HData=FinalData.(filename).colheaders;
-        [rg,ca]=find(strncmp(HData,'Gn A',4));
-        %find Knee Goniometer
-        [rk,ck]=find(strncmp(HData,'Gn K',4));
-        %find Hip goniometer
-        [rh,ch]=find(strncmp(HData,'Gn H',4));
-        %find Biodex
-        [rb,cb]=find(strncmp(HData,'Biodex',6));
-        %find EMG
-        [re,ce]=find(contains(HData,'EMG')&~contains(HData,'RMS'));
-        [r,c]=size(Data);
-        %% Process on Motion Data
-        %knee calibration
-        GonK=Data(:,ck(2));
-        GonCalibratedK = polyval(Pk,GonK);
-        GonCalibratedK=GonCalibratedK-GonCalibratedK(1);
-        %Hip calibration
-        GonH=Data(:,ch(2));
-        GonCalibratedH = polyval(Ph,GonH);
-        %Ankle calibration
-        GonA=Data(:,ca(2));
-        GonCalibratedA = polyval(Pa,GonA);
-        %Biodex angle 
-        BiodexAngle=Biodexcof(1)+Biodexcof(2)*(-35.5*Data(:,cb(2))+103)*pi()/180;
-        MTable=[Data(:,1),GonCalibratedH,GonCalibratedK,GonCalibratedA,BiodexAngle];
-        %% Finding events
-        Event=EventDetection(filename,DStime,MTable,[ResultData.info.M_ThresholdMin ResultData.info.M_ThresholdMax]);
-        Sindx=Event(:,1);
-        Eindx=Event(:,2);
-        %% Save Motion        
-        F_fnames=append(char(filename),'_Motion.mot');
-        TrimMTable=MTable(Sindx:Eindx,:);
-        %%% removing time offset 
-        TrimMTable(:,1)=TrimMTable(:,1)-TrimMTable(1,1);
-        [TMr,TMc]=size(TrimMTable);
-        Titledata=[TMr TMc];
-        makefile(Datafolder,F_fnames,TitleM,Titledata,Dataheadermotion,TrimMTable,5,delimiterIn);    
-        %% Process Force
-        %%% Caculating Torque from Arm
-        % ArmTorque=cos(BiodexAngle*pi()/180)*ArmWeight*9.8*ArmCOM;
-        ArmTorque=cos(BiodexAngle)*Torqueref;
-        %%% Calcuating Torque from biodex
-        x=1*Data(:,cb(1)); %data of a trial
-        TotalTroque=polyval(P_Bidoex_Calibration,x);
-        KneeTorque=TotalTroque-ArmTorque;
-        
-        KneeControl=Biodexcof(2)*(KneeTorque/optForce);
-        %% Save Force
-        F_fnames=append(char(filename),'_Torque.mot');
-        FData=[TrimMTable(:,1),KneeControl(Sindx:Eindx,1)];
-        [TFr,TFc]=size(FData);
-        Titledata=[TFr TFc];
-        makefile(Datafolder,F_fnames,Title,Titledata,Dataheaderforce,FData,7,delimiterIn);      
-        
-
-        %% Trail check
-%         if length(Stime)~=3||length(Etime)~=3
-%             fprintf('\nERROR: %s Wrong trail ...\n\n', filename);
-%         end
-        %% Strat reading Simulation files
-        ResultData.(char(filename)).('ExpTorque').('full')=FData;
-        ResultData.(char(filename)).('ExpMotion').('full')=TrimMTable;
-        
-
-%         for itr=1:length(Stime)
-%             Expindx=find(Data(:,1)>=Stime(itr)&Data(:,1)<=Etime(itr));
-%             ResultData.(filename).('time').Exp.(Terials3(itr))=Data(Expindx,1);
-%             ResultData.(filename).('Motion').(Terials3(itr))=ResultData.(filename).Motion.full(Expindx,2);
-%             ResultData.(filename).('ExpForce').(Terials3(itr))=ResultData.(filename).ExpForce.full(Expindx,2);
-%         end
-        
+        for T3=1:length(Terials3)
+            EMGHDdata=[""];
+            filename=append(psname,'_',upper(whichleg),Joints(T1),'_',Terials2(T2),'_',Terials3(T3));
+            Data=FinalData.(filename).data;
+            HData=FinalData.(filename).colheaders;
+            [rg,ca]=find(contains(HData,'Goni')&contains(HData,'Ankle'));
+            %find Knee Goniometer
+            [rk,ck]=find(contains(HData,'Goni')&contains(HData,'Knee'));
+            %find Hip goniometer
+            [rh,ch]=find(contains(HData,'Goni')&contains(HData,'Hip'));
+            %find Biodex
+            [rb,cb]=find(contains(HData,'Biodex'));
+            %find EMG
+            [re,ce]=find(contains(HData,'EMG')&~contains(HData,'RMS'));
+            [r,c]=size(Data);
+            %% Process on Motion Data
+            %knee calibration
+            GonK=Data(:,ck(1));
+            GonCalibratedK = polyval(Pk,GonK);
+            GonCalibratedK=GonCalibratedK-GonCalibratedK(1);
+            %Hip calibration
+            GonH=Data(:,ch(2));
+            GonCalibratedH = polyval(Ph,GonH);
+            %Ankle calibration
+            GonA=Data(:,ca(1));
+            GonCalibratedA = polyval(Pa,GonA);
+            %Biodex angle
+            
+            %         BiodexAngle=Biodexcof(1)+Biodexcof(2)*(-35.5*Data(:,cb(2))+103)*pi()/180;
+            if contains(Joints(T1),"Knee")
+                BiodexAngle=polyval(P_Bidoex_Motion_Calibration([1,2]),Data(:,cb(2)))*pi()/180;
+                Thrsh=0.02;
+                Dataheaderforce=strrep(Dataheaderforce,'ankle','knee');
+            else
+                BiodexAngle=polyval(P_Bidoex_Motion_Calibration([1,3]),Data(:,cb(2)))*pi()/180;
+                Thrsh=0.06;
+                Dataheaderforce=strrep(Dataheaderforce,'knee','ankle');
+            end
+            MTable=[Data(:,1),GonCalibratedH,GonCalibratedK,GonCalibratedA,BiodexAngle];
+            %% Finding events
+            Events=EventDetection(ResultData.info.DStime,BiodexAngle,Thrsh);
+            Sindx=Events.EventEtime(1);
+            if Sindx<=0
+                warning('%s is cropped ... ',filename)
+                Sindx=1;
+            end
+            Eindx=Events.EventEtime(end);
+            %% Save Motion
+            F_fnames=append(char(filename),'_Motion.mot');
+            TrimMTable=MTable(Sindx:Eindx,:);
+            %%% removing time offset
+            TrimMTable(:,1)=TrimMTable(:,1)-TrimMTable(1,1);
+            [TMr,TMc]=size(TrimMTable);
+            Titledata=[TMr TMc];
+            makefile(Datafolder,F_fnames,TitleM,Titledata,Dataheadermotion,TrimMTable,5,delimiterIn);
+            %% Process Force
+            %%% Caculating Torque from Arm
+            % ArmTorque=cos(BiodexAngle*pi()/180)*ArmWeight*9.8*ArmCOM;
+            ArmTorque=cos(BiodexAngle)*Torqueref;
+            %%% Calcuating Torque from biodex
+            x=1*Data(:,cb(1)); %data of a trial
+            TotalTroque=polyval(P_Bidoex_Calibration,x);
+            KneeTorque=TotalTroque-ArmTorque;
+            
+            KneeControl=Biodexcof(2)*(KneeTorque/optForce);
+            %% Save Force
+            F_fnames=append(char(filename),'_Torque.mot');
+            FData=[TrimMTable(:,1),KneeControl(Sindx:Eindx,1)];
+            [TFr,TFc]=size(FData);
+            Titledata=[TFr TFc];
+            makefile(Datafolder,F_fnames,Title,Titledata,Dataheaderforce,FData,7,delimiterIn);
+            %% Strat reading Simulation files
+            ResultData.(char(filename)).('ExpTorque').('full')=FData;
+            ResultData.(char(filename)).('ExpMotion').('full')=TrimMTable;
+            plot(TrimMTable(:,3)*180/3.14)
+            hold on
+%             CombinedFdata(:,T3)=MData(:,2);
+%              plot(diff(MTable(:,5))./diff(MTable(:,1)))
+        end
+%             CombinedFdata=mean(CombinedFdata,2); 
+%             filenameComb=append(psname,'_',upper(whichleg),Joints(T1),'_',Terials2(T2));
+            
+%             ResultData.(char(filenameComb)).('ExpTorque').('full')=FData;
+%             ResultData.(char(filenameComb)).('ExpMotion').('full')=TrimMTable;
     end
 end
+mkdir(results_folder)
 save (append(results_folder,"\",psname,"_ResultData.mat"),'ResultData');
 
