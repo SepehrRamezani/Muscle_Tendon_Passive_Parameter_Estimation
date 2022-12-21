@@ -1,7 +1,7 @@
 function [P_Gonio_H,P_Gonio_K,P_Gonio_A,P_Bidoex_Torque_Calibration,Torqueref,P_Bidoex_Motion_Calibration]= GnCalib (Datafolder,psname,Info,plotflage)
 
 Fname =append(psname,"_GnCalib_");
-
+Dstime=Info.DStime/5;
 Names=[append("AnkleDorsi",string(Info.MaxDorsi_Calib)),"AnkleDorsi10"...
     ,"Ankle0","AnklePlant10","AnklePlant30",append("AnklePlant",string(Info.MaxPlant_Calib))...
     ,"Hip0","Hip30","Hip60","Hip90"...
@@ -12,7 +12,7 @@ KneeGnCalibdata=[];
 
 for i=1:length(Names)
     GnCaldatadir=importdata(append(Datafolder,"\",Fname,Names(i),".csv"));
-    [GnCaldatadir.data,Gheader]= ReshapingData(GnCaldatadir,Info.DStime/5);
+    [GnCaldatadir.data,Gheader]= ReshapingData(GnCaldatadir,Dstime);
     [Gr,Gc]=find(contains(Gheader,'Goni'));
     %     [Tr,Tc]=find(strncmp(GnCaldatadir.textdata,'X',1));
 %     Tc=Gc-1;
@@ -78,26 +78,37 @@ if plotflage
     legend('Ch A','Ch B');
     title('Goinometer Calibration Data for Knee');
 end
+
+%% calibratio of biodex for Knee
 Fname =append(psname,"_BiodexCalib_Knee");
 BiodexCaldata=importdata(append(Datafolder,"\",Fname,".csv"));
-[Gdata,Gheader]= ReshapingData(BiodexCaldata,0.05);
+[Gdata,Gheader]= ReshapingData(BiodexCaldata,Dstime);
 [Gr,Gc]=find(strncmp(Gheader,'Biodex',6));
-normAngle=Gdata(:,Gc(2))/max(abs(Gdata(:,Gc(2))));
-timeindx=find((abs(diff(normAngle)./diff(Gdata(:,1))))<=0.02);
-selecttime=find(diff(timeindx)>1);
-timeindx=timeindx(1:selecttime(1)-1);
+Event=EventDetection(Dstime,Gdata(:,Gc(2)),0.1);
+timeindx=Event.ConstantTime;
 VolTorqueref=mean(Gdata(timeindx,Gc(1)));
 HAngle=mean(Gdata(timeindx,Gc(2)));
 Fname =append(psname,"_BiodexCalib_Knee_V");
 BiodexMotionCaldata=importdata(append(Datafolder,"\",Fname,".csv"));
-[BiodexMdata,BiodexMheader]= ReshapingData(BiodexMotionCaldata,Info.DStime);
+[BiodexMdata,BiodexMheader]= ReshapingData(BiodexMotionCaldata,Dstime);
 Mtimeindx=(BiodexMdata(:,1)>=1.5&BiodexMdata(:,1)<=2.5);
 VAngle=mean(BiodexMdata(Mtimeindx,Gc(2)));
 Angle=[0 90];
 x=[HAngle VAngle];
-P_Bidoex_Motion_Calibration=polyfit(x,Angle,1);
+P_Bidoex_Motion_Calibration_Knee=polyfit(x,Angle,1);
 P_Bidoex_Torque_Calibration=[139.01,-24.46];
-
-Torqueref=polyval(P_Bidoex_Torque_Calibration,VolTorqueref);
-
+Torqueref_KneeArm=polyval(P_Bidoex_Torque_Calibration,VolTorqueref);
+%% Calibration of Biodex for ankle  
+Fname =append(psname,"_BiodexCalib_Ankle");
+BiodexCaldata=importdata(append(Datafolder,"\",Fname,".csv"));
+[GAdata,Gheader]= ReshapingData(BiodexCaldata,0.05);
+[Gr,Gc]=find(strncmp(Gheader,'Biodex',6));
+Event=EventDetection(Dstime,GAdata(:,Gc(2)),0.02);
+timeindx=Event.ConstantTime;
+VolTorqueref_A=mean(GAdata(timeindx,Gc(1)));
+HAngle_Aakle=mean(GAdata(timeindx,Gc(2)));
+Biodex_Ankle_offset=-1*P_Bidoex_Motion_Calibration_Knee(1)*HAngle_Aakle;
+Torqueref_AnkleArm=polyval(P_Bidoex_Torque_Calibration,VolTorqueref_A);
+P_Bidoex_Motion_Calibration=[P_Bidoex_Motion_Calibration_Knee,Biodex_Ankle_offset];
+Torqueref=[Torqueref_KneeArm,Torqueref_AnkleArm];
 end
