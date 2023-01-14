@@ -35,15 +35,21 @@ end
 ydeg=[20,10,0,-10,-30,-50];
 y=ydeg./180*pi();
 xa=AnkelGnCalibdata;
-P_Gonio_A = polyfit(xa(:,1)',y,1);
-new_xa=linspace(xa(1,1),xa(end,1),20);
+if contains(psname,"T006")||contains(psname,"T007")
+    P_Gonio_A = polyfit(xa(:,1)',y,1);
+    new_xa=linspace(xa(1,1),xa(end,1),20);
+else
+    P_Gonio_A = polyfit(xa(:,2)',y,1);
+    new_xa=linspace(xa(1,2),xa(end,2),20);
+end
 y1 = polyval(P_Gonio_A,new_xa);
 if plotflage
+    figure
     plot(xa(:,1),ydeg,'*',xa(:,2),ydeg,'*',new_xa,y1*180/3.14);
     xlabel('Biodex Output (Voltage)');
     ylabel('Angle (Degree)');
     legend('Ch A','Ch B');
-    title('Goinometer Calibration Data for Ankle');
+    title(['Ankle Calibration of ',psname]);
 end
 
 
@@ -59,7 +65,7 @@ if plotflage
     xlabel('Biodex Output (Voltage)');
     ylabel('Angle (Degree)');
     legend('Ch A','Ch B');
-    title('Goinometer Calibration Data for Hip');
+    title(['Hip Calibration of ',psname]);
 end
 
 %% 2 zeros added for regression since zero is important angle
@@ -76,7 +82,7 @@ if plotflage
     xlabel('Biodex Output (Voltage)');
     ylabel('Angle (Degree)');
     legend('Ch A','Ch B');
-    title('Goinometer Calibration Data for Knee');
+    title(['Knee Calibration of ',psname]);
 end
 
 %% calibratio of biodex for Knee

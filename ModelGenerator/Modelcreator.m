@@ -63,9 +63,9 @@ for m = 0:osimmodel.getActuators().getSize()-1
     
 end
 fgroupnames=ArrayStr();
-osimmodel.getForceSet().getGroupNames(fgroupnames)
+osimmodel.getForceSet().getGroupNames(fgroupnames);
 for fg = 0:1:fgroupnames.getSize()-1
-osimmodel.getForceSet().removeGroup(fgroupnames.get(fg))
+osimmodel.getForceSet().removeGroup(fgroupnames.get(fg));
 end
 state=osimmodel.initSystem();
 %% Configure markers
@@ -86,7 +86,7 @@ bonames=ArrayStr();
 osimmodel.getBodySet().getNames(bonames);
 for bo = 0:1:bonames.getSize()-1   
     if ~sum(strcmp(char(bonames.get(bo)), Data.bodies))
-        curbody=osimmodel.getBodySet.get(bonames.get(bo))
+        curbody=osimmodel.getBodySet.get(bonames.get(bo));
         osimmodel.updBodySet().remove(curbody);
     end
 end
@@ -95,7 +95,7 @@ jonames=ArrayStr();
 osimmodel.getJointSet().getNames(jonames);
 for jo = 0:1:jonames.getSize()-1 
     if ~sum(strcmp(char(jonames.get(jo)), Data.joints))
-        curjoint=osimmodel.getJointSet.get(jonames.get(jo))
+        curjoint=osimmodel.getJointSet.get(jonames.get(jo));
         osimmodel.updJointSet().remove(curjoint);
     end
 end
@@ -117,7 +117,7 @@ F1=JointWelded.get_frames(0);
 JointWelded.connectSocket_parent_frame(F1);
 JointWelded.set_frames(1,CurrjointChild)
 F2=JointWelded.get_frames(1);
-JointWelded.connectSocket_child_frame(F2)
+JointWelded.connectSocket_child_frame(F2);
 osimmodel.updJointSet().remove(Currjoint);
 osimmodel.addJoint(JointWelded);
 osimmodel.initSystem();
@@ -127,7 +127,7 @@ for m = 0:osimmodel.getCoordinateSet().getSize()-1
     Coord=osimmodel.getCoordinateSet().get(m);
     
     if sum(contains(Data.ActiveCoordinates,char(Coord.getName)))
-    osimmodel.updCoordinateSet().get(m).set_locked(false);
+    Coord.set_locked(false);
     addCoordinateActuator(osimmodel,char(Coord.getName), Data.optForce)
     else
     
@@ -216,7 +216,7 @@ for i=0:1:osimmodel.getMuscles().getSize()-1
 end
 osimmodel.initSystem();
 
-osimmodel.print(Data.(Coordlable).ModelPath);
+osimmodel.print(Data.(Coordlable).Combinedname);
 
 end
 function addCoordinateActuator(osimmodel, coordName, optForce)

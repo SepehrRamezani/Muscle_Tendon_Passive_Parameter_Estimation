@@ -1,7 +1,7 @@
-function [kneeTrackingParamSolution]=ParameterEstimation(StateTrackTable,ControlTrackTable,osimmodel,Coordlable,Data)
+function [kneeTrackingParamSolution]=ParameterEstimation(StateTrackTable,ControlTrackTable,osimmodel,combinedname,Coordlable,Data)
 import org.opensim.modeling.*;
 ComplianacMusclename=Data.ComplianacMusclename;
-MinMTLength=Data.(Coordlable).MuscleInfo.MinMTLength;
+MinMTLength=Data.(combinedname).MuscleInfo.MinMTLength;
 Solverinterval=Data.ParamSolverinterval;
 Etime=Data.Etime;
 Stime=Data.Stime;
@@ -9,7 +9,7 @@ Stime=Data.Stime;
 % w=1/osimmodel.getForceSet().getSize();
 StateWeight = 10.0/osimmodel.getNumCoordinates();
 ControlWight=StateWeight;
-osimmodel=changemodelproperty(osimmodel,Coordlable,Data,0);
+osimmodel=changemodelproperty(osimmodel,combinedname,Data,0);
 %% Define tracking problem
 track = MocoTrack();
 track.setName('kneestateTracking');
