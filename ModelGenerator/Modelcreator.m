@@ -1,7 +1,7 @@
 function [osimmodel,Muscleinfo]=Modelcreator(Coordlable,Data,osimmodel)
 import org.opensim.modeling.*;
 % osimmodel = Model('subject_walk_armless_RLeg_justknee.osim');
-Kneerange=90/180*3.14;
+Kneerange=100/180*pi();
 hiplable=append('hip_',Data.whichleg);
 kneelable=append('knee_angle_',Data.whichleg);
 anklelable=append('ankle_angle_',Data.whichleg);
@@ -122,7 +122,7 @@ osimmodel.updJointSet().remove(Currjoint);
 osimmodel.addJoint(JointWelded);
 osimmodel.initSystem();
 end
-
+%%% lock the unsed joints and add actuator
 for m = 0:osimmodel.getCoordinateSet().getSize()-1
     Coord=osimmodel.getCoordinateSet().get(m);
     
@@ -152,10 +152,9 @@ Kneecoord = modelCoordSet.get(kneelable);
 Kneecoord.setDefaultValue(Kneeangle);
 %%% Setup ankle_cordiante
 Anklecoord = modelCoordSet.get(anklelable);
-if Anklecoord.getRangeMin()>Ankleangle Anklecoord.setRangeMin(Ankleangle); end
 Anklecoord.setDefaultValue(Ankleangle);
+Anklecoord.setRangeMax(35/180*pi())
 %%% Setup Pelvis-ground_cordiante
-
 Pelviscoord=modeljointSet.get('ground_pelvis');
 pelvisparentframe=Pelviscoord.get_frames(0);
 pelvisparentframe.set_translation(Vec3(0,0.9,0));
@@ -174,12 +173,14 @@ for i=0:1:osimmodel.getMuscles().getSize()-1
     %% finding minimum MTL
     %%Knee deformation
     CurrentMuscle=osimmodel.getMuscles().get(Data.SimMusclename(i+1));
-    
-    
     if sum(strcmp(char(CurrentMuscle.getName),Data.ComplianacMusclename))&& sum(contains(Data.ActiveCoordinates,'ankle_angle'))
-        AnkleCoor=osimmodel.updCoordinateSet().get(anklelable);
-        for q=-Ankleangle:Ankleangle/20:Ankleangle
+        AnkleCoor=osimmodel.updCoordinateSet().get(Data.ActiveCoordinates);
+        rmax=AnkleCoor.getRangeMax();
+        rmin=AnkleCoor.getRangeMin();
+        Kneecoord.setValue(state, Kneeangle);
+        for q=rmin:(rmax-rmin)/20:rmax
             u=u+1;
+            
             AnkleCoor.setValue(state, q);
             osimmodel.realizePosition(state);
             musclelength(k+u)=CurrentMuscle.getLength(state);
@@ -205,8 +206,9 @@ for i=0:1:osimmodel.getMuscles().getSize()-1
     else
         
         Muscleinfo.TSlack(i+1)=CurrentMuscle.get_tendon_slack_length();
-        Muscleinfo.MaxIso(i+1)=CurrentMuscle.get_max_isometric_force();
+        
     end
+    Muscleinfo.MaxIso(i+1)=CurrentMuscle.get_max_isometric_force();
     %     dgf = DeGrooteFregly2016Muscle.safeDownCast(CurrentMuscle);
     Muscleinfo.Passive(i+1)=DeGrooteFregly2016Muscle.safeDownCast(CurrentMuscle).get_passive_fiber_strain_at_one_norm_force();
     if sum(strcmp(char(CurrentMuscle.getName()), Data.ComplianacMusclename))
