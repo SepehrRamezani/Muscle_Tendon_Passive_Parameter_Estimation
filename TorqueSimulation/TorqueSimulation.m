@@ -21,7 +21,7 @@ track = MocoTrack();
 track.setName('kneeTracking');
 modelProcessor = ModelProcessor(osimmodel);
 track.setModel(modelProcessor);
-track.setStatesReference(tableProcessor);
+track.setStatesReference(TableProcessor(tableProcessor));
 track.set_states_global_tracking_weight(GlobalstateTrackingWeight);
 track.set_allow_unused_references(false);
 track.set_track_reference_position_derivatives(true);
@@ -29,13 +29,13 @@ track.set_apply_tracked_states_to_guess(true);
 track.set_initial_time(Stime);
 track.set_final_time(Etime);
 stateWeights = MocoWeightSet();
-if contains(Data.ActiveCoordinates,"knee_angle_r")
-    stateWeights.cloneAndAppend(MocoWeight('/jointset/walker_knee_r/knee_angle_r/value',StateWeight));
-    stateWeights.cloneAndAppend(MocoWeight('/jointset/walker_knee_r/knee_angle_r/speed',StateWeight*0.5));
+if contains(Data.ActiveCoordinates,"knee_angle")
+    stateWeights.cloneAndAppend(MocoWeight(append('/jointset/walker_knee_',Data.whichleg,'/knee_angle_',Data.whichleg,'/value'),StateWeight));
+    stateWeights.cloneAndAppend(MocoWeight(append('/jointset/walker_knee_',Data.whichleg,'/knee_angle_',Data.whichleg,'/speed'),StateWeight*0.5));
     
 else
-    stateWeights.cloneAndAppend(MocoWeight('/jointset/ankle_r/ankle_angle_r/value',StateWeight*2));
-    stateWeights.cloneAndAppend(MocoWeight('/jointset/ankle_r/ankle_angle_r/speed',StateWeight*1));
+    stateWeights.cloneAndAppend(MocoWeight(append('/jointset/ankle_',Data.whichleg,'/ankle_angle_',Data.whichleg,'/value'),StateWeight*2));
+    stateWeights.cloneAndAppend(MocoWeight(append('/jointset/ankle_',Data.whichleg,'/ankle_angle_',Data.whichleg,'/speed'),StateWeight*1));
 end
 track.set_states_weight_set(stateWeights);
 study = track.initialize();
@@ -61,8 +61,9 @@ end
 effort.setExponent(2);
 effort.setDivideByDisplacement(false);
 %% Bounderies
-problem.setStateInfo('/jointset/walker_knee_r/knee_angle_r/value',[0, 1.6]);
-problem.setStateInfo('/jointset/ankle_r/ankle_angle_r/value',[-.5, .5]);
+anklelable=append('ankle_angle_',Data.whichleg);
+Anklecoord =  osimmodel.getCoordinateSet().get(anklelable);
+problem.setStateInfo(append('/jointset/ankle_',Data.whichleg,'/',anklelable,'/value'),[Anklecoord.getRangeMin(), Anklecoord.getRangeMax()]);
 %% Defining Solver 
 solver = study.initCasADiSolver();
 solver.set_num_mesh_intervals(Solverinterval);
