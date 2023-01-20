@@ -31,7 +31,7 @@ ArmCOM=0.27;
 Fdata=[];
 k=0;
 % DStime=0.0005192; % desired sampling time
-ResultData.info.DStime=0.2;
+ResultData.info.DStime=0.1;
 %
 basefolder=fullfile('C:\MyCloud\OneDriveUcf\Real\Simulation\Source',Project);
 if readflage
@@ -107,7 +107,7 @@ for S=1:length(SubjectNumber)
             load(resultfile);
         end
         Datafolder=fullfile(folder,'Data');
-        [Ph,Pk,Pa,P_Bidoex_Calibration,Torquerefs,P_Bidoex_Motion_Calibration]= GnCalib(Datafolder,psname,FinalData.(SubjectNumber(S)).info,1);
+        [Ph,Pk,Pa,P_Bidoex_Calibration,Torquerefs,P_Bidoex_Motion_Calibration]= GnCalib(Datafolder,psname,FinalData.(SubjectNumber(S)).info,0);
         whichleg = FinalData.(SubjectNumber(S)).info.whichleg;
         optForce = FinalData.(SubjectNumber(S)).info.optForce;
         if contains(whichleg,'l')
@@ -157,6 +157,7 @@ for S=1:length(SubjectNumber)
                         Dataheaderforce=strrep(Dataheaderforce,'ankle','knee');
                         Events=EventDetection(ResultData.info.DStime,[BiodexAngle,Data(:,cb(1))],Thrsh,1);
                         Torqueref=Torquerefs(1);
+                        torqcoef=-1;
                         MTable=[Data(:,1),GonCalibratedH,GonCalibratedK,GonCalibratedA,BiodexAngle];
                     else
                         BiodexAngle=-1*(polyval(P_Bidoex_Motion_Calibration([1,3]),Data(:,cb(2)))*pi()/180);
@@ -164,6 +165,7 @@ for S=1:length(SubjectNumber)
                         Dataheaderforce=strrep(Dataheaderforce,'knee','ankle');
                         Events=EventDetection(ResultData.info.DStime,[BiodexAngle,Data(:,cb(1))],Thrsh,1);
                         Torqueref=Torquerefs(2);
+                        torqcoef=1;
                         MTable=[Data(:,1),GonCalibratedH,GonCalibratedK,GonCalibratedA,BiodexAngle];
                     end
                     
@@ -190,9 +192,10 @@ for S=1:length(SubjectNumber)
                     TotalTroque=polyval(P_Bidoex_Calibration,x);
                     NetTorque=TotalTroque-ArmTorque;
                     
-                    JointControl=1*(NetTorque/optForce);
+                    JointControl=torqcoef*(NetTorque/optForce);
                     % Save Force
                     F_fnames=append(char(filename),'_Torque.sto');
+
                     FData=[TrimMTable(:,1),JointControl(Sindx:Eindx,1)];
                     [TFr,TFc]=size(FData);
                     Titledata=[TFr TFc];
@@ -231,6 +234,6 @@ for S=1:length(SubjectNumber)
             end
          end
         
-        mkdir(results_folder)
+        [ss,ee]=mkdir(results_folder);
         save (resultfile,'ResultData');
 end
