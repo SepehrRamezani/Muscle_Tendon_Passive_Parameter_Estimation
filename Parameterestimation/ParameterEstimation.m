@@ -80,7 +80,7 @@ model.initSystem();
 problem.setStateInfo(append('/jointset/walker_knee_',Data.whichleg,'/knee_angle_',Data.whichleg,'/value'),[0, 1.6]);
 anklelable=append('ankle_angle_',Data.whichleg);
 Anklecoord =  osimmodel.getCoordinateSet().get(anklelable);
-problem.setStateInfo(append('/jointset/ankle_',Data.whichleg,'/',anklelable,'/value'),[Anklecoord.getRangeMin(), .5]);
+problem.setStateInfo(append('/jointset/ankle_',Data.whichleg,'/',anklelable,'/value'),[Anklecoord.getRangeMin(), Anklecoord.getRangeMax()]);
 %% optimal_fiber_length
 solver = study.initCasADiSolver();
 %% define solver
@@ -99,5 +99,13 @@ else
 %     solver.setGuessFile([cd '\Parameterestimation\Parameter_Initial_Guess_' Coordlable '.sto']);
 end
 kneeTrackingParamSolution = study.solve();
+
+if ~kneeTrackingParamSolution.success()
+    kneeTrackingParamSolution.unseal()
+   fprintf(2,'Optimazation of %s is sealed \n',Coordlable);
+else
+   fprintf('Optimazation of %s is done \n',Coordlable);
+end 
+
 kneeTrackingParamSolution.write(Data.(Coordlable).ParamSimulPath);
 end
