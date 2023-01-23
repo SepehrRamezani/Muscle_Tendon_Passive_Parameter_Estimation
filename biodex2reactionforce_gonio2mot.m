@@ -22,8 +22,10 @@ Biodexcof=[0,1];
 
 % Terials1=["Fl"];
 % Terials2=["H90","H45","H0"];
-Joints=["Knee","Ankle"];
+Joints=["Ankle","Knee"];
+% Joints=["Ankle"];
 Terials3=["L1","L2","L3"];
+% Terials3=["L3"];
 % Terials1=["Fl"];
 % Terials2=["IsoK60"];
 ArmWeight=2.72;
@@ -31,7 +33,7 @@ ArmCOM=0.27;
 Fdata=[];
 k=0;
 % DStime=0.0005192; % desired sampling time
-ResultData.info.DStime=0.1;
+DStime=0.1;
 %
 basefolder=fullfile('C:\MyCloud\OneDriveUcf\Real\Simulation\Source',Project);
 if readflage
@@ -53,7 +55,7 @@ if readflage
         ResultData.info.MaxDorsi_Calib=Pardata.data(4);
         ResultData.info.MaxPlant_Calib=Pardata.data(5);
         ResultData.info.optForce=Pardata.data(6);
-        
+        ResultData.info.DStime=DStime;
     for T1=1:length(Joints)
         if contains(Joints(T1),"Knee")
             Terials2=["H90","H55","H15"];
@@ -93,7 +95,7 @@ Dataheaderforce=['time' delimiterIn '/forceset/knee_angle_r_act'];
 
 TitleM='\nversion=1\nnRows=%d\nnColumns=%d\ninDegrees=no\nendheader\n';
 Title='\ninDegrees=no\nnum_controls=1\nnum_derivatives=0\nDataType=double\nversion=3\nnRows=%d\nnColumns=%d\nendheader\n';
-
+Degtorad=180/pi();
 %getting goniometer calibration coefficient
 for S=1:length(SubjectNumber)
     
@@ -110,6 +112,7 @@ for S=1:length(SubjectNumber)
         [Ph,Pk,Pa,P_Bidoex_Calibration,Torquerefs,P_Bidoex_Motion_Calibration]= GnCalib(Datafolder,psname,FinalData.(SubjectNumber(S)).info,0);
         whichleg = FinalData.(SubjectNumber(S)).info.whichleg;
         optForce = FinalData.(SubjectNumber(S)).info.optForce;
+        DStime=FinalData.(SubjectNumber(S)).info.DStime;
         if contains(whichleg,'l')
             Dataheadermotion=strrep(Dataheadermotion,'_r','_l');
             Dataheaderforce=strrep(Dataheaderforce,'_r','_l');
@@ -147,28 +150,37 @@ for S=1:length(SubjectNumber)
                     GonH=Data(:,ch(2));
                     GonCalibratedH = polyval(Ph,GonH);
 %                     Ankle calibration
-                    GonA=Data(:,ca(1));
-                    GonCalibratedA = polyval(Pa,GonA);
+                    GonAchA=Data(:,ca(1));
+                    GonAchB=Data(:,ca(2));
+                    if contains(psname,"T006")||contains(psname,"T007")
+                        GonCalibratedA = polyval(Pa,GonAchA);
+                    else
+                        GonCalibratedA = polyval(Pa,GonAchB);
+                    end
+
+
 %                     Biodex angle
                     
                     if contains(Joints(T1),"Knee")
-                        BiodexAngle=1*(polyval(P_Bidoex_Motion_Calibration([1,2]),Data(:,cb(2)))*pi()/180);
+                        BiodexAngle=1*(polyval(P_Bidoex_Motion_Calibration([1,2]),Data(:,cb(2)))/Degtorad);
                         Thrsh=0.04;
                         Dataheaderforce=strrep(Dataheaderforce,'ankle','knee');
-                        Events=EventDetection(ResultData.info.DStime,[BiodexAngle,Data(:,cb(1))],Thrsh,1);
                         Torqueref=Torquerefs(1);
                         torqcoef=-1;
                         MTable=[Data(:,1),GonCalibratedH,GonCalibratedK,GonCalibratedA,BiodexAngle];
                     else
-                        BiodexAngle=-1*(polyval(P_Bidoex_Motion_Calibration([1,3]),Data(:,cb(2)))*pi()/180);
-                        Thrsh=0.07;
+                        BiodexAngle=-1*(polyval(P_Bidoex_Motion_Calibration([1,3]),Data(:,cb(2)))/Degtorad);
+                        if contains(SubjectNumber(S),'T006')
+                        Thrsh=0.10;
+                        else
+                        Thrsh=0.12;
+                        end
                         Dataheaderforce=strrep(Dataheaderforce,'knee','ankle');
-                        Events=EventDetection(ResultData.info.DStime,[BiodexAngle,Data(:,cb(1))],Thrsh,1);
                         Torqueref=Torquerefs(2);
                         torqcoef=1;
                         MTable=[Data(:,1),GonCalibratedH,GonCalibratedK,GonCalibratedA,BiodexAngle];
                     end
-                    
+                    Events=EventDetection(DStime,[BiodexAngle,Data(:,cb(1))],Thrsh,1);
                     % Finding events
                     Sindx=Events.EventEtime(1);
                     if Sindx<=0
@@ -180,10 +192,11 @@ for S=1:length(SubjectNumber)
                     F_fnames=append(char(filename),'_Motion.mot');
                     TrimMTable=MTable(Sindx:Eindx,:);
                     %% removing time offset
-                                TrimMTable(:,1)=TrimMTable(:,1)-TrimMTable(1,1);
-                    [TMr,TMc]=size(TrimMTable);
+                    NoOffsetTrimMTable=TrimMTable;
+                    NoOffsetTrimMTable(:,1)=TrimMTable(:,1)-TrimMTable(1,1);
+                    [TMr,TMc]=size(NoOffsetTrimMTable);
                     Titledata=[TMr TMc];
-                    makefile(Datafolder,F_fnames,TitleM,Titledata,Dataheadermotion,TrimMTable,5,delimiterIn);
+                    makefile(Datafolder,F_fnames,TitleM,Titledata,Dataheadermotion,NoOffsetTrimMTable,5,delimiterIn);
                     % Process Force
                     %% Caculating Torque from Arm
                     ArmTorque=cos(BiodexAngle)*Torqueref;
@@ -196,38 +209,40 @@ for S=1:length(SubjectNumber)
                     % Save Force
                     F_fnames=append(char(filename),'_Torque.sto');
 
-                    FData=[TrimMTable(:,1),JointControl(Sindx:Eindx,1)];
-                    [TFr,TFc]=size(FData);
+                    TrimedJointControl=[NoOffsetTrimMTable(:,1),JointControl(Sindx:Eindx,1)];
+                    [TFr,TFc]=size(TrimedJointControl);
                     Titledata=[TFr TFc];
-                    makefile(Datafolder,F_fnames,Title,Titledata,Dataheaderforce,FData,7,delimiterIn);
+                    makefile(Datafolder,F_fnames,Title,Titledata,Dataheaderforce,TrimedJointControl,7,delimiterIn);
                     % Strat reading Simulation files
-                    ResultData.(char(filename)).('ExpTorque').('Trimed')=FData;
-                    ResultData.(char(filename)).('ExpMotion').('Trimed')=TrimMTable;
+                    FinalData.(char(filename)).('ExpTorque').('Trimed')=TrimedJointControl;
+                    FinalData.(char(filename)).('ExpMotion').('Trimed')=NoOffsetTrimMTable;
                     if plot_flag
+%                     p = uipanel('Position',[.01 .2 .8 2.6]);
+                    f=figure;
+                    f.Position = [10 10 550 1800]; 
                     t=tiledlayout(5,1);
                     title(t,filename)
                     nexttile
                     plot(Data(:,1),JointControl)
                     hold on
-                    plot(FData(:,1),FData(:,2))
+                    plot(TrimMTable(:,1),TrimedJointControl(:,2))
                     hold off
                     ylabel('Control')
                     nexttile
-                    plot(TrimMTable(:,5)*180/3.14)
+                    plot(TrimMTable(:,5)*Degtorad)
                     ylabel('Biodex A')
                     nexttile
                     plot(Data(1:end-1,1),diff(MTable(:,5))./diff(MTable(:,1)));
                     hold on
-                    plot(TrimMTable(1:end-1,1),diff(TrimMTable(:,5))./0.2);
+                    plot(TrimMTable(1:end-1,1),diff(TrimMTable(:,5))./DStime);
                     hold off
                     ylabel('Biodex S')
                     nexttile
-                    plot(TrimMTable(:,1),TrimMTable(:,3)*180/3.14)
+                    plot(TrimMTable(:,1),TrimMTable(:,3)*Degtorad)
                     ylabel('Knee')
                     nexttile
-                    plot(TrimMTable(:,1),TrimMTable(:,4)*180/3.14);
+                    plot(TrimMTable(:,1),TrimMTable(:,4)*Degtorad);
                     ylabel('Ankle')
-                    figure
                     fprintf('%s is done \n',filename);
                     end
                 end
