@@ -1,11 +1,12 @@
 clear all
 import org.opensim.modeling.*;
-myLog = JavaLogSink();
-Logger.addSink(myLog);
+% myLog = JavaLogSink();
+% Logger.addSink(myLog);
 
 Project='P006';
-SubjectNumber=["06","07","08","09","10","11","12","13","14","15"];
-% SubjectNumber=["06"];
+% SubjectNumber=["06","07","08","09","10","11","12","13","14","15"];
+SubjectNumber=["07","08","09","10","11","12","13","14","15"];
+
 
 SubjectNumber=append("T0",SubjectNumber);
 Data.whichleg="l";
@@ -15,7 +16,7 @@ Data.Weldjoints=["ground_pelvis","hip","mtp","subtalar"];
 Data.Weldjoints(2:end)=addingleg(Data.Weldjoints(2:end),Data.whichleg);
 Data.bodies=["pelvis","femur","tibia","patella","talus","calcn","toes"];
 Data.bodies(2:end)=addingleg(Data.bodies(2:end),Data.whichleg);
-maxpanlt=-15/180*pi();
+Data.maxpanlt=-15/180*pi();
 
 Data.DeGrooteflage=1;
 % Hipangle=0;%deg
@@ -32,9 +33,9 @@ Data.TendonStrainBound=[0.01,0.1];
 
 
 % Joints=["Knee","Ankle"];
-Joints=["Ankle","Knee"];
+Joints=["Knee","Ankle"];
 Terials3=["L1","L2","L3"];
-txtBasepath=append('C:\MyCloud\OneDriveUcf\Real\Simulation\Source','\',Project)
+txtBasepath=append('C:\MyCloud\OneDriveUcf\Real\Simulation\Source','\',Project);
 diarydir=append(txtBasepath,"\log.txt");
 diary(diarydir)
 %% running just Parameter optimization
@@ -110,12 +111,12 @@ for S=1:length(SubjectNumber)
                 kneelabe=StateDataTable.getColumnLabel(1);
                 anklelabe=StateDataTable.getColumnLabel(2);
                 if contains(Joints(T1),"Knee")
-                    StateDataTable.setColumnLabel(3,kneelabe)
-                    Etimeindx=StateDataTable.process.getNumRows();
+                    StateDataTable.setColumnLabel(3,kneelabe);
+                    Etimeindx=StateDataTable.getNumRows();
                 else
                     StateDataTable.setColumnLabel(3,anklelabe)
                     Anklecoord =  osimmodel.getCoordinateSet().get(Data.ActiveCoordinates);
-                    Etimeindx=find(BiodexAngle>= maxpanlt);
+                    Etimeindx=find(BiodexAngle>= Data.maxpanlt);
                 end
                 for tt=1:3
                     StateDataTable.removeColumnAtIndex(0)
@@ -136,7 +137,7 @@ for S=1:length(SubjectNumber)
 
                 Data.Etime=double(StateSolutionTable.getIndependentColumn().get(Etimeindx(end)-1));
 %                 [kneeTrackingSolution]=TorqueSimulation(StateDataTable,osimmodel,filename,Data);
-                [kneeTrackingParamSolution]=ParameterEstimation(StateSolutionTable,ControlSolutionTable,osimmodel,combinedname,filename,Data);
+                [kneeTrackingParamSolution,Data]=ParameterEstimation(StateSolutionTable,ControlSolutionTable,osimmodel,combinedname,filename,Data);
                 osimmodel=changemodelproperty(osimmodel,filename,Data,1);
                 qe=qe+1;
             end
@@ -144,7 +145,7 @@ for S=1:length(SubjectNumber)
     end
 end
 diary off
-Logger.removeSink(myLog);
+% Logger.removeSink(myLog);
 save([Basepath '\SimData.mat'],'Data');
 
 % Plotting()

@@ -102,9 +102,10 @@ kneeTrackingParamSolution = study.solve();
 
 if ~kneeTrackingParamSolution.success()
     kneeTrackingParamSolution.unseal()
-   fprintf(2,'Optimazation of %s is sealed \n',Coordlable);
+    fprintf(2,'\n\n\n\n\n\n\n Optimization of %s is sealed \n\n\n\n\n\n\n',Coordlable);
+    Data.(Coordlable).sealedsolution=1;
 else
-   fprintf('Optimazation of %s is done \n',Coordlable);
+    fprintf('\n\n\n\n\n\n Optimization of %s is done \n\n\n\n\n\n',Coordlable);
 end 
 
 kneeTrackingParamSolution.write(Data.(Coordlable).ParamSimulPath);

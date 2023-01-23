@@ -153,7 +153,8 @@ Kneecoord.setDefaultValue(Kneeangle);
 %%% Setup ankle_cordiante
 Anklecoord = modelCoordSet.get(anklelable);
 Anklecoord.setDefaultValue(Ankleangle);
-Anklecoord.setRangeMax(35/180*pi())
+Anklecoord.setRangeMax(35/180*pi());
+Anklecoord.setRangeMin(Data.maxpanlt)
 %%% Setup Pelvis-ground_cordiante
 Pelviscoord=modeljointSet.get('ground_pelvis');
 pelvisparentframe=Pelviscoord.get_frames(0);
