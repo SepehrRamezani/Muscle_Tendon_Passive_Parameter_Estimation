@@ -34,7 +34,7 @@ for m = 0:osimmodel.getActuators().getSize()-1
         musc.set_ignore_activation_dynamics(true);
         
         if Data.DeGrooteflage
-            %                 if sum(strcmp(char(frcset.getName()), Data.ComplianacMusclename))
+            %                 if sum(strcmp(char(frcset.getName()), Data.ComplianceTendon))
             musc.set_ignore_tendon_compliance(false);
             %                 else
             %                     musc.set_ignore_tendon_compliance(true);
@@ -174,7 +174,7 @@ for i=0:1:osimmodel.getMuscles().getSize()-1
     %% finding minimum MTL
     %%Knee deformation
     CurrentMuscle=osimmodel.getMuscles().get(Data.SimMusclename(i+1));
-    if sum(strcmp(char(CurrentMuscle.getName),Data.ComplianacMusclename))&& sum(contains(Data.ActiveCoordinates,'ankle_angle'))
+    if sum(strcmp(char(CurrentMuscle.getName),Data.ComplianceTendon))&& sum(contains(Data.ActiveCoordinates,'ankle_angle'))
         AnkleCoor=osimmodel.updCoordinateSet().get(Data.ActiveCoordinates);
         rmax=AnkleCoor.getRangeMax();
         rmin=AnkleCoor.getRangeMin();
@@ -212,14 +212,14 @@ for i=0:1:osimmodel.getMuscles().getSize()-1
     Muscleinfo.MaxIso(i+1)=CurrentMuscle.get_max_isometric_force();
     %     dgf = DeGrooteFregly2016Muscle.safeDownCast(CurrentMuscle);
     Muscleinfo.Passive(i+1)=DeGrooteFregly2016Muscle.safeDownCast(CurrentMuscle).get_passive_fiber_strain_at_one_norm_force();
-    if sum(strcmp(char(CurrentMuscle.getName()), Data.ComplianacMusclename))
+    if sum(strcmp(char(CurrentMuscle.getName()), Data.ComplianceTendon))
         newi=newi+1;
         Muscleinfo.Tstrain(newi)= DeGrooteFregly2016Muscle.safeDownCast(CurrentMuscle).get_tendon_strain_at_one_norm_force();
     end
 end
 osimmodel.initSystem();
 
-osimmodel.print(Data.(Coordlable).Combinedname);
+osimmodel.print(Data.(Coordlable).Modelpath);
 
 end
 function addCoordinateActuator(osimmodel, coordName, optForce)

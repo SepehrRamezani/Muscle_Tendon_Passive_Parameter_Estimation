@@ -1,6 +1,6 @@
 function [kneeTrackingParamSolution]=ParameterEstimation(StateTrackTable,ControlTrackTable,osimmodel,combinedname,Coordlable,Data)
 import org.opensim.modeling.*;
-ComplianacMusclename=Data.ComplianacMusclename;
+ComplianceTendon=Data.ComplianceTendon;
 MinMTLength=Data.(combinedname).MuscleInfo.MinMTLength;
 Solverinterval=Data.ParamSolverinterval;
 Etime=Data.Etime;
@@ -52,7 +52,7 @@ for i=0:1:osimmodel.getMuscles().getSize()-1
     MaxTendonSlack=MinMTLength(i+1);
     param = MocoParameter(append('tendon_slack_',char(Musname)),MusPath,'tendon_slack_length', MocoBounds(0.05*MaxTendonSlack,MaxTendonSlack));
     param1= MocoParameter(append('passive_fiber_',char(Musname)),MusPath,'passive_fiber_strain_at_one_norm_force', MocoBounds(Data.PassiveFiberBound(1),Data.PassiveFiberBound(2)));
-    if sum(strcmp(char(Musname), ComplianacMusclename))
+    if sum(strcmp(char(Musname), ComplianceTendon))
         param2= MocoParameter(append('tendon_strain_',char(Musname)),MusPath,'tendon_strain_at_one_norm_force', MocoBounds(Data.TendonStrainBound(1),Data.TendonStrainBound(2)));
         problem.addParameter(param2);
         problem.addParameter(param1);
@@ -103,7 +103,6 @@ kneeTrackingParamSolution = study.solve();
 if ~kneeTrackingParamSolution.success()
     kneeTrackingParamSolution.unseal()
     fprintf(2,'\n\n\n\n\n\n\n Optimization of %s is sealed \n\n\n\n\n\n\n',Coordlable);
-    Data.(Coordlable).sealedsolution=1;
 else
     fprintf('\n\n\n\n\n\n Optimization of %s is done \n\n\n\n\n\n',Coordlable);
 end 
