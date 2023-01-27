@@ -141,8 +141,8 @@ for S=1:length(SubjectNumber)
 
                 Data.Etime=double(StateSolutionTable.getIndependentColumn().get(Etimeindx(end)-1));
 %                 [kneeTrackingSolution]=TorqueSimulation(StateDataTable,osimmodel,filename,Data);
-                [kneeTrackingParamSolution]=ParameterEstimation(StateSolutionTable,ControlSolutionTable,osimmodel,combinedname,filename,Data);
-                osimmodel=changemodelproperty(osimmodel,filename,Data,1);
+%                 [kneeTrackingParamSolution]=ParameterEstimation(StateSolutionTable,ControlSolutionTable,osimmodel,combinedname,filename,Data);
+%                 osimmodel=changemodelproperty(osimmodel,filename,Data,1);
                 qe=qe+1;
 
             end
