@@ -9,8 +9,8 @@ OptTendonStrain=[];
 % Muscname=Data.SimMusclename;
 MarkerSize=6;
 OptPassiveFiber=[];
-SubjectNumber=["06","07","08","09","10","11","12","13","14","15"];
-% SubjectNumber=["06"];
+% SubjectNumber=["06","07","08","09","10","11","12","13","14","15"];
+SubjectNumber=["10"];
 SubjectNumber=append('T0',SubjectNumber);
 % Joints=["Knee","Ankle"];
 Joints=["Knee","Ankle"];
@@ -41,6 +41,18 @@ trialnames=string(fildnames((contains(fieldnames(Data),'_L1')|contains(fieldname
 for S=1:length(SubjectNumber)
     psname=append(Project,'_',SubjectNumber(S));
     counter=0;
+    OptPassiveFiber=[];
+    OptTSL=[];
+    OptTendonStrain=[];
+    tendod_slack_rigid=[];
+    tendod_slack_comp=[];
+    tendon_slack_Error_comp=[];
+    tendod_slack_ref=[];
+    tendon_slack_Error_rigid=[];
+    muscle_stiffness=[];
+    muscle_stiffness_error=[];
+    tendon_stiffness=[];
+    tendon_stiffness_error=[];
     for T1=1:length(Joints)
 
         if contains(Joints(T1),"Knee")
@@ -120,7 +132,7 @@ for S=1:length(SubjectNumber)
                 %% Calculating parameter error
                 tendod_slack_ref=Data.(combinedname).MuscleInfo.TSlack;
                 if isempty(OptTendonStrain)
-                    Muscname_rigid=Data.(combinedname).SimMusclename;
+                    Muscname_rigid_tendon=Data.(combinedname).SimMusclename;
                     %% Tendon Slack Length
                     tendod_slack_rigid(counter,:)=OptTSL(counter,:);
                     tendon_slack_Error_rigid(counter,:)=(tendod_slack_rigid(counter,:)-tendod_slack_ref)./tendod_slack_ref.*100;
@@ -133,7 +145,7 @@ for S=1:length(SubjectNumber)
                     muscle_stiffness_error(counter,:)=(muscle_stiffness(counter,:)-muscle_stiffness_ref)./muscle_stiffness_ref.*100;
                     muscle_passive_fiber_at_norm_ref_Error(counter,:)=100*(OptPassiveFiber(counter,:)-muscle_passive_fiber_at_norm_ref)./muscle_passive_fiber_at_norm_ref;
                 else
-                    Muscname_comp=Data.(combinedname).SimMusclename;
+                    Muscname_comp_tendon=Data.(combinedname).SimMusclename;
                     tendod_slack_comp(counter,:)=OptTSL(counter,:);
                     tendon_slack_Error_comp(counter,:)=(tendod_slack_comp(counter,:)-tendod_slack_ref)./tendod_slack_ref.*100;
                     c1=0.2;
@@ -144,7 +156,7 @@ for S=1:length(SubjectNumber)
                     tendon_strain_at_norm_ref=Data.(combinedname).MuscleInfo.Tstrain;
                     %tendon_stiffness_ref=1./(1+tendon_strain_at_norm_ref);
                     tendon_stiffness_ref=1.1*log((1.0 + c3) / c1) ./ (1.0 + tendon_strain_at_norm_ref - c2);
-                    TkErrortendon_stiffness_error(counter,:)=(tendon_stiffness(counter,:)-tendon_stiffness_ref)./tendon_stiffness_ref.*100;
+                    tendon_stiffness_error(counter,:)=(tendon_stiffness(counter,:)-tendon_stiffness_ref)./tendon_stiffness_ref.*100;
                     epsilonerror(counter,:)=(OptTendonStrain(counter,:)-tendon_strain_at_norm_ref)./tendon_strain_at_norm_ref.*100;
                 end
                 %% Getting ref and FD states
@@ -188,27 +200,43 @@ for S=1:length(SubjectNumber)
     %% Tendon Slack Length
     tendod_slack=[tendod_slack_rigid,tendod_slack_comp];
     h(1)=figure;
-    ttt=append(SubjectNumber(S),'-Tendon Slack length');
-    Muscname=[Muscname_rigid Muscname_comp];
+    ttt=append(SubjectNumber(S),'-Tendon Slack length different trials');
+    Muscname=[Muscname_rigid_tendon Muscname_comp_tendon];
     numfigs=10;
     t=tiledlayout(numfigs/2,2);
-    multiplotting(t,Muscname_rigid,kneelable,ttt,tendod_slack_rigid,newcolors,MarkerSize)
-    multiplotting(t,Muscname_comp,anklelable,ttt,tendod_slack_comp,newcolors,MarkerSize)
-   %% Muscle Stiffness
+    multiplotting(t,Muscname_rigid_tendon,kneelable,ttt,tendod_slack_rigid,newcolors,MarkerSize,1);
+    multiplotting(t,Muscname_comp_tendon,anklelable,ttt,tendod_slack_comp,newcolors,MarkerSize,1);
+   %% Muscle-Tendon Stiffness
     h(2)=figure;
     numfigs=10;
     t2=tiledlayout(numfigs/2,2);
-    ttt2=append(SubjectNumber(S),'-Muscle-Tendon Stiffness');
-    multiplotting(t2,Muscname_rigid,kneelable,ttt2,muscle_stiffness,newcolors,MarkerSize)
-    multiplotting(t2,Muscname_comp,anklelable,ttt2,tendon_stiffness,newcolors,MarkerSize)
+    ttt2=append(SubjectNumber(S),'-Muscle-Tendon Stiffness different trials');
+    multiplotting(t2,Muscname_rigid_tendon,kneelable,ttt2,muscle_stiffness,newcolors,MarkerSize,1);
+    multiplotting(t2,Muscname_comp_tendon,anklelable,ttt2,tendon_stiffness,newcolors,MarkerSize,1);
+    
+    
     h(3)=figure;
-    numfigs=4;
-    t3=tiledlayout(numfigs/2,2);
-    multiplotting(t3,kneelable,Muscname_rigid,kneelable,ttt,muscle_stiffness,newcolors,MarkerSize)
-
+    MarkerSize=10;
+    t3=tiledlayout(2,2);
+    nexttile
+    titet=SubjectNumber(S);
+    Ylable="Tendon Slack length(m)";
+    multiplotting(t3,Ylable,Muscname_rigid_tendon,titet,tendod_slack_rigid,newcolors,MarkerSize,0);
+    legend(kneelable)
+    nexttile   
+    multiplotting(t3,Ylable,Muscname_comp_tendon,titet,tendod_slack_comp,newcolors,MarkerSize,0);
+    legend(anklelable);
+    nexttile
+    Ylable="Muscle Stiffness(N.m)";
+    multiplotting(t3,Ylable,Muscname_rigid_tendon,titet,muscle_stiffness,newcolors,MarkerSize,0);
+    legend(kneelable);
+    nexttile
+    Ylable="Tendon Stiffness(N.m)";
+    multiplotting(t3,Ylable,Muscname_comp_tendon,titet,tendon_stiffness,newcolors,MarkerSize,0);
+    legend(anklelable);
     resdir=fullfile(txtBasepath,SubjectNumber(S),'Result',append(SubjectNumber(S),'-Muscle-Tendo-E1.fig'));
     savefig(h,resdir)
-
+    fprintf('%s is done \n',SubjectNumber(S));
 end
 %     legend(Terials3);
 
@@ -240,22 +268,6 @@ end
 
     
         
-        %% Tendon stiffness
- h(3)=figure;
-        if OptTendonStrain
-            nexttile
-            X2 = categorical(Data.ComplianacMusclename);
-            plot(X2,TkErrortendon_stiffness_error','.','MarkerSize',MarkerSize)
-            ylabel ('Tendon Stiffness Estimation Error(%)')
-            % legend(Data.Coordlable,'Location','northeast')
-            nexttile
-
-            X2 = categorical(Data.ComplianacMusclename);
-            plot(X2,epsilonerror','.','MarkerSize',MarkerSize)
-            ylabel ('Epsilon Estimation Error(%)')
-            legend(Data.Coordlable,'Location','northeast')
-        end
-    
-
+ 
 
 
