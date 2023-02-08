@@ -6,9 +6,9 @@ import org.opensim.modeling.*;
 Project='P006';
 txtBasepath=fullfile('C:\MyCloud\OneDriveUcf\Real\Simulation\Source',Project);
 load([txtBasepath '\SimData.mat'])
-
+runver="E3";
 % SubjectNumber=["06","07","08","09","10","11","12","13","14","15"];
-SubjectNumber=["06"];
+SubjectNumber=["10"];
 
 
 SubjectNumber=append("T0",SubjectNumber);
@@ -31,14 +31,14 @@ Data.TorqueSolverinterval=40;
 Data.ParamSolverinterval=50;
 % Data.Etime=20;
 Data.Stime=0;
-Data.PassiveFiberBound=[0.05,0.9];
-Data.TendonStrainBound=[0.01,0.1];
+Data.PassiveFiberBound=[0.01,0.9];
+Data.TendonStrainBound=[0.005,0.1];
 
 
 % Joints=["Knee","Ankle"];
-Joints=["Knee"];
-% Terials3=["L1","L2","L3"];
-Terials3=["L2","L3"];
+Joints=["Ankle","Knee"];
+Terials3=["L1","L2","L3"];
+%  % Terials3=["L2","L3"];
 
 diarydir=append(txtBasepath,"\log.txt");
 % diary(diarydir)
@@ -55,25 +55,31 @@ for S=1:length(SubjectNumber)
     
     for T1=1:length(Joints)
         if contains(Joints(T1),"Knee")
-%             Terials2=["H90","H55","H15"];
-            Terials2unm=[90,55,10]*pi()/180;
-                        Terials2=["H15"];
+            Terials2=["H90","H55","H15"];
+%             Terials2=["H90"];
+            Terials2unmtxt=erase(Terials2,"H");
+            Terials2unm=str2double(Terials2unmtxt);
+            Terials2unm(find(Terials2unm==15))=10;
+            Terials2unm=deg2rad(Terials2unm);
+%             Terials2unm=deg2rad(10);
             Data.ActiveCoordinates=["knee_angle"];
-            Data.ActiveCoordinates=addingleg(Data.ActiveCoordinates,Data.whichleg);
-            Data.Rigidtendon=["bflh","bfsh","recfem","semimem","semiten","vasint","vaslat","vasmed"];
-            Data.Rigidtendon=addingleg(Data.Rigidtendon,Data.whichleg);
+            Data.Rigidtendon=["bflh","bfsh","recfem","semimem","semiten","vasint","vaslat","vasmed","sart","grac"];
             Data.ComplianceTendon=[];
+            Data.muscle4opt=["bflh","recfem","semimem","semiten","vasint","vaslat","vasmed"];
         else
             Terials2=["K90","K45","K0"];
-            Terials2unm=[90,45,0]*pi()/180;
-            %             Terials2=["K90"];
+%             Terials2=["K0"];
+            Terials2unmtxt=erase(Terials2,"K");
+            Terials2unm=deg2rad(str2double(Terials2unmtxt));
             Data.ActiveCoordinates=["ankle_angle"];
-            Data.ActiveCoordinates=addingleg(Data.ActiveCoordinates,Data.whichleg);
-            Data.Rigidtendon=["gaslat","gasmed"];
-            Data.Rigidtendon=addingleg(Data.Rigidtendon,Data.whichleg);
-            Data.ComplianceMusclename=["gaslat","gasmed"];
-            Data.ComplianceTendon=addingleg(Data.ComplianceTendon,Data.whichleg);
+            Data.Rigidtendon=["tibpost","perlong","perbrev","fdl","fhl"];
+            Data.ComplianceTendon=["gaslat","gasmed","soleus"];
+            Data.muscle4opt=["gaslat","gasmed","soleus"];
         end
+        Data.ActiveCoordinates=addingleg(Data.ActiveCoordinates,Data.whichleg);
+        Data.Rigidtendon=addingleg(Data.Rigidtendon,Data.whichleg);
+        Data.muscle4opt=addingleg(Data.muscle4opt,Data.whichleg);
+        Data.ComplianceTendon=addingleg(Data.ComplianceTendon,Data.whichleg);
         % Make sure if you have common name in the Rigidtendon and Compliance
         % Muscle put their name at the end of rigid tendon.
         if ~isempty(Data.ComplianceTendon)
@@ -84,7 +90,7 @@ for S=1:length(SubjectNumber)
         for T2=1:length(Terials2)
             
             combinedname=append(psname,'_',upper(Data.whichleg),Joints(T1),'_',Terials2(T2));
-            Data.(combinedname).Modelpath=append(Basepath,'\Model\',combinedname,'.osim');
+            Data.(combinedname).Modelpath=append(Basepath,'\Model\',combinedname,'_',runver,'.osim');
             if contains(Joints(T1),"Knee")
                 Data.(combinedname).Hipangle=Terials2unm(T2);
                 Data.(combinedname).Kneeangle=0;
@@ -96,9 +102,11 @@ for S=1:length(SubjectNumber)
             end
              Refmmodel = Model(Data.(psname).RefModelpath);
              [osimmodel,Data.(combinedname).MuscleInfo]=Modelcreator(combinedname,Data,Refmmodel);
+%              Passiveforcegenerate(combinedname,Data,Refmmodel);
              Data.(combinedname).SimMusclename=Data.SimMusclename;
              Data.(combinedname).ActiveCoordinates=Data.ActiveCoordinates;
              Data.(combinedname).ComplianceTendon=Data.ComplianceTendon;
+             Data.(combinedname).muscle4opt=Data.muscle4opt;
             for T3=1:length(Terials3)
                 filename=append(psname,'_',upper(Data.whichleg),Joints(T1),'_',Terials2(T2),'_',Terials3(T3));
                 Data.(filename).RefStatepath=append(Basepath,'\Data\',filename,'_Motion.mot');
@@ -106,7 +114,7 @@ for S=1:length(SubjectNumber)
                 paramdir=fullfile(Basepath,'Parameterestimation');
                 [r,e]=mkdir(paramdir);
                 Data.(filename).TorqeSimulPath=append(paramdir,'\Torque_Opt_',filename,'.sto');
-                Data.(filename).ParamSimulPath=append(paramdir,'\Parameter_Opt_',filename,'.sto');
+                Data.(filename).ParamSimulPath=append(paramdir,'\Parameter_Opt_',filename,'_',runver,'.sto');
                 Data.(filename).ModelPath=append(Basepath,'\Model\',filename,'.osim');
                 StateDataTable=TableProcessor(Data.(filename).RefStatepath).process;
                 HipAngle=StateDataTable.getDependentColumnAtIndex(0).getAsMat();
@@ -132,17 +140,14 @@ for S=1:length(SubjectNumber)
                 %                 if Meanknee< 0 Meanknee=0; end
                 %                 Data.(filename).Kneeangle= 1.57;
                 %                 Data.(filename).Ankleangle=mean(AnkleAngle);
-                
-                
-                
                 ControlDataTable=TableProcessor(Data.(filename).RefControlpath).process;
                 StateSolutionTable=StateDataTable;
                 ControlSolutionTable=ControlDataTable;
-
-                Data.Etime=double(StateSolutionTable.getIndependentColumn().get(Etimeindx(end)-1));
+                Data.(filename).Stime=double(StateSolutionTable.getIndependentColumn().get(0));
+                Data.(filename).Etime=double(StateSolutionTable.getIndependentColumn().get(Etimeindx(end)-1));
 %                 [kneeTrackingSolution]=TorqueSimulation(StateDataTable,osimmodel,filename,Data);
-%                 [kneeTrackingParamSolution]=ParameterEstimation(StateSolutionTable,ControlSolutionTable,osimmodel,combinedname,filename,Data);
-%                 osimmodel=changemodelproperty(osimmodel,filename,Data,1);
+                [kneeTrackingParamSolution]=ParameterEstimation(StateSolutionTable,ControlSolutionTable,osimmodel,combinedname,filename,Data);
+                osimmodel=changemodelproperty(osimmodel,filename,Data,1);
                 qe=qe+1;
 
             end

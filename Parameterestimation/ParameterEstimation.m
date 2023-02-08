@@ -1,19 +1,21 @@
 function [kneeTrackingParamSolution]=ParameterEstimation(StateTrackTable,ControlTrackTable,osimmodel,combinedname,Coordlable,Data)
 import org.opensim.modeling.*;
 ComplianceTendon=Data.ComplianceTendon;
+SimMusclename=Data.(combinedname).SimMusclename;
 MinMTLength=Data.(combinedname).MuscleInfo.MinMTLength;
 Solverinterval=Data.ParamSolverinterval;
-Etime=Data.Etime;
-Stime=Data.Stime;
+Etime=Data.(Coordlable).Etime;
+Stime=Data.(Coordlable).Stime;
 
 % w=1/osimmodel.getForceSet().getSize();
-StateWeight = 10.0/osimmodel.getNumCoordinates();
-ControlWight=StateWeight;
+StateWeight = 1/(osimmodel.getNumCoordinates()+length(SimMusclename));
+ControlWight=1/(osimmodel.getNumCoordinates()+length(SimMusclename));
+TotalControlWight=1;
 osimmodel=changemodelproperty(osimmodel,combinedname,Data,0);
 %% Define tracking problem
 track = MocoTrack();
 track.setName('kneestateTracking');
-stateTrackingWeight = 1;
+stateTrackingWeight = 10;
 tableProcessor = TableProcessor(StateTrackTable);
 % tableProcessor.append(TabOpLowPassFilter(2));
 modelProcessor = ModelProcessor(osimmodel);
@@ -27,14 +29,21 @@ track.set_initial_time(Stime);
 track.set_final_time(Etime);
 track.set_minimize_control_effort(false);
 stateWeights = MocoWeightSet();
-
+study = track.initialize();
+problem = study.updProblem();
 if contains(Data.ActiveCoordinates,"knee_angle")
+    kneelable=append('knee_angle_',Data.whichleg);
     stateWeights.cloneAndAppend(MocoWeight(append('/jointset/walker_knee_',Data.whichleg,'/knee_angle_',Data.whichleg,'/value'),StateWeight));
-    stateWeights.cloneAndAppend(MocoWeight(append('/jointset/walker_knee_',Data.whichleg,'/knee_angle_',Data.whichleg,'/speed'),StateWeight*0.01));
-    
+    stateWeights.cloneAndAppend(MocoWeight(append('/jointset/walker_knee_',Data.whichleg,'/knee_angle_',Data.whichleg,'/speed'),StateWeight*0.01));   
+    Kneecoord =  osimmodel.getCoordinateSet().get(kneelable);
+    problem.setStateInfo(append('/jointset/walker_knee_',Data.whichleg,'/knee_angle_',Data.whichleg,'/value'),[Kneecoord.getRangeMin(), Kneecoord.getRangeMax()]);
+
 else
     stateWeights.cloneAndAppend(MocoWeight(append('/jointset/ankle_',Data.whichleg,'/ankle_angle_',Data.whichleg,'/value'),StateWeight*4));
     stateWeights.cloneAndAppend(MocoWeight(append('/jointset/ankle_',Data.whichleg,'/ankle_angle_',Data.whichleg,'/speed'),StateWeight*0.04));
+    anklelable=append('ankle_angle_',Data.whichleg);
+    Anklecoord =  osimmodel.getCoordinateSet().get(anklelable);
+    problem.setStateInfo(append('/jointset/ankle_',Data.whichleg,'/',anklelable,'/value'),[Anklecoord.getRangeMin(), Anklecoord.getRangeMax()]);
 end
 track.set_states_weight_set(stateWeights);
 study = track.initialize();
@@ -44,18 +53,19 @@ ContTracking = MocoControlTrackingGoal('kneeControlTracking');
 % controlsRef = TableProcessor('Kneeflexion_solution.sto');
 ConttableProcessor = TableProcessor(ControlTrackTable);
 ContTracking.setReference(ConttableProcessor);
-ContTracking.setWeight(5);
+ContTracking.setWeight(TotalControlWight);
 % param3 = MocoParameter('WrappingR','/bodyset/tibia_r/wrapobjectset/GasMed_at_shank_r','radius', MocoBounds(0.2,0.8));
-for i=0:1:osimmodel.getMuscles().getSize()-1
-    Musname = osimmodel.updMuscles().get(i).getName();
+for i=1:1:length(Data.muscle4opt)
+    Musname=Data.muscle4opt(i);
+%     Musname = osimmodel.updMuscles().get(Data.muscle4opt(i));
     MusPath=append('/forceset/',char(Musname));
-    MaxTendonSlack=MinMTLength(i+1);
+    MaxTendonSlack=MinMTLength(contains(SimMusclename,Musname));
     param = MocoParameter(append('tendon_slack_',char(Musname)),MusPath,'tendon_slack_length', MocoBounds(0.05*MaxTendonSlack,MaxTendonSlack));
     param1= MocoParameter(append('passive_fiber_',char(Musname)),MusPath,'passive_fiber_strain_at_one_norm_force', MocoBounds(Data.PassiveFiberBound(1),Data.PassiveFiberBound(2)));
+    param2= MocoParameter(append('tendon_strain_',char(Musname)),MusPath,'tendon_strain_at_one_norm_force', MocoBounds(Data.TendonStrainBound(1),Data.TendonStrainBound(2)));
     if sum(strcmp(char(Musname), ComplianceTendon))
-        param2= MocoParameter(append('tendon_strain_',char(Musname)),MusPath,'tendon_strain_at_one_norm_force', MocoBounds(Data.TendonStrainBound(1),Data.TendonStrainBound(2)));
         problem.addParameter(param2);
-        problem.addParameter(param1);
+%         problem.addParameter(param1);
     else
         problem.addParameter(param1);
     end
@@ -75,12 +85,7 @@ model.initSystem();
 % effort.setWeight(0.001);
 % effort.setExponent(2);
 % effort.setDivideByDisplacement(false);
-%% define parameter
 
-problem.setStateInfo(append('/jointset/walker_knee_',Data.whichleg,'/knee_angle_',Data.whichleg,'/value'),[0, 1.6]);
-anklelable=append('ankle_angle_',Data.whichleg);
-Anklecoord =  osimmodel.getCoordinateSet().get(anklelable);
-problem.setStateInfo(append('/jointset/ankle_',Data.whichleg,'/',anklelable,'/value'),[Anklecoord.getRangeMin(), Anklecoord.getRangeMax()]);
 %% optimal_fiber_length
 solver = study.initCasADiSolver();
 %% define solver
@@ -93,6 +98,7 @@ solver.set_optim_max_iterations(4000);
 solver.set_implicit_auxiliary_derivatives_weight(0.00001)
 solver.set_parameters_require_initsystem(false);
 solver.resetProblem(problem);
+study.print(strrep(Data.(Coordlable).ParamSimulPath,'.sto','.omoco'))
 if isfile(Data.(Coordlable).ParamSimulPath)
     solver.setGuessFile(Data.(Coordlable).ParamSimulPath);
 else
