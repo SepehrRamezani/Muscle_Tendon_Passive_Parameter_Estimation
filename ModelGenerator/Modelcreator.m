@@ -32,7 +32,7 @@ for m = 0:osimmodel.getActuators().getSize()-1
         musc=Muscle.safeDownCast(frcset);
         
         musc.set_ignore_activation_dynamics(true);
-        
+   
         if Data.DeGrooteflage
             %                 if sum(strcmp(char(frcset.getName()), Data.ComplianceTendon))
             musc.set_ignore_tendon_compliance(false);
@@ -45,6 +45,12 @@ for m = 0:osimmodel.getActuators().getSize()-1
             dgf.set_active_force_width_scale(1);
             dgf.set_tendon_compliance_dynamics_mode('implicit');
             dgf.set_ignore_passive_fiber_force(false);
+            if any(contains(Data.Rigidtendon,string(dgf.getName())))
+%                 dgf.set_ignore_tendon_compliance(true);
+%                 dgf.set_tendon_compliance_dynamics_mode('explicit');
+            else
+%                  dgf.set_ignore_passive_fiber_force(true)
+            end
         else
             musc.set_min_control(0.0);
             musc.set_max_control(0.0);
@@ -150,6 +156,8 @@ end
 %%% Setup Knee_cordiante
 Kneecoord = modelCoordSet.get(kneelable);
 Kneecoord.setDefaultValue(Kneeangle);
+Kneecoord.setRangeMax(deg2rad(100));
+Kneecoord.setRangeMin(deg2rad(0));
 %%% Setup ankle_cordiante
 Anklecoord = modelCoordSet.get(anklelable);
 Anklecoord.setDefaultValue(Ankleangle);
@@ -171,31 +179,19 @@ osimmodel.initSystem();
 for i=0:1:osimmodel.getMuscles().getSize()-1
     k=0;
     u=0;
+    step=30;
     %% finding minimum MTL
     %%Knee deformation
     CurrentMuscle=osimmodel.getMuscles().get(Data.SimMusclename(i+1));
-    if sum(strcmp(char(CurrentMuscle.getName),Data.ComplianceTendon))&& sum(contains(Data.ActiveCoordinates,'ankle_angle'))
-        AnkleCoor=osimmodel.updCoordinateSet().get(Data.ActiveCoordinates);
-        rmax=AnkleCoor.getRangeMax();
-        rmin=AnkleCoor.getRangeMin();
-        Kneecoord.setValue(state, Kneeangle);
-        for q=rmin:(rmax-rmin)/20:rmax
-            u=u+1;
-            
-            AnkleCoor.setValue(state, q);
-            osimmodel.realizePosition(state);
-            musclelength(k+u)=CurrentMuscle.getLength(state);
-        end
-    else
-        for q=0:Kneerange/20:Kneerange
-            k=k+1;
-            
-            Kneecoord.setValue(state, q);
-            osimmodel.realizePosition(state);
-            musclelength(k)=CurrentMuscle.getLength(state);
-        end
+    Currentcoord=osimmodel.updCoordinateSet().get(Data.ActiveCoordinates);
+    rmax=Currentcoord.getRangeMax();
+    rmin=Currentcoord.getRangeMin();
+    for q=rmin:(rmax-rmin)/step:rmax
+        k=k+1;
+        Currentcoord.setValue(state, q);
+        osimmodel.realizePosition(state);
+        musclelength(k+u)=CurrentMuscle.getLength(state);
     end
-    
     Muscleinfo.MinMTLength(i+1)=min(musclelength);
     
     if Muscleinfo.MinMTLength(i+1) < CurrentMuscle.get_tendon_slack_length()
