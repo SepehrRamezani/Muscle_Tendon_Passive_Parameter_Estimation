@@ -9,11 +9,11 @@ OptTendonStrain=[];
 % Muscname=Data.SimMusclename;
 MarkerSize=6;
 OptPassiveFiber=[];
-% SubjectNumber=["06","07","08","09","10","11","12","13","14","15"];
-SubjectNumber=["10"];
+SubjectNumber=["06","07","08","09","10","11","12","13","14","15"];
+% SubjectNumber=["10"];
 SubjectNumber=append('T0',SubjectNumber);
 % Joints=["Knee","Ankle"];
-Joints=["Knee","Ankle"];
+Joints=["Ankle","Knee"];
 Joints=append("L",Joints);
 
 % Terials2=["K90"];
@@ -93,7 +93,7 @@ for S=1:length(SubjectNumber)
                     ControlRefData.colheaders=[ControlRefData.colheaders string(ControlDataTable.getColumnLabel(iLabel))];
                 end
                 % getting optimization result
-                u=0;
+                compliance_tendon_counter=0;
                 stiff_tendon_counter=0;
                 OptTableData=TableProcessor(Data.(trialname).ParamSimulPath).process;
                 OptData.data=OptTableData.getMatrix().getAsMat();
@@ -112,27 +112,32 @@ for S=1:length(SubjectNumber)
                     fprintf('optimization %s is unsuccessful \n',trialname);
                 end
                 %% getting mucsles parameters
-                Muscname=Data.(combinedname).SimMusclename;
+                Muscname=Data.(combinedname).muscle4opt;
+                MuscleInfo=Data.(combinedname).MuscleInfo;
                 for m=1:length(Muscname)
                     M_indx=find(contains(OptData.colheaders,Muscname(m))&~contains(OptData.colheaders,'force'));
+                    indxn=find(contains(MuscleInfo.Musclename,Muscname(m)));
+                    
                     for y=1:length(M_indx)
                         if contains(OptData.colheaders(M_indx(y)),'tendon_slack')
+                            tendod_slack_ref(m)= MuscleInfo.TSlack(indxn);
                             OptTSL(counter,m)=OptData.data(1,M_indx(y));
                         elseif contains(OptData.colheaders(M_indx(y)),'passive_fiber_')
                             stiff_tendon_counter=stiff_tendon_counter+1;
+                            muscle_passive_fiber_at_norm_ref(m)= MuscleInfo.Passive(indxn);
                             OptPassiveFiber(counter,stiff_tendon_counter)=OptData.data(1,M_indx(y));
                         elseif contains(OptData.colheaders(M_indx(y)),'tendon_strain')
-                            u=u+1;
-                            OptTendonStrain(counter,u)=OptData.data(1,M_indx(y));
+                            compliance_tendon_counter=compliance_tendon_counter+1;
+                            tendon_strain_at_norm_ref(m)=MuscleInfo.Tstrain(indxn);
+                            OptTendonStrain(counter,compliance_tendon_counter)=OptData.data(1,M_indx(y));
                         end
                     end
 
                 end
                 %     Coordlable(i,1)=append("Hip",num2str(Data.Hipangle(i)));
                 %% Calculating parameter error
-                tendod_slack_ref=Data.(combinedname).MuscleInfo.TSlack;
-                if isempty(OptTendonStrain)
-                    Muscname_rigid_tendon=Data.(combinedname).SimMusclename;
+                if contains(Joints(T1),"Knee")
+                    Muscname_rigid_tendon=Muscname;
                     %% Tendon Slack Length
                     tendod_slack_rigid(counter,:)=OptTSL(counter,:);
                     tendon_slack_Error_rigid(counter,:)=(tendod_slack_rigid(counter,:)-tendod_slack_ref)./tendod_slack_ref.*100;
@@ -140,12 +145,11 @@ for S=1:length(SubjectNumber)
                     %     muscle_stiffness=1./(1+OptParam2(i,:));
                     muscle_stiffness(counter,:)=2./(OptPassiveFiber(counter,:));
                     %     muscle_stiffness_ref=1./(1+muscle_passive_fiber_at_norm_ref);
-                    muscle_passive_fiber_at_norm_ref=Data.(combinedname).MuscleInfo.Passive;
                     muscle_stiffness_ref=2./(muscle_passive_fiber_at_norm_ref);
                     muscle_stiffness_error(counter,:)=(muscle_stiffness(counter,:)-muscle_stiffness_ref)./muscle_stiffness_ref.*100;
                     muscle_passive_fiber_at_norm_ref_Error(counter,:)=100*(OptPassiveFiber(counter,:)-muscle_passive_fiber_at_norm_ref)./muscle_passive_fiber_at_norm_ref;
                 else
-                    Muscname_comp_tendon=Data.(combinedname).SimMusclename;
+                    Muscname_comp_tendon=Muscname;
                     tendod_slack_comp(counter,:)=OptTSL(counter,:);
                     tendon_slack_Error_comp(counter,:)=(tendod_slack_comp(counter,:)-tendod_slack_ref)./tendod_slack_ref.*100;
                     c1=0.2;
@@ -153,7 +157,6 @@ for S=1:length(SubjectNumber)
                     c3=0.2;
                     tendon_stiffness(counter,:) = 1.1*log((1.0 + c3) / c1) ./ (1.0 + OptTendonStrain(counter,:) - c2);
                     %tendon_stiffness=1./(1+OptParam3(i,:));
-                    tendon_strain_at_norm_ref=Data.(combinedname).MuscleInfo.Tstrain;
                     %tendon_stiffness_ref=1./(1+tendon_strain_at_norm_ref);
                     tendon_stiffness_ref=1.1*log((1.0 + c3) / c1) ./ (1.0 + tendon_strain_at_norm_ref - c2);
                     tendon_stiffness_error(counter,:)=(tendon_stiffness(counter,:)-tendon_stiffness_ref)./tendon_stiffness_ref.*100;
