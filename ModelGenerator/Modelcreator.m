@@ -1,4 +1,4 @@
-function [osimmodel,Muscleinfo]=Modelcreator(Coordlable,Data,osimmodel)
+function [osimmodel,MuscleInfo]=Modelcreator(Coordlable,Data,osimmodel)
 import org.opensim.modeling.*;
 % osimmodel = Model('subject_walk_armless_RLeg_justknee.osim');
 Kneerange=100/180*pi();
@@ -176,6 +176,7 @@ end
 osimmodel.initSystem();
 
 %% change TSL to avoid buckling and save muscle information
+qq=0;
 for i=0:1:osimmodel.getMuscles().getSize()-1
     k=0;
     u=0;
@@ -192,26 +193,21 @@ for i=0:1:osimmodel.getMuscles().getSize()-1
         osimmodel.realizePosition(state);
         musclelength(k+u)=CurrentMuscle.getLength(state);
     end
-    Muscleinfo.MinMTLength(i+1)=min(musclelength);
+    MuscleInfo.MinMTLength(i+1)=min(musclelength);
     
-    if Muscleinfo.MinMTLength(i+1) < CurrentMuscle.get_tendon_slack_length()
+    if MuscleInfo.MinMTLength(i+1) < CurrentMuscle.get_tendon_slack_length()
         warning('buckeling will be happend in %s',CurrentMuscle.getName())
         %% "0.99" is for making TSL a little bit smaller than minimum MT length   
-        TSlack(i+1)=0.99*Muscleinfo.MinMTLength(i+1);
-        CurrentMuscle.set_tendon_slack_length(TSlack(i+1));
-        Muscleinfo.TSlack(i+1)=TSlack(i+1);
-    else
-        
-        Muscleinfo.TSlack(i+1)=CurrentMuscle.get_tendon_slack_length();
-        
+        TSlack(i+1)=0.99*MuscleInfo.MinMTLength(i+1);
+        CurrentMuscle.set_tendon_slack_length(TSlack(i+1))
     end
-    Muscleinfo.MaxIso(i+1)=CurrentMuscle.get_max_isometric_force();
-    %     dgf = DeGrooteFregly2016Muscle.safeDownCast(CurrentMuscle);
-    Muscleinfo.Passive(i+1)=DeGrooteFregly2016Muscle.safeDownCast(CurrentMuscle).get_passive_fiber_strain_at_one_norm_force();
-    if sum(strcmp(char(CurrentMuscle.getName()), Data.ComplianceTendon))
-        newi=newi+1;
-        Muscleinfo.Tstrain(newi)= DeGrooteFregly2016Muscle.safeDownCast(CurrentMuscle).get_tendon_strain_at_one_norm_force();
-    end
+        %% Getting the Muscle information
+        MuscleInfo.TSlack(i+1)=CurrentMuscle.get_tendon_slack_length();
+        MuscleInfo.MaxIso(i+1)=CurrentMuscle.get_max_isometric_force();
+        MuscleInfo.Passive(i+1)=DeGrooteFregly2016Muscle.safeDownCast(CurrentMuscle).get_passive_fiber_strain_at_one_norm_force();
+        MuscleInfo.Tstrain(i+1)= DeGrooteFregly2016Muscle.safeDownCast(CurrentMuscle).get_tendon_strain_at_one_norm_force();
+        MuscleInfo.Musclename(i+1)=string(CurrentMuscle.getName());
+
 end
 osimmodel.initSystem();
 
