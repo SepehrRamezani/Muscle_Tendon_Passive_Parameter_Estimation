@@ -12,10 +12,10 @@ OptPassiveFiber=[];
 SubjectNumber=["06","07","08","09","10","11","12","13","14","15"];
 % SubjectNumber=["10"];
 SubjectNumber=append('T0',SubjectNumber);
-% Joints=["Knee","Ankle"];
-Joints=["Ankle","Knee"];
+Joints=["Knee","Ankle"];
+% Joints=["Ankle","Knee"];
 Joints=append("L",Joints);
-
+Data.runver
 % Terials2=["K90"];
 Terials3=["L1","L2","L3"];
 
@@ -237,7 +237,7 @@ for S=1:length(SubjectNumber)
     Ylable="Tendon Stiffness(N.m)";
     multiplotting(t3,Ylable,Muscname_comp_tendon,titet,tendon_stiffness,newcolors,MarkerSize,0);
     legend(anklelable);
-    resdir=fullfile(txtBasepath,SubjectNumber(S),'Result',append(SubjectNumber(S),'-Muscle-Tendo-E1.fig'));
+    resdir=fullfile(txtBasepath,SubjectNumber(S),'Result',append(SubjectNumber(S),'-Muscle-Tendo-',Data.runver,'.fig'));
     savefig(h,resdir)
     fprintf('%s is done \n',SubjectNumber(S));
 end

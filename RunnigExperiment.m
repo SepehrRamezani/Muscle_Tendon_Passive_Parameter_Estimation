@@ -6,9 +6,9 @@ import org.opensim.modeling.*;
 Project='P006';
 txtBasepath=fullfile('C:\MyCloud\OneDriveUcf\Real\Simulation\Source',Project);
 load([txtBasepath '\SimData.mat'])
-runver="E3";
+Data.runver="E3";
 % SubjectNumber=["06","07","08","09","10","11","12","13","14","15"];
-SubjectNumber=["10"];
+SubjectNumber=["06","07","08","09","11","12","13","14","15"];
 
 
 SubjectNumber=append("T0",SubjectNumber);
