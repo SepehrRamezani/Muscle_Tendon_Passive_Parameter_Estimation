@@ -3,15 +3,15 @@ clear all
 import org.opensim.modeling.*;
 Trc_path=['C:\MyCloud\OneDriveUcf\Real\Simulation\Passive_Parameter_prediction\Robotic_Leg\Data'];
 listing = dir(Trc_path);
-plotfalg=0;
-IKflag=1;
+plotfalg=1;
+IKflag=0;
 Mnames=[];
 Tnames=[];
 for i=1:length(listing)
     curname=string(listing(i,1).name);
-    if contains(curname,".trc")
+    if contains(curname,".trc")&contains(curname,"Knee")
         Mnames=[Mnames; curname];
-    elseif contains(curname,"Torque")&contains(curname,".mot")
+    elseif contains(curname,"Torque")&contains(curname,".mot")&contains(curname,"Knee")
         Tnames=[Tnames; curname];
     else
     end
