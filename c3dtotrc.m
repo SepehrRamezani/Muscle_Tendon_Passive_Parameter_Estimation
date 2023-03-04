@@ -1,13 +1,13 @@
 clear all
-txtdir=['C:\MyCloud\OneDriveUcf\Real\Simulation\Passive_Parameter_prediction\Robotic_Leg\Data'];
+txtdir=['C:\MyCloud\OneDriveUcf\Real\Simulation\Passive_Parameter_prediction\Robotic_Leg\Data\Second'];
 listing = dir(txtdir);
 names=[];
 Title='\ninDegrees=no\nnum_controls=1\nnum_derivatives=0\nDataType=double\nversion=3\nnRows=%d\nnColumns=%d\nendheader\n';
-
+Torqueflage=0;
 for i=1:length(listing)
     curname=string(listing(i,1).name);
 %     if contains(curname,"Trial")&~contains(curname,"Knee")&~contains(curname,"Marker")&~contains(curname,"Torque")
-    if contains(curname,"Knee")&contains(curname,".c3d")
+    if contains(curname,".c3d")
         names=[names; curname];
     end
 end
@@ -32,7 +32,7 @@ for S=1:length(names)
     %             fullname=filedata.trialas(S);
     filedir=char(fullfile(txtdir,names(S)));
     markdatastruct = c3d_getdata(filedir, 0);
-    Torque_volt=[markdatastruct.analog_data.Time  markdatastruct.analog_data.Channels.Sensor_16_EMG16];
+   
     oldFPS=markdatastruct.marker_data.Info.frequency;
     Markerset=fieldnames(markdatastruct.marker_data.Markers);
     Markerset=Markerset(~contains(Markerset,'C_'));
@@ -84,12 +84,14 @@ for S=1:length(names)
     delimiterIn='\t';
     Dataheaderforce=['time' delimiterIn '/forceset/knee_act'];
 %     calibration equation for voltage to torque
+if Torqueflage
+    Torque_volt=[markdatastruct.analog_data.Time  markdatastruct.analog_data.Channels.Sensor_16_EMG16];
     Torqueinterp=interp1(Torque_volt(:,1),Torque_volt(:,2),time_newFPS','linear','extrap'); %Interpolates data to match sampling time to desierd sampling time
-    Torque=(Torqueinterp-0.168)*2/0.168*67;
-    TorqueData=[time_newFPS' Torque];
+%     Torque=(Torqueinterp-0.168)*2/0.168*67;
+    TorqueData=[time_newFPS' Torqueinterp];
     [TFr,TFc]=size(TorqueData);
     Titledata=[TFr,TFc];
     F_fnames= strrep(names(S),'.c3d','_Torque.mot');
-    makefile(txtdir,F_fnames,Title,Titledata,Dataheaderforce,TorqueData,7,delimiterIn);
-
+     makefile(txtdir,F_fnames,Title,Titledata,Dataheaderforce,TorqueData,7,delimiterIn);
+end
 end

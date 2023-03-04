@@ -1,23 +1,25 @@
 clear all
 % close all
 import org.opensim.modeling.*;
-Trc_path=['C:\MyCloud\OneDriveUcf\Real\Simulation\Passive_Parameter_prediction\Robotic_Leg\Data'];
+Trc_path=['C:\MyCloud\OneDriveUcf\Real\Simulation\Passive_Parameter_prediction\Robotic_Leg\Data\Second'];
 listing = dir(Trc_path);
 plotfalg=1;
 IKflag=0;
+Torqueflage=0;
 Mnames=[];
 Tnames=[];
+torque=[];
 for i=1:length(listing)
     curname=string(listing(i,1).name);
-    if contains(curname,".trc")&contains(curname,"Knee")
+    if contains(curname,".trc")& ~contains(curname,"Knee")
         Mnames=[Mnames; curname];
-    elseif contains(curname,"Torque")&contains(curname,".mot")&contains(curname,"Knee")
+    elseif contains(curname,"Torque")& ~contains(curname,"Knee")
         Tnames=[Tnames; curname];
     else
     end
 end
 
-modeldir=append(Trc_path,'/../Model/FinalModel.osim');
+modeldir=fullfile(Trc_path,'..','..','Model','FinalModel.osim');
 model=Model(modeldir);
 for S=1:length(Mnames)
     Trialnames= erase(Mnames(S),'_Marker.trc');
@@ -50,34 +52,59 @@ for S=1:length(Mnames)
 
     end
     ik_result= TableProcessor(outdir).process; 
+    if Torqueflage
     torque_result=TableProcessor(fullfile(Trc_path,Tnames(S))).process;
+    torque=mean(torque_result.getDependentColumnAtIndex(0).getAsMat());
+    end
 %     torque_result=importdata(fullfile(Trc_path,Tnames(S)));
     kneeangle=mean(ik_result.getDependentColumnAtIndex(7).getAsMat());
+
     Hipangle=mean(ik_result.getDependentColumnAtIndex(6).getAsMat());
-    torque=mean(torque_result.getDependentColumnAtIndex(0).getAsMat());
     FinalData(S,:)=[kneeangle,Hipangle,torque];
 
 end
+% Voltage=[1.842 1.725 1.638 1.554 1.458 1.256 1.135 0.857 0.62 0.062 -0.326 -1.67];
+load(fullfile(Trc_path,'Voltage.mat'));
+% Voltage=FinalData(:,3)-(0.168)+0.018;
+Finaltorque=4.61*Voltage - 0.8627;
+FinalData(:,3)=Finaltorque;
 
-indx35=find(FinalData(:,2)<40& FinalData(:,2)>30);
-Data35=sortrows(FinalData(indx35,:),1);
-indx45=find(FinalData(:,2)<50& FinalData(:,2)>40);
-Data45=sortrows(FinalData(indx45,:),1);
-indx70=find(FinalData(:,2)<75& FinalData(:,2)>65);
-Data70=sortrows(FinalData(indx70,:),1);
+
 indx90=find(FinalData(:,2)<95& FinalData(:,2)>85);
-Data90=sortrows(FinalData(indx90,:),1);
+Data90=sortrows(FinalData(indx90,:),1,'descend');
+% indx110=find(FinalData(:,2)<115& FinalData(:,2)>105);
+% Data110=sortrows(FinalData(indx110,:),1);
+% indx135=find(FinalData(:,2)<140& FinalData(:,2)>130);
+% Data135=sortrows(FinalData(indx135,:),1);
+indx35=find(FinalData(:,2)<150& FinalData(:,2)>140);
+Data35=sortrows(FinalData(indx35,:),1);
+ExpData.Data90=Data90;
+ExpData.Data35=Data35;
 if plotfalg
-plot(Data35(:,1),Data35(:,3))
-hold on
-plot(Data45(:,1),Data45(:,3))
-plot(Data70(:,1),Data70(:,3))
-plot(Data90(:,1),Data90(:,3))
-legend(string(floor([Data35(1,2),Data45(1,2),Data70(1,2),Data90(1,2)])))
-hold off
-end
+    
+    plot(90-Data90(:,1),Data90(:,3),"*")
+    hold on
+%     plot(Data110(:,1),Data110(:,3))
+%     plot(90-Data35(:,1),Data35(:,3))
 
-time90=Data90(:,1)*20/90;
-newtim90=0:20/(4*length(time90)):20;
+legend(string(floor(180-[Data90(1,2),Data35(1,2)])))
+% hold off
+end
+xlabel('Knee(deg)')
+ylabel('Torque(N.m)')
+m=(Data90(end,1)-Data90(1,1))/(20);
+time90=(Data90(:,1)-Data90(1,1))/m;
+newtim90=0:20/(5*length(time90)):20;
 newData90=interp1(time90,Data90,newtim90,"linear","extrap");
+plot(90-newData90(:,1),newData90(:,3))
+newData90(:,3)=newData90(:,3)/100;
+newData90=[newtim90' newData90];
+[TFr,TFc]=size(newData90);
+Titledata=[TFr,TFc];
+delimiterIn='\t';
+Title='\ninDegrees=yes\nnum_controls=1\nnum_derivatives=0\nDataType=double\nversion=3\nnRows=%d\nnColumns=%d\nendheader\n';
+F_fnames='Hip90.sto';
+Dataheaderforce=append('time',delimiterIn,'knee',delimiterIn,'hip',delimiterIn,'act');
+makefile(Trc_path,F_fnames,Title,Titledata,Dataheaderforce,newData90,7,delimiterIn);
+save(fullfile(Trc_path,"ExpData.mat"),'ExpData');
 % % c3dtotrc();
