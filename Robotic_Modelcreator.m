@@ -1,4 +1,4 @@
-function [osimmodel]=Robotic_Modelcreator(Coordlable,Data,osimmodel)
+function [osimmodel,Data]=Robotic_Modelcreator(Coordlable,Data,osimmodel)
 import org.opensim.modeling.*;
 % osimmodel = Model('subject_walk_armless_RLeg_justknee.osim');
 Kneerange=100/180*pi();
@@ -17,8 +17,61 @@ Hipangle=Data.(Coordlable).Hipangle;
 
 osimmodel.initSystem();
 newi=0;
-%% Change the joints type
 
+
+modelCoordSet = osimmodel.getCoordinateSet();
+%%
+
+%% finding lowest spring length
+%%% finding all possible coordinates value
+Allcoord=["Knee","Hip"];
+activL=length(Allcoord);
+for c=1:activL
+    Currentcoord=modelCoordSet.get(Allcoord(c));
+    rmax=Currentcoord.getRangeMax();
+    rmin=Currentcoord.getRangeMin();
+    cordvalues=(linspace(rmin,rmax,step));
+    elements{c}=cordvalues; %cell array with N vectors to combine
+end
+%%% For Hip
+% elements{c+1}=(linspace(deg2rad(90),degtorad(144),step));
+
+combinations = cell(1, numel(elements));  %set up the varargout result
+[combinations{:}] = ndgrid(elements{:});
+combinations = cellfun(@(x) x(:), combinations,'uniformoutput',false); %there may be a better way to do this
+Coboval = [combinations{:}]; % NumberOfCombinations by N matrix. Each row is unique.
+%%% feed into model to calculate the Actuator length
+state=osimmodel.initSystem();
+for i=0:1:osimmodel.getForceSet().getSize()-1
+    CurrenSpring=osimmodel.getForceSet().get(i);
+    CurrName=string(CurrenSpring.getName);
+    %%% activate the active Force
+    if any(contains(Data.ActiveAct,CurrName))
+        CurrenSpring.set_appliesForce(true) 
+        for cv=1:length(Coboval)
+            for c=1:activL
+                Currentcoord=modelCoordSet.get(Allcoord(c));
+                Currentcoord.setValue(state, Coboval(cv,c));
+            end
+            osimmodel.realizePosition(state);
+            pathsp=PathSpring.safeDownCast(CurrenSpring);
+            musclelength(cv)=pathsp.getLength(state);
+        end
+        pathsp.set_resting_length(Data.restingpos(i+1))
+        restpos=min(musclelength);
+        Data.(Coordlable).(CurrName).Minlenght=restpos;
+        rerestpos=pathsp.get_resting_length();
+        if rerestpos >restpos
+            pathsp.set_resting_length(restpos);           
+        end
+        pathsp.set_stiffness(Data.stiffness(i+1));
+        pathsp.set_dissipation(Data.dissipation(i+1));
+    else
+    CurrenSpring.set_appliesForce(false) 
+    end
+end
+
+%% Change the joints type
 modeljointSet=osimmodel.getJointSet();
 for i=1:1:length(Data.Weldjoints)
     Currjoint=modeljointSet.get(Data.Weldjoints(i));
@@ -37,6 +90,13 @@ for i=1:1:length(Data.Weldjoints)
     osimmodel.addJoint(ModifedJoint);
     osimmodel.initSystem();
 end
+%% Configure Bodies
+Shankbod=osimmodel.getBodySet().get('Shank');
+Shankbod.set_mass(Data.Shank.mass);
+Shankbod.set_inertia(Vec6(Data.Shank.Iner(1),Data.Shank.Iner(2),Data.Shank.Iner(3),0,0,0))
+Footbod=osimmodel.getBodySet().get('Foot');
+Footbod.set_mass(Data.Foot.mass);
+Footbod.set_inertia(Vec6(Data.Foot.Iner(1),Data.Foot.Iner(2),Data.Foot.Iner(3),0,0,0))
 % grcor=osimmodel.getJointSet().get('ground_pelvis');
 % grcoor=grcor.clone;
 % osimmodel.updJointSet().remove(grcor);
@@ -77,49 +137,11 @@ else
     Kneecoord = modelCoordSet.get("Knee");
     Kneecoord.setDefaultValue(Kneeangle);
     Kneecoord.setRangeMax(deg2rad(90));
-    Kneecoord.setRangeMin(deg2rad(-5));
+    Kneecoord.setRangeMin(deg2rad(0));
 end
 
 
-%% finding lowest spring length
-%%% finding all possible coordinates value
-activL=length(Data.ActiveCoordinates);
-for c=1:activL
-    Currentcoord=modelCoordSet.get(Data.ActiveCoordinates(c));
-    rmax=Currentcoord.getRangeMax();
-    rmin=Currentcoord.getRangeMin();
-    cordvalues=(linspace(rmin,rmax,step));
-    elements{c}=cordvalues; %cell array with N vectors to combine
-end
-combinations = cell(1, numel(elements));  %set up the varargout result
-[combinations{:}] = ndgrid(elements{:});
-combinations = cellfun(@(x) x(:), combinations,'uniformoutput',false); %there may be a better way to do this
-Coboval = [combinations{:}]; % NumberOfCombinations by N matrix. Each row is unique.
-%%% feed into model to calculate the Actuator length
-state=osimmodel.initSystem();
-for i=0:1:osimmodel.getForceSet().getSize()-1
-    CurrenSpring=osimmodel.getForceSet().get(i);
-    %%% activate the active Force
-    if any(contains(Data.ActiveAct,string(CurrenSpring.getName)))
-        CurrenSpring.set_appliesForce(true) 
-        for cv=1:length(Coboval)
-            for c=1:activL
-                Currentcoord=modelCoordSet.get(Data.ActiveCoordinates(c));
-                Currentcoord.setValue(state, Coboval(cv));
-            end
-            osimmodel.realizePosition(state);
-            pathsp=PathSpring.safeDownCast(CurrenSpring);
-            musclelength(cv)=pathsp.getLength(state);
-        end
 
-        restpos=min(musclelength);
-        pathsp.set_resting_length(restpos);
-        pathsp.set_stiffness(Data.stiffness(i+1));
-        
-    else
-    CurrenSpring.set_appliesForce(false) 
-    end
-end
 %% unlock the active coordinates
 for m = 0:osimmodel.getCoordinateSet().getSize()-1
     Coord=osimmodel.getCoordinateSet().get(m);
