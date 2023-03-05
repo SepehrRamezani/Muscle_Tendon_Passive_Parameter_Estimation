@@ -82,7 +82,7 @@ model = modelProcessor.process();
 model.initSystem();
 %% add cost function
 % effort = MocoControlGoal.safeDownCast(problem.updGoal('control_effort'));
-% effort.setWeight(0.001);
+% effort.setWeight(0);
 % effort.setExponent(2);
 % effort.setDivideByDisplacement(false);
 
