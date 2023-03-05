@@ -31,7 +31,7 @@ kneelable='/jointset/Knee_Joint/Knee/value';
 ControlWight=1;
 StateWeight = 2/osimmodel.getNumCoordinates();
 GlobalstateTrackingWeight = 1;
-TotalControlWight=50;
+TotalControlWight=20;
 % Etime=20;
 % Solverinterval=10;
 %% Import reference state
@@ -76,7 +76,7 @@ ContTracking.setReference(ConttableProcessor);
 ContTracking.setWeight(TotalControlWight);
 
 Minrestpos=Data.restingpos-Data.Maxdeformation;
-Minrestpos(find(Minrestpos<(Data.restingpos*.2)))=Data.restingpos(find(Minrestpos<(Data.restingpos*.2)))*.2;
+Minrestpos(find(Minrestpos<(Data.restingpos*.70)))=Data.restingpos(find(Minrestpos<(Data.restingpos*.70)))*.7;
 for i=1:length(Data.ActiveAct)
     Springname=string(osimmodel.getForceSet().get(Data.ActiveAct(i)).getName());
     Maxrestpos=Data.(Coordlable).(Springname).Minlenght;
@@ -116,16 +116,16 @@ effort = MocoControlGoal.safeDownCast(problem.updGoal('control_effort'));
 effort.setWeight(0);
 
 %% Defining Solver
-% solver=study.initTropterSolver();
-solver = study.initCasADiSolver();
+solver=study.initTropterSolver();
+% solver = study.initCasADiSolver();
 solver.set_num_mesh_intervals(Solverinterval);
 solver.set_verbosity(2);
 solver.set_optim_solver('ipopt');
-solver.set_optim_convergence_tolerance(1e-5);
-solver.set_optim_constraint_tolerance(1e-32);
-solver.set_optim_max_iterations(6000);
-solver.set_implicit_auxiliary_derivatives_weight(0.00001);
-solver.set_parameters_require_initsystem(false);
+solver.set_optim_convergence_tolerance(1e-4);
+solver.set_optim_constraint_tolerance(1e-2);
+solver.set_optim_max_iterations(1000);
+% solver.set_implicit_auxiliary_derivatives_weight(0.00001);
+% solver.set_parameters_require_initsystem(false);
 solver.resetProblem(problem);
 if isfile(Data.(Coordlable).ParmSimulPath)
     solver.setGuessFile(Data.(Coordlable).ParmSimulPath);

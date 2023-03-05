@@ -72,6 +72,7 @@ FinalData(:,3)=Finaltorque;
 
 indx90=find(FinalData(:,2)<95& FinalData(:,2)>85);
 Data90=sortrows(FinalData(indx90,:),1,'descend');
+
 % indx110=find(FinalData(:,2)<115& FinalData(:,2)>105);
 % Data110=sortrows(FinalData(indx110,:),1);
 % indx135=find(FinalData(:,2)<140& FinalData(:,2)>130);
@@ -94,6 +95,7 @@ xlabel('Knee(deg)')
 ylabel('Torque(N.m)')
 m=(Data90(end,1)-Data90(1,1))/(20);
 time90=(Data90(:,1)-Data90(1,1))/m;
+ExpData.Data90time=time90;
 newtim90=0:20/(5*length(time90)):20;
 newData90=interp1(time90,Data90,newtim90,"linear","extrap");
 plot(90-newData90(:,1),newData90(:,3))
