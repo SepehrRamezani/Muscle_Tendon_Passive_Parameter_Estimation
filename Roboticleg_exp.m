@@ -3,36 +3,62 @@ close all
 import org.opensim.modeling.*;
 Trc_path=['C:\MyCloud\OneDriveUcf\Real\Simulation\Passive_Parameter_prediction\Robotic_Leg\'];
 listing = dir(Trc_path);
+
 plotfalg=0;
-IKflag=1;
+IKflag=0;
 Mnames=[];
 Tnames=[];
-
+torquoptflag=0;
 % myLog = JavaLogSink();
 % Logger.addSink(myLog);
 
-runver="E5";
+runver="E17";
 % SubjectNumber=["06","07","08","09","10","11","12","13","14","15"];
 SubjectNumber=["10"];
+stiffnessLbs=[0.207 0.128 0.117 0.088]';%lbs/mm
 
-Data.stiffness=[420.7,569.3,520.44193,391.1];
+Data.stiffness=stiffnessLbs*4.44*1000; %N/m
+% Data.stiffness=[920.7, 569.3, 520.4, 391.1]';  %[VASINT, RECFEM, BFLH, BFSH]
+% Data.Stiffnessboundary=[500 1500;200 800;200 800;200 800];
+Data.Stiffnessboundary=[Data.stiffness*.8 Data.stiffness*1.2];
+PretensionsLb=[3.56 6.53 6.01 1.5]'; % lbs
+MaxLoad=[28.55 26.4	44.96 12.84]';% lbs
+Data.Maxdeformation=(MaxLoad./stiffnessLbs)/1000; % m
+IniLofPretension=(PretensionsLb./stiffnessLbs)/1000; % m
+% Data.stiffness=[900 0.0001 500 300]';%lbs/mm
+
+IniL=[0.36,0.57,0.39,0.23]'; % m
+Data.restingpos=IniL-IniLofPretension; 
+% Data.restingpos=[0.35,0.56,0.42,0.20];
+Data.Foot.mass=0.76;
+Footlength=0.32;
+MemberWidth=0.03;
+const=1/12*Data.Foot.mass;
+Data.Foot.Iner=[const*(2*MemberWidth^2) const*(Footlength^2+MemberWidth^2) const*(Footlength^2+MemberWidth^2) 0 0 0];
+Data.Shank.mass=0.81;
+Shanklength=0.4;
+const2=1/12*Data.Shank.mass;
+Data.Shank.Iner=[const2*(Shanklength^2+MemberWidth^2) const2*(2*MemberWidth^2) const2*(Shanklength^2+MemberWidth^2) 0 0 0];
+
+Data.restingposboundary=[0.2 0.8;0.4 0.65;0.2 0.55;0.15 0.3];
+Data.dissipation=[0.05,0.05,0.05,00.05];
 SubjectNumber=append("T0",SubjectNumber);
 Data.joints=["ground_pelvis","Hip_Joint","Knee_Joint","Ankle_Joint"];
 Data.Weldjoints=["ground_pelvis","Hip_Joint","Ankle_Joint"];
 Data.bodies=["Hip_Bone","Thigh","Shank","Foot"];
 Data.maxpanlt=-deg2rad(15);
 Data.DeGrooteflage=1;
-Data.TorqueSolverinterval=40;
+Data.TorqueSolverinterval=30;
 Data.ParamSolverinterval=50;
 
 Data.optForce=1;
-psname=["Knee90Trial0","Knee45Trial0","Knee0Trial0"];
+psname=["Hip90"];
 for S=length(psname)
     combinedname=psname(S);
     Data.(combinedname).ModelPath=fullfile(Trc_path,'Model',append(combinedname,runver,'.osim'));
     Data.(combinedname).RefModelpath=fullfile(Trc_path,'Model','FinalModel.osim');
-    Data.(combinedname).RefStatepath=fullfile(Trc_path,'Data',append(combinedname,'_IK.mot'));
-    Data.(combinedname).RefControlpath=fullfile(Trc_path,'Data',append(combinedname,'_Torque.sto'));
+    Data.(combinedname).RefStatepath=fullfile(Trc_path,'Data','Second',append(combinedname,'.sto'));
+    Data.(combinedname).RefControlpath=fullfile(Trc_path,'Data','Second',append(combinedname,'_Torque.sto'));
     Data.(combinedname).TorqeSimulPath=fullfile(Trc_path,'Result',append(combinedname,'_TorqueOpt',runver,'.sto'));
     Data.(combinedname).ParmSimulPath=fullfile(Trc_path,'Result',append(combinedname,'_ParamOpt',runver,'.sto'));
     Data.(combinedname).Hipangle=deg2rad(0);
@@ -40,11 +66,12 @@ for S=length(psname)
     Data.(combinedname).Ankleangle=0;
     Data.ActiveCoordinates=["Knee"];
     Data.ActiveAct=["VASINT","RECFEM","BFLH","BFSH"];
-%     Data.ActiveAct=["RECFEM","BFLH"]
+%     Data.ActiveAct=["BFLH"]
     Refmmodel = Model(Data.(combinedname).RefModelpath);
-%     osimmodel = Model(Data.(combinedname).ModelPath);
-    osimmodel=Robotic_Modelcreator(combinedname,Data,Refmmodel);
 
+    [osimmodel,Data]=Robotic_Modelcreator(combinedname,Data,Refmmodel);
+    
+    osimmodel = Model(Data.(combinedname).ModelPath);
     %% processing data
     StateDataTable=TableProcessor(Data.(combinedname).RefStatepath).process;
     r=StateDataTable.getNumRows();
@@ -65,41 +92,56 @@ for S=length(psname)
 
 
     %%% getting data
-    HipAngle=StateDataTable.getDependentColumnAtIndex(6).getAsMat();
-%     KneeAngle=StateDataTable.getDependentColumnAtIndex(7).getAsMat();
-    KneeAngle=(90:(0-90)/(r-1):0)';
+    HipAngle=StateDataTable.getDependentColumnAtIndex(1).getAsMat();
+%     KneeAngle=StateDataTable.getDependentColumnAtIndex(0).getAsMat();
+KneeAnkle=
+    act=StateDataTable.getDependentColumnAtIndex(2).getAsMat();
+%     KneeAngle=(90:(0-90)/(r-1):0)';
     timejav=StateDataTable.getIndependentColumn();
     for tt=1:r
         time(tt,1)=double(timejav.get(tt-1));
     end
     %%% filtering
-    [bb,aa] = butter(1, 0.1,'low');
+    [bb,aa] = butter(1, 0.08,'low');
     Hipfilt=filtfilt(bb,aa,HipAngle);
     Kneefilt=filtfilt(bb,aa,KneeAngle);
+    Kneefilt=KneeAngle;
+    actfilt=filtfilt(bb,aa,act);
     HipSpeed=diff(Hipfilt)./diff(time);
     KneeSpeed=diff(Kneefilt)./diff(time);
-    NewData=[Hipfilt(1:end-1),HipSpeed,Kneefilt(1:end-1),KneeSpeed];
-    newtime=time(1):(time(end-1)-time(1))/300:time(end-1);
-    NewDatalowsamp=interp1(time(1:end-1),NewData, newtime);
+    NewData=[Hipfilt(1:end-1),HipSpeed,Kneefilt(1:end-1),KneeSpeed,actfilt(1:end-1)];
+    % newtime=time(1):(time(end-1)-time(1))/300:time(end-1);
+    newtime=time(1):(time(end)-time(1))/300:time(end);
+    % newtime=time;
+    NewDatalowsamp=interp1(time(1:end-1),NewData, newtime,"linear","extrap");
     Data.(combinedname).Hip=NewDatalowsamp(:,[1,2]);
     Data.(combinedname).Knee=NewDatalowsamp(:,[3,4]);
+    Data.(combinedname).Act=NewDatalowsamp(:,5);
     [nrow,ncol]=size(NewDatalowsamp);
+    % making state table
     collabels =  StdVectorString();
-    
-    for i=1:length(Data.ActiveCoordinates)
+    Lact=length(Data.ActiveCoordinates);
+    for i=1:Lact
         corrval=append("/jointset/",Data.ActiveCoordinates(i),"_Joint/",Data.ActiveCoordinates(i),"/value");
         corrspval=append("/jointset/",Data.ActiveCoordinates(i),"_Joint/",Data.ActiveCoordinates(i),"/speed");
         collabels.add(corrval);
         collabels.add(corrspval);
     end
+    for i=1:Lact
+        corrval=append("/forceset/",Data.ActiveCoordinates(i),'_act');
+        collabels.add(corrval);
+    end
+
     Newstate.setColumnLabels(collabels);
     ncol=double(collabels.size());
     row = RowVector(ncol, 0);
     for iRow=1:nrow
-        for iCol = 1 :length(Data.ActiveCoordinates)
+        for iCol = 1 :Lact
             row.set(iCol-1,Data.(combinedname).(Data.ActiveCoordinates(iCol))(iRow,iCol));
             row.set(iCol,Data.(combinedname).(Data.ActiveCoordinates(iCol))(iRow,iCol+1));
+
         end
+            row.set(2,Data.(combinedname).Act(iRow,1));
         Newstate.appendRow(iRow-1, row);
     end
 
@@ -118,17 +160,33 @@ for S=length(psname)
             Newstate.addTableMetaDataString(Kyes.get(i-1),Keval);
         end
     end
-
     %%
+
+
     Data.(combinedname).Stime=newtime(1);
-    Data.(combinedname).Etime=26;
+    Data.(combinedname).Etime=newtime(end-1);
+    if torquoptflag
+        [TqkneeTrackingSolution]=Roboticleg_TorqueSimulation(Newstate,osimmodel,combinedname,Data);
 
-%     [TqkneeTrackingSolution]=Roboticleg_TorqueSimulation(Newstate,osimmodel,combinedname,Data);
 
-    TorqStateDataTable=TableProcessor(Data.(combinedname).TorqeSimulPath).process;
-    Torqtimjav=TorqStateDataTable.getIndependentColumn();
-    for tt=1:Torqtimjav.size()
-        TorqOpttime(tt,1)=double(Torqtimjav.get(tt-1));
+        TorqStateDataTable=TableProcessor(Data.(combinedname).TorqeSimulPath).process;
+
+
+        xlabel('Knee(deg)')
+        ylabel('Torque(N.m)')
+        
+%         plot(deg2rad(NewDatalowsamp(:,3)),deg2rad(NewDatalowsamp(:,4)),TorqStateDataTable.getDependentColumnAtIndex(0).getAsMat(),TorqStateDataTable.getDependentColumnAtIndex(1).getAsMat())
+        hold on
+        %         figure
+        plot(90-rad2deg(TorqStateDataTable.getDependentColumnAtIndex(0).getAsMat()),TorqStateDataTable.getDependentColumnAtIndex(2).getAsMat()*100);
+        hold on
+        Torqtimjav=TorqStateDataTable.getIndependentColumn();
+        for tt=1:Torqtimjav.size()
+            TorqOpttime(tt,1)=double(Torqtimjav.get(tt-1));
+        end
+    else
+        TorqStateDataTable=Newstate                                                                                                                                                                                                                                                       ;
+        
     end
 
     [ParkneeTrackingSolution]=Roboticleg_ParamOpt(TorqStateDataTable,osimmodel,combinedname,Data);
@@ -138,15 +196,48 @@ for S=length(psname)
     for tt=1:paramtimjav.size()
         ParamOpttime(tt,1)=double(paramtimjav.get(tt-1));
     end
-    plot(newtime,deg2rad(Data.(combinedname).Knee(:,1)),TorqOpttime,TorqStateDataTable.getDependentColumnAtIndex(0).getAsMat());
+    load(fullfile(Trc_path,'Data','Second','ExpData.mat'));
+    plot(90-ExpData.Data90(:,1),ExpData.Data90(:,3),'*');
+%     title('Torque-Knee angle');
     hold on
-    plot(ParamOpttime,ParamStateDataTable.getDependentColumnAtIndex(0).getAsMat());
-    hold off
-    legend('exp','torque','param')
+    plot(90-Newstate.getDependentColumnAtIndex(0).getAsMat(),Newstate.getDependentColumnAtIndex(2).getAsMat()*100);
+    plot(90-rad2deg(ParamStateDataTable.getDependentColumnAtIndex(0).getAsMat()),ParamStateDataTable.getDependentColumnAtIndex(2).getAsMat()*100);
+    legend('Exp','Exp_Filltered','Opt')
+    xlabel('Knee (deg)')
+    ylabel('Torque (N)')
+%     plot(newtime,deg2rad(Data.(combinedname).Knee(:,1)));
+%     hold on
+%     figure
+%     plot(ParamOpttime,ParamStateDataTable.getDependentColumnAtIndex(0).getAsMat());
+%     hold off
+%     legend('exp','param')
     figure 
-    plot(TorqOpttime,TorqStateDataTable.getDependentColumnAtIndex(2).getAsMat());
+%     title('Motion-time')
+    plot(newtime,90-Data.(combinedname).Knee(:,1));
     hold on
-    plot(ParamOpttime,ParamStateDataTable.getDependentColumnAtIndex(2).getAsMat());
-    legend('torque','param')
+%     plot(TorqOpttime,TorqStateDataTable.getDependentColumnAtIndex(2).getAsMat()*100);
+    plot(ParamOpttime,90-rad2deg(ParamStateDataTable.getDependentColumnAtIndex(0).getAsMat()));
+    legend('Experiment','Opt')
+    xlabel('Time (s)')
+    ylabel('Torque (N.m)')
+    hold off
+    for i=1:length(Data.ActiveAct)
+        OptStiffness(i,S)=ParamStateDataTable.getDependentColumnAtIndex(2*i+1).get(0);
+        OptRestingPos(i,S)=ParamStateDataTable.getDependentColumnAtIndex(2*i+2).get(0);
+    end
 
 end
+StiffErro=(OptStiffness-Data.stiffness)./Data.stiffness*100;
+RestingPosErro=(OptRestingPos-Data.restingpos)./Data.restingpos*100;
+figure
+MarkerSize=15;
+tiledlayout(1,2)
+nexttile
+X2 = categorical(Data.ActiveAct');
+plot(X2,StiffErro,'.','MarkerSize',MarkerSize)
+ylabel ('Stiffness Estimation Error(%)')
+nexttile
+plot(X2,RestingPosErro,'.','MarkerSize',MarkerSize)
+ylabel ('Resting Position Estimation Error(%)')
+
+% Logger.removeSink(myLog);
