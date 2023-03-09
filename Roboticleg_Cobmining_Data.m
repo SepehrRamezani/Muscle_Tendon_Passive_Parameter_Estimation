@@ -2,6 +2,7 @@ clear all
 % close all
 import org.opensim.modeling.*;
 Trc_path=['C:\MyCloud\OneDriveUcf\Real\Simulation\Passive_Parameter_prediction\Robotic_Leg\Data\Second'];
+ExpData.Trc_path=Trc_path;
 listing = dir(Trc_path);
 plotfalg=1;
 IKflag=0;
@@ -71,31 +72,37 @@ FinalData(:,3)=Finaltorque;
 
 
 indx90=find(FinalData(:,2)<95& FinalData(:,2)>85);
-Data90=sortrows(FinalData(indx90,:),1,'descend');
+Hip90=sortrows(FinalData(indx90,:),1,'descend');
 
 % indx110=find(FinalData(:,2)<115& FinalData(:,2)>105);
 % Data110=sortrows(FinalData(indx110,:),1);
-% indx135=find(FinalData(:,2)<140& FinalData(:,2)>130);
-% Data135=sortrows(FinalData(indx135,:),1);
-indx35=find(FinalData(:,2)<150& FinalData(:,2)>140);
-Data35=sortrows(FinalData(indx35,:),1);
-ExpData.Data90=Data90;
-ExpData.Data35=Data35;
+indx124=find(FinalData(:,2)<130& FinalData(:,2)>115);
+Hip124=sortrows(FinalData(indx124,:),1);
+indx144=find(FinalData(:,2)<150& FinalData(:,2)>140);
+Hip144=sortrows(FinalData(indx144,:),1);
+ExpData.Hip90=Hip90;
+ExpData.Hip124=Hip124;
+ExpData.Hip144=Hip144;
+
 if plotfalg
     
-    plot(90-Data90(:,1),Data90(:,3),"*")
+    plot(90-Hip90(:,1),Hip90(:,3),'+','LineWidth',1.5)
     hold on
-%     plot(Data110(:,1),Data110(:,3))
-%     plot(90-Data35(:,1),Data35(:,3))
-
-legend(string(floor(180-[Data90(1,2),Data35(1,2)])))
+    plot(90-Hip124(:,1),Hip124(:,3),'*')
+    plot(90-Hip144(:,1),Hip144(:,3),'.','MarkerSize',10)
+ylabel('Torque (N.m)')
+xlabel('Knee angle (Deg)')
+legend(string(floor(180-[Hip90(1,2),Hip124(1,2),Hip144(1,2)])))
 % hold off
 end
-xlabel('Knee(deg)')
-ylabel('Torque(N.m)')
+[ExpData]=makingrefrencefiles(ExpData,Hip90,'Hip90');
+[ExpData]=makingrefrencefiles(ExpData,Hip124,'Hip124');
+[ExpData]=makingrefrencefiles(ExpData,Hip144,'Hip144');
+save(fullfile(ExpData.Trc_path,"ExpData.mat"),'ExpData');
+function [ExpData]=makingrefrencefiles(ExpData,Data90,label)
 m=(Data90(end,1)-Data90(1,1))/(20);
 time90=(Data90(:,1)-Data90(1,1))/m;
-ExpData.Data90time=time90;
+ExpData.(append(label,'time'))=time90;
 newtim90=0:20/(5*length(time90)):20;
 newData90=interp1(time90,Data90,newtim90,"linear","extrap");
 plot(90-newData90(:,1),newData90(:,3))
@@ -105,8 +112,10 @@ newData90=[newtim90' newData90];
 Titledata=[TFr,TFc];
 delimiterIn='\t';
 Title='\ninDegrees=yes\nnum_controls=1\nnum_derivatives=0\nDataType=double\nversion=3\nnRows=%d\nnColumns=%d\nendheader\n';
-F_fnames='Hip90.sto';
+F_fnames=append(label,'.sto');
 Dataheaderforce=append('time',delimiterIn,'knee',delimiterIn,'hip',delimiterIn,'act');
-makefile(Trc_path,F_fnames,Title,Titledata,Dataheaderforce,newData90,7,delimiterIn);
-save(fullfile(Trc_path,"ExpData.mat"),'ExpData');
+makefile(ExpData.Trc_path,F_fnames,Title,Titledata,Dataheaderforce,newData90,7,delimiterIn);
+
+end
+
 % % c3dtotrc();

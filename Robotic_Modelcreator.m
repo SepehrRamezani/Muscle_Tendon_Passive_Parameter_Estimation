@@ -146,7 +146,7 @@ end
 for m = 0:osimmodel.getCoordinateSet().getSize()-1
     Coord=osimmodel.getCoordinateSet().get(m);
     Coord.set_locked(false);
-    addCoordinateActuator(osimmodel,char(Coord.getName), 100)
+    addCoordinateActuator(osimmodel,char(Coord.getName), Data.optForce)
 end
 
 

@@ -51,9 +51,9 @@ Data.DeGrooteflage=1;
 Data.TorqueSolverinterval=30;
 Data.ParamSolverinterval=50;
 load(fullfile(Trc_path,'Data','Second','ExpData.mat'));
-Data.optForce=1;
+Data.optForce=100;
 psname=["Hip90"];
-for S=length(psname)
+for S=1:length(psname)
     combinedname=psname(S);
     Data.(combinedname).ModelPath=fullfile(Trc_path,'Model',append(combinedname,runver,'.osim'));
     Data.(combinedname).RefModelpath=fullfile(Trc_path,'Model','FinalModel.osim');
@@ -95,15 +95,15 @@ for S=length(psname)
 %     HipAngle=StateDataTable.getDependentColumnAtIndex(1).getAsMat();
 %     KneeAngle=StateDataTable.getDependentColumnAtIndex(0).getAsMat();
 %     act=StateDataTable.getDependentColumnAtIndex(2).getAsMat();
-HipAngle= ExpData.Data90(:,2);
-    KneeAngle= ExpData.Data90(:,1);
-    act=ExpData.Data90(:,3)/100;
+HipAngle= ExpData.(psname(S))(:,2);
+    KneeAngle= ExpData.(psname(S))(:,1);
+    act=ExpData.(psname(S))(:,3)/Data.optForce;
 %     KneeAngle=(90:(0-90)/(r-1):0)';
     timejav=StateDataTable.getIndependentColumn();
     for tt=1:r
         time(tt,1)=double(timejav.get(tt-1));
     end
-    time=ExpData.Data90time;
+    time=ExpData.(append(psname(S),'time'));
     %%% filtering
     [bb,aa] = butter(1, 0.08,'low');
     Hipfilt=filtfilt(bb,aa,HipAngle);
@@ -198,7 +198,7 @@ HipAngle= ExpData.Data90(:,2);
         
     end
 
-%     [ParkneeTrackingSolution]=Roboticleg_ParamOpt(TorqStateDataTable,osimmodel,combinedname,Data);
+%      [ParkneeTrackingSolution]=Roboticleg_ParamOpt(TorqStateDataTable,osimmodel,combinedname,Data);
 
     ParamStateDataTable=TableProcessor(Data.(combinedname).ParmSimulPath).process;
     paramtimjav=ParamStateDataTable.getIndependentColumn();
@@ -206,32 +206,23 @@ HipAngle= ExpData.Data90(:,2);
         ParamOpttime(tt,1)=double(paramtimjav.get(tt-1));
     end
     load(fullfile(Trc_path,'Data','Second','ExpData.mat'));
-    plot(90-ExpData.Data90(:,1),ExpData.Data90(:,3),'*');
-%     title('Torque-Knee angle');
+    plot(90-KneeAngle,act*Data.optForce,'*');
     hold on
-%     plot(90-Newstate.getDependentColumnAtIndex(0).getAsMat(),Newstate.getDependentColumnAtIndex(2).getAsMat()*100);
     plot(90-rad2deg(ParamStateDataTable.getDependentColumnAtIndex(0).getAsMat()),ParamStateDataTable.getDependentColumnAtIndex(2).getAsMat()*100);
     legend('Exp','Opt')
     xlabel('Knee (deg)')
     ylabel('Torque (N)')
-%     plot(newtime,deg2rad(Data.(combinedname).Knee(:,1)));
-%     hold on
-%     figure
-%     plot(ParamOpttime,ParamStateDataTable.getDependentColumnAtIndex(0).getAsMat());
-%     hold off
-%     legend('exp','param')
+
     figure 
-%     title('Motion-time')
     plot(newtime,90-Data.(combinedname).Knee(:,1));
     hold on
-%     plot(TorqOpttime,TorqStateDataTable.getDependentColumnAtIndex(2).getAsMat()*100);
     plot(ParamOpttime,90-rad2deg(ParamStateDataTable.getDependentColumnAtIndex(0).getAsMat()));
     legend('Experiment','Opt')
     xlabel('Time (s)')
     ylabel('Torque (N.m)')
     hold off
     for i=1:length(Data.ActiveAct)
-        OptStiffness(i,S)=ParamStateDataTable.getDependentColumnAtIndex(2*i+1).get(0);
+        OptStiffness(i,S)=(ParamStateDataTable.getDependentColumnAtIndex(2*i+1).get(0));
         OptRestingPos(i,S)=ParamStateDataTable.getDependentColumnAtIndex(2*i+2).get(0);
     end
 
@@ -243,10 +234,10 @@ MarkerSize=15;
 tiledlayout(1,2)
 nexttile
 X2 = categorical(Data.ActiveAct');
-plot(X2,StiffErro,'.','MarkerSize',MarkerSize)
+bar(X2,StiffErro)
 ylabel ('Stiffness Estimation Error(%)')
 nexttile
-plot(X2,RestingPosErro,'.','MarkerSize',MarkerSize)
+bar(X2,RestingPosErro)
 ylabel ('Resting Position Estimation Error(%)')
 
 % Logger.removeSink(myLog);
