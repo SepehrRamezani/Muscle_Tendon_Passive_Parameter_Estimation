@@ -3,6 +3,7 @@ import org.opensim.modeling.*;
 ComplianceTendon=Data.ComplianceTendon;
 SimMusclename=Data.(combinedname).SimMusclename;
 MinMTLength=Data.(combinedname).MuscleInfo.MinMTLength;
+TSL=Data.(combinedname).MuscleInfo.TSlack;
 Solverinterval=Data.ParamSolverinterval;
 Etime=Data.(Coordlable).Etime;
 Stime=Data.(Coordlable).Stime;
@@ -10,7 +11,7 @@ Stime=Data.(Coordlable).Stime;
 % w=1/osimmodel.getForceSet().getSize();
 StateWeight = 1/(osimmodel.getNumCoordinates()+length(SimMusclename));
 ControlWight=1/(osimmodel.getNumCoordinates()+length(SimMusclename));
-TotalControlWight=1;
+TotalControlWight=80;
 osimmodel=changemodelproperty(osimmodel,combinedname,Data,0);
 %% Define tracking problem
 track = MocoTrack();
@@ -60,12 +61,13 @@ for i=1:1:length(Data.muscle4opt)
 %     Musname = osimmodel.updMuscles().get(Data.muscle4opt(i));
     MusPath=append('/forceset/',char(Musname));
     MaxTendonSlack=MinMTLength(contains(SimMusclename,Musname));
-    param = MocoParameter(append('tendon_slack_',char(Musname)),MusPath,'tendon_slack_length', MocoBounds(0.05*MaxTendonSlack,MaxTendonSlack));
+    MinTendonSlack=TSL(contains(SimMusclename,Musname));
+    param = MocoParameter(append('tendon_slack_',char(Musname)),MusPath,'tendon_slack_length', MocoBounds(0.6*MinTendonSlack,MaxTendonSlack));
     param1= MocoParameter(append('passive_fiber_',char(Musname)),MusPath,'passive_fiber_strain_at_one_norm_force', MocoBounds(Data.PassiveFiberBound(1),Data.PassiveFiberBound(2)));
     param2= MocoParameter(append('tendon_strain_',char(Musname)),MusPath,'tendon_strain_at_one_norm_force', MocoBounds(Data.TendonStrainBound(1),Data.TendonStrainBound(2)));
     if sum(strcmp(char(Musname), ComplianceTendon))
         problem.addParameter(param2);
-%         problem.addParameter(param1);
+        problem.addParameter(param1);
     else
         problem.addParameter(param1);
     end
@@ -92,9 +94,9 @@ solver = study.initCasADiSolver();
 solver.set_num_mesh_intervals(Solverinterval);
 solver.set_verbosity(2);
 solver.set_optim_solver('ipopt');
-solver.set_optim_convergence_tolerance(1e-3);
-solver.set_optim_constraint_tolerance(1e-1);
-solver.set_optim_max_iterations(4000);
+solver.set_optim_convergence_tolerance(1e-5);
+solver.set_optim_constraint_tolerance(1e-3);
+solver.set_optim_max_iterations(6000);
 solver.set_implicit_auxiliary_derivatives_weight(0.00001)
 solver.set_parameters_require_initsystem(false);
 solver.resetProblem(problem);
