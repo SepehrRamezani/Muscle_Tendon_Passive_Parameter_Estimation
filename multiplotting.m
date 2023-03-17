@@ -1,11 +1,14 @@
-function fig=multiplotting(fig,Ylable,XLable,thetitle,tendod_slack,newcolors,MarkerSize,errorbarflage)
+function fig=multiplotting(fig,Ylable,XLable,thetitle,Data,newcolors,MarkerSize,errorbarflage)
 numfigs=length(Ylable);
 cc=0;
 for p=1:3:9
     cc=cc+1;
-    ty(cc,:)=mean(tendod_slack(p:p+2,:));
-    terrpo(cc,:)=max(tendod_slack(p:p+2,:))-ty(cc,:);
-    terrneg(cc,:)=ty(cc,:)-min(tendod_slack(p:p+2,:));
+    [s,ty(cc,:)]=std(Data(p:p+2,:),0,2); 
+    terrpo(cc,:)=ty(cc,:)+s';
+    terrneg(cc,:)=ty(cc,:)-s';
+    %     ty(cc,:)=mean(Data(p:p+2,:));
+    %     terrpo(cc,:)=max(Data(p:p+2,:))-ty(cc,:);
+    %     terrneg(cc,:)=ty(cc,:)-min(Data(p:p+2,:));
 end
 for m=1:numfigs
     if m>size(newcolors)
