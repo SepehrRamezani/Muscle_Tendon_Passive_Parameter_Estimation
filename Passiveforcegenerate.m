@@ -34,9 +34,17 @@ for i=0:1:osimmodel.getMuscles().getSize()-1
         %             osimmodel.realizeDynamics(state)
         Passivefiberforce(k,i+1)=degmus.getPassiveFiberForce(state);
         Tendonforce(k,i+1)=degmus.getTendonForce(state);
+        Musclestif(k,i+1)=CurrentMuscle.getMuscleStiffness(state);
+        Tendonstif(k,i+1)=CurrentMuscle.getTendonStiffness(state);
+        keeangl(k)=q;
         alpha(k,i+1)=degmus.getPennationAngle(state);
     end
 end
+plot(keeangl*180/3.14,Musclestif)
+legend(muscname)
+figure
+plot(keeangl*180/3.14,Tendonstif)
+legend(muscname)
 differ=Passivefiberforce.*cos(alpha)-Tendonforce;
 if differ > 0.01
     fprintf('in %s muscle %s',combinedname,string(CurrentMuscle.getName()));
