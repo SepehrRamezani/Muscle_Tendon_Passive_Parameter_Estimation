@@ -4,13 +4,17 @@ ComplianceTendon=Data.ComplianceTendon;
 SimMusclename=Data.(combinedname).SimMusclename;
 MinMTLength=Data.(combinedname).MuscleInfo.MinMTLength;
 TSL=Data.(combinedname).MuscleInfo.TSlack;
+MaxIsoF=Data.(combinedname).MuscleInfo.MaxIso;
+OptFiberL=Data.(combinedname).MuscleInfo.OptFiberL;
 Solverinterval=Data.ParamSolverinterval;
 Etime=Data.(Coordlable).Etime;
 Stime=Data.(Coordlable).Stime;
 
 % w=1/osimmodel.getForceSet().getSize();
-StateWeight = 1/(osimmodel.getNumCoordinates()+length(SimMusclename));
-ControlWight=1/(osimmodel.getNumCoordinates()+length(SimMusclename));
+% StateWeight = 1/(osimmodel.getNumCoordinates()+length(SimMusclename));%0.0909
+StateWeight=0.0909;
+% ControlWight=1/(osimmodel.getNumCoordinates()+length(SimMusclename));
+ControlWight=StateWeight;
 TotalControlWight=80;
 osimmodel=changemodelproperty(osimmodel,combinedname,Data,0);
 %% Define tracking problem
@@ -61,17 +65,26 @@ for i=1:1:length(Data.muscle4opt)
 %     Musname = osimmodel.updMuscles().get(Data.muscle4opt(i));
     MusPath=append('/forceset/',char(Musname));
     MaxTendonSlack=MinMTLength(contains(SimMusclename,Musname));
-    MinTendonSlack=TSL(contains(SimMusclename,Musname));
-    param = MocoParameter(append('tendon_slack_',char(Musname)),MusPath,'tendon_slack_length', MocoBounds(0.6*MinTendonSlack,MaxTendonSlack));
+    TendonSlack=TSL(contains(SimMusclename,Musname));
+    MaxIso=MaxIsoF((contains(SimMusclename,Musname)));
+    OptFL=OptFiberL((contains(SimMusclename,Musname)));
+    
     param1= MocoParameter(append('passive_fiber_',char(Musname)),MusPath,'passive_fiber_strain_at_one_norm_force', MocoBounds(Data.PassiveFiberBound(1),Data.PassiveFiberBound(2)));
     param2= MocoParameter(append('tendon_strain_',char(Musname)),MusPath,'tendon_strain_at_one_norm_force', MocoBounds(Data.TendonStrainBound(1),Data.TendonStrainBound(2)));
     if sum(strcmp(char(Musname), ComplianceTendon))
+        K=Data.TendonStiffness((contains(Data.ComplianceTendon,Musname)),:);
+        epsilonbound=(1.97.*MaxIso)./(K.*TendonSlack);
+        
+        param = MocoParameter(append('tendon_slack_',char(Musname)),MusPath,'tendon_slack_length', MocoBounds(0.7*TendonSlack,MaxTendonSlack));
         problem.addParameter(param2);
         problem.addParameter(param1);
+        problem.addParameter(param);
     else
+        paramz= MocoParameter(append('OptL_',char(Musname)),MusPath,'optimal_fiber_length', MocoBounds(0.8*OptFL,OptFL*1.2));
+        problem.addParameter(param2);
         problem.addParameter(param1);
     end
-        problem.addParameter(param);
+        
 end
 
 for corindx = 1:length(Data.ActiveCoordinates)
