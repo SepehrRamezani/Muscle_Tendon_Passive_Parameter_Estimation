@@ -45,8 +45,8 @@ for m = 0:osimmodel.getActuators().getSize()-1
             dgf.set_active_force_width_scale(1);
             dgf.set_tendon_compliance_dynamics_mode('implicit');
             dgf.set_ignore_passive_fiber_force(false);
-            if any(contains(Data.Rigidtendon,string(dgf.getName())))
-%                 dgf.set_ignore_tendon_compliance(true);
+            if any(contains(Data.RajRigidMus,string(dgf.getName())))
+                dgf.set_ignore_tendon_compliance(true);
 %                 dgf.set_tendon_compliance_dynamics_mode('explicit');
             else
 %                  dgf.set_ignore_passive_fiber_force(true)
@@ -192,6 +192,7 @@ for i=0:1:osimmodel.getMuscles().getSize()-1
         Currentcoord.setValue(state, q);
         osimmodel.realizePosition(state);
         musclelength(k+u)=CurrentMuscle.getLength(state);
+
     end
     MuscleInfo.MinMTLength(i+1)=min(musclelength);
     
@@ -202,11 +203,15 @@ for i=0:1:osimmodel.getMuscles().getSize()-1
         CurrentMuscle.set_tendon_slack_length(TSlack(i+1))
     end
         %% Getting the Muscle information
+
+        Data.TendonStrainBound=[0.040,0.1];
         MuscleInfo.TSlack(i+1)=CurrentMuscle.get_tendon_slack_length();
         MuscleInfo.MaxIso(i+1)=CurrentMuscle.get_max_isometric_force();
+        MuscleInfo.OptFiberL(i+1)=CurrentMuscle.get_optimal_fiber_length();
         MuscleInfo.Passive(i+1)=DeGrooteFregly2016Muscle.safeDownCast(CurrentMuscle).get_passive_fiber_strain_at_one_norm_force();
         MuscleInfo.Tstrain(i+1)= DeGrooteFregly2016Muscle.safeDownCast(CurrentMuscle).get_tendon_strain_at_one_norm_force();
         MuscleInfo.Musclename(i+1)=string(CurrentMuscle.getName());
+   
 
 end
 osimmodel.initSystem();
