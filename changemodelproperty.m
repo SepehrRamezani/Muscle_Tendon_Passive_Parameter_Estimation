@@ -21,6 +21,7 @@ if Optimizedflag
         end
 
     end
+    osimmodel.setName(append(Coordlable,"_Optimized"))
     osimmodel.initSystem();
     osimmodel.print(insertBefore(char(Data.(Coordlable).ModelPath),".osim","_optimized"));
 else

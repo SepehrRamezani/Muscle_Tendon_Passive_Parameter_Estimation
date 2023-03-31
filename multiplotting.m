@@ -3,10 +3,11 @@ numfigs=length(Ylable);
 cc=0;
 for p=1:3:9
     cc=cc+1;
-    [s,ty(cc,:)]=std(Data(p:p+2,:),0,2); 
-    terrpo(cc,:)=ty(cc,:)+s';
-    terrneg(cc,:)=ty(cc,:)-s';
-    %     ty(cc,:)=mean(Data(p:p+2,:));
+    [s,mid]=std(Data(p:p+2,:),0,1); 
+    ty(cc,:)=mean(Data(p:p+2,:));
+    terrpo(cc,:)=s;
+    terrneg(cc,:)=-s;
+    
     %     terrpo(cc,:)=max(Data(p:p+2,:))-ty(cc,:);
     %     terrneg(cc,:)=ty(cc,:)-min(Data(p:p+2,:));
 end
@@ -29,7 +30,8 @@ for m=1:numfigs
         ylabel (Ylable(m));
     else
         title(fig,thetitle);
-        plot(X',ty,'.','MarkerSize',MarkerSize)
+%         plot(X',Data','.','MarkerSize',MarkerSize)
+bar(X',Data')
         ylabel (Ylable(m));
         
     end

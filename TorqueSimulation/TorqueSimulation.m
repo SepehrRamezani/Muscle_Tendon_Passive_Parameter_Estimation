@@ -1,7 +1,8 @@
 function [kneeTrackingSolution]=TorqueSimulation(tableProcessor,osimmodel,Coordlable,Data)
 % ModelPath=[cd '\..\ModelGenerator\OneDOF_Knee_DeGroote.osim'];
 Solverinterval=Data.TorqueSolverinterval;
-Etime=Data.Etime;
+Etime=Data.(Coordlable).Etime;
+Stime=Data.(Coordlable).Stime;
 import org.opensim.modeling.*;
 % myLog = JavaLogSink();
 % Logger.addSink(myLog);
@@ -10,7 +11,7 @@ import org.opensim.modeling.*;
 ControlWight=1;
 StateWeight = 10.0/osimmodel.getNumCoordinates();
 GlobalstateTrackingWeight = 1;
-Stime=0;
+
 % Etime=20;
 % Solverinterval=10;
 %% Import reference state
@@ -69,17 +70,19 @@ solver = study.initCasADiSolver();
 solver.set_num_mesh_intervals(Solverinterval);
 solver.set_verbosity(2);
 solver.set_optim_solver('ipopt');
-solver.set_optim_convergence_tolerance(1e-4);
-solver.set_optim_constraint_tolerance(1e-1);
+solver.set_optim_convergence_tolerance(1e-5);
+solver.set_optim_constraint_tolerance(1e-2);
 solver.set_optim_max_iterations(3000);
 solver.set_implicit_auxiliary_derivatives_weight(0.00001)
 solver.set_parameters_require_initsystem(false);
 solver.resetProblem(problem);
+
 if isfile(Data.(Coordlable).TorqeSimulPath)
      solver.setGuessFile(Data.(Coordlable).TorqeSimulPath);
 else
 %     solver.setGuessFile([cd '\TorqueSimulation\Tracking_Initial_Guess.sto']);
 end
+study.print(strrep(Data.(Coordlable).TorqeSimulPath,'.sto','.omoco'))
 kneeTrackingSolution = study.solve();
 kneeTrackingSolution.write(Data.(Coordlable).TorqeSimulPath);
 % study.visualize(kneeTrackingSolution);
