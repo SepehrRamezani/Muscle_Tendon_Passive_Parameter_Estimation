@@ -81,11 +81,11 @@ for i=1:1:length(Data.muscle4opt)
         problem.addParameter(param);
     else
         paramz= MocoParameter(append('OptL_',char(Musname)),MusPath,'optimal_fiber_length', MocoBounds(0.6*OptFL,OptFL*1.4));
-maxtsl=0.9*MaxTendonSlack;
-        param = MocoParameter(append('tendon_slack_',char(Musname)),MusPath,'tendon_slack_length', MocoBounds(0.5*TendonSlack,maxtsl));
+        maxtsl=0.99*MaxTendonSlack;
+        param = MocoParameter(append('tendon_slack_',char(Musname)),MusPath,'tendon_slack_length', MocoBounds(0.7*TendonSlack,maxtsl));
         problem.addParameter(param);
         problem.addParameter(param1);
-        problem.addParameter(param2);
+%         problem.addParameter(param2);
     end
         
 end

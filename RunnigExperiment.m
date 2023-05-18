@@ -6,11 +6,11 @@ import org.opensim.modeling.*;
 Project='P006';
 txtBasepath=fullfile('C:\MyCloud\OneDriveUcf\Real\Simulation\Source',Project);
 load([txtBasepath '\SimData.mat'])
-runver="E_Sim";
+runver="E16";
 Data.runver=runver;
 % SubjectNumber=["06","07","08","09","10","11","12","13","14","15"];
-SubjectNumber=["10"];
-
+SubjectNumber=["06","07"];
+torqueSimulationflag=0;
 
 SubjectNumber=append("T0",SubjectNumber);
 Data.whichleg="l";
@@ -33,14 +33,14 @@ Data.TorqueSolverinterval=40;
 Data.ParamSolverinterval=50;
 % Data.Etime=20;
 Data.Stime=0;
-Data.PassiveFiberBound=[0.5,1];
-Data.TendonStrainBound=[0.03,0.09];
+Data.PassiveFiberBound=[0.2,1];
+Data.TendonStrainBound=[0.03,0.06];
 
 
-Joints=["Knee","Ankle"];
-% Joints=["Ankle"];
-% Terials3=["L1","L2","L3"];
- Terials3=["L1"];
+% Joints=["Knee","Ankle"];
+Joints=["Knee"];
+Terials3=["L1","L2","L3"];
+%  Terials3=["L1"];
 
 diarydir=append(txtBasepath,"\log.txt");
 % diary(diarydir)
@@ -49,7 +49,7 @@ Data.justparameterflag=1;
 qe=1;
 for S=1:length(SubjectNumber)
     Basepath=append('C:\MyCloud\OneDriveUcf\Real\Simulation\Source','\',Project,'\',SubjectNumber(S));
-    
+
     Pardata=importdata(append(Basepath,"\Data\Parameters.csv"));
     psname=append(Project,'_',SubjectNumber(S));
     Data.optForce=Pardata.data(6);
@@ -57,8 +57,8 @@ for S=1:length(SubjectNumber)
     
     for T1=1:length(Joints)
         if contains(Joints(T1),"Knee")
-            Terials2=["H90","H55","H15"];
-%             Terials2=["H90"];
+%             Terials2=["H90","H55","H15"];
+            Terials2=["H15","H55"];
             Terials2unmtxt=erase(Terials2,"H");
             Terials2unm=str2double(Terials2unmtxt);
             Terials2unm(find(Terials2unm==15))=10;
@@ -68,6 +68,9 @@ for S=1:length(SubjectNumber)
             Data.Rigidtendon=["bflh","bfsh","recfem","semimem","semiten","vasint","vaslat","vasmed","sart","grac"];
             Data.ComplianceTendon=[];
             Data.muscle4opt=["bflh","recfem","semimem","semiten","vasint","vaslat","vasmed"];
+            Data.convergencetolerance=1e-6;
+            Data.constrainttolerance=5e-3;
+            Data.TotalControlWeight=160;
         else
             Terials2=["K90","K45","K0"];
 %             Terials2=["K0"];
@@ -78,6 +81,9 @@ for S=1:length(SubjectNumber)
             Data.ComplianceTendon=["gaslat","gasmed","soleus"];
             Data.muscle4opt=["gaslat","gasmed","soleus"];
             Data.TendonStiffness=[108 390;108 390;108 390]*1000/3; %N/m
+            Data.TotalControlWeight=80;
+            Data.convergencetolerance=1e-5;
+            Data.constrainttolerance=1e-3;
         end
         Data.ActiveCoordinates=addingleg(Data.ActiveCoordinates,Data.whichleg);
         Data.Rigidtendon=addingleg(Data.Rigidtendon,Data.whichleg);
@@ -115,7 +121,7 @@ for S=1:length(SubjectNumber)
                 Data.(filename).RefStatepath=append(Basepath,'\Data\',filename,'_Motion.mot');
                 Data.(filename).RefControlpath=append(Basepath,'\Data\',filename,'_Torque.sto');
                 paramdir=fullfile(Basepath,'Parameterestimation');
-                [r,e]=mkdir(paramdir);
+                [root,e]=mkdir(paramdir);
                 Data.(filename).TorqeSimulPath=append(paramdir,'\Torque_Opt_',filename,'_',runver,'.sto');
                 Data.(filename).ParamSimulPath=append(paramdir,'\Parameter_Opt_',filename,'_',runver,'.sto');
                 Data.(filename).ModelPath=append(Basepath,'\Model\',filename,'_',runver,'.osim');
@@ -130,6 +136,7 @@ for S=1:length(SubjectNumber)
                 anklespeedlabel=strrep(anklelabe,'value','speed');
                 timejav=StateDataTable.getIndependentColumn();
                 r=StateDataTable.getNumRows();
+                time=[];
                 for tt=1:r
                     time(tt,1)=double(timejav.get(tt-1));
                 end
@@ -185,24 +192,32 @@ for S=1:length(SubjectNumber)
 
 
 
-                   
-%                 %%% definning Biodex as ref motion
-%                 for tt=1:3
-%                     StateDataTable.removeColumnAtIndex(0)
-%                 end
-%                 StateDataTable.removeTableMetaDataKey('nColumns')
-%                 StateDataTable.addTableMetaDataString('nColumns','2')
+                %                 %%% definning Biodex as ref motion
+                %                 for tt=1:3
+                %                     StateDataTable.removeColumnAtIndex(0)
+                %                 end
+                %                 StateDataTable.removeTableMetaDataKey('nColumns')
+                %                 StateDataTable.addTableMetaDataString('nColumns','2')
                 %                 Data.(filename).Hipangle=mean(HipAngle);
                 %                 Meanknee=mean(KneeAngle);
                 %                 if Meanknee< 0 Meanknee=0; end
                 %                 Data.(filename).Kneeangle= 1.57;
                 %                 Data.(filename).Ankleangle=mean(AnkleAngle);
+
+
                 ControlDataTable=TableProcessor(Data.(filename).RefControlpath).process;
-                StateSolutionTable=Newstate;
-                ControlSolutionTable=ControlDataTable;
-                Data.(filename).Stime=double(StateSolutionTable.getIndependentColumn().get(0));
-                Data.(filename).Etime=double(StateSolutionTable.getIndependentColumn().get(Etimeindx(end)-1));
-                [kneeTrackingSolution]=TorqueSimulation(StateSolutionTable,osimmodel,filename,Data);
+                Data.(filename).Stime=double(Newstate.getIndependentColumn().get(0));
+                Data.(filename).Etime=double(Newstate.getIndependentColumn().get(Etimeindx(end)-1));
+%                 Data.(filename).Etime=double(Newstate.getIndependentColumn().get(50));
+                if torqueSimulationflag
+                    [kneeTrackingSolution]=TorqueSimulation(Newstate,osimmodel,filename,Data);
+                    StateSolutionTable=kneeTrackingSolution.exportToStatesTable;
+                    ControlSolutionTable=kneeTrackingSolution.exportToControlsTable;
+                else
+                    StateSolutionTable=Newstate;
+                    ControlSolutionTable=ControlDataTable;
+                end
+                
                 [kneeTrackingParamSolution]=ParameterEstimation(StateSolutionTable,ControlSolutionTable,osimmodel,combinedname,filename,Data);
                 osimmodel=changemodelproperty(osimmodel,filename,Data,1);
                 qe=qe+1;

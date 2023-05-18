@@ -45,11 +45,11 @@ for m = 0:osimmodel.getActuators().getSize()-1
             dgf.set_active_force_width_scale(1);
             dgf.set_tendon_compliance_dynamics_mode('implicit');
             dgf.set_ignore_passive_fiber_force(false);
-            if any(contains(Data.Rigidtendon,string(dgf.getName())))
-                dgf.set_ignore_tendon_compliance(true);
-%                 dgf.set_tendon_compliance_dynamics_mode('explicit');
-            else
-%                  dgf.set_ignore_passive_fiber_force(true)
+            if  contains(Data.ActiveCoordinates,"knee")
+                 if any(contains(Data.Rigidtendon,string(dgf.getName())))
+                     dgf.set_ignore_tendon_compliance(true);
+                 end
+           
             end
         else
             musc.set_min_control(0.0);
